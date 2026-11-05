@@ -4,6 +4,9 @@
 !/.gitignore
 !/README.md
 !/index.html
+!/admin.html
+!/server.js
+!/package.json
 
 # На всякий случай — никогда не публиковать:
 .env
@@ -12,3 +15,4 @@
 .ssh/
 *.pem
 *.key
+data/

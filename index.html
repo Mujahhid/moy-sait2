@@ -421,6 +421,11 @@ table.pun td small{display:block;font-size:.7rem;color:var(--muted);line-height:
 #bt-tests:checked~#panel-lessons,#bt-lessons:checked~#panel-tests,#bt-lessons:checked~.nojs-note{display:none}
 .nojs-note{background:var(--orange-soft);color:var(--ink);border:1.5px solid var(--orange);border-radius:14px;padding:.8rem 1rem;margin:0 0 1rem;font-weight:500}
 html.js .nojs-note{display:none}
+#pet{display:none}
+@media (hover:hover) and (pointer:fine) and (min-width:900px){#pet{display:block}}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.f-err{margin:0;color:#ffb3a3;font-weight:600;font-size:.9rem}
+#lead button:disabled{opacity:.6;cursor:wait}
 /* курсор — морковка: кончик — точка клика; .bite-N на html — сколько раз её надкусила капибара (съедается с кончика, точка клика переезжает) */
 html,body{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cg%20fill%3D%22%233d9a5c%22%20stroke%3D%22%231f5a33%22%20stroke-width%3D%221%22%3E%3Cpath%20d%3D%22M22%2023%20Q24%2031%2030%2031%20Q29%2025%2022%2023Z%22%2F%3E%3Cpath%20d%3D%22M23%2022%20Q31%2024%2031%2030%20Q25%2029%2023%2022Z%22%2F%3E%3Cpath%20d%3D%22M22.5%2022.5%20Q30%2020%2031%2023%20Q27%2027%2022.5%2022.5Z%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M2%202%20L25%2016%20Q27%2025%2016%2025%20Z%22%20fill%3D%22%23f07f1e%22%20stroke%3D%22%237a3a0c%22%20stroke-width%3D%221.2%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23b4560a%22%20stroke-width%3D%221%22%20stroke-linecap%3D%22round%22%3E%3Cline%20x1%3D%229%22%20y1%3D%227.5%22%20x2%3D%2211%22%20y2%3D%226.8%22%2F%3E%3Cline%20x1%3D%2211%22%20y1%3D%2213%22%20x2%3D%2213%22%20y2%3D%2212%22%2F%3E%3Cline%20x1%3D%2215%22%20y1%3D%2212%22%20x2%3D%2217.5%22%20y2%3D%2210.8%22%2F%3E%3Cline%20x1%3D%2215%22%20y1%3D%2219%22%20x2%3D%2217.5%22%20y2%3D%2218.5%22%2F%3E%3Cline%20x1%3D%2220%22%20y1%3D%2217%22%20x2%3D%2222%22%20y2%3D%2215.5%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M5%205%20L18%2013%22%20stroke%3D%22%23ffc58a%22%20stroke-width%3D%221.2%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.8%22%2F%3E%3C%2Fsvg%3E") 2 2,auto}
 a,button,select,label,.choice,.opt,.tab{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cg%20fill%3D%22%233d9a5c%22%20stroke%3D%22%231f5a33%22%20stroke-width%3D%221%22%3E%3Cpath%20d%3D%22M22%2023%20Q24%2031%2030%2031%20Q29%2025%2022%2023Z%22%2F%3E%3Cpath%20d%3D%22M23%2022%20Q31%2024%2031%2030%20Q25%2029%2023%2022Z%22%2F%3E%3Cpath%20d%3D%22M22.5%2022.5%20Q30%2020%2031%2023%20Q27%2027%2022.5%2022.5Z%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22%235cc489%22%20stroke%3D%22%231f5a33%22%20stroke-width%3D%221%22%3E%3Cpath%20d%3D%22M23%2024%20Q22%2031%2026%2032%20Q27%2027%2023%2024Z%22%2F%3E%3Cpath%20d%3D%22M24%2023%20Q31%2022%2032%2026%20Q27%2027%2024%2023Z%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M2%202%20L25%2016%20Q27%2025%2016%2025%20Z%22%20fill%3D%22%23f07f1e%22%20stroke%3D%22%237a3a0c%22%20stroke-width%3D%221.2%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23b4560a%22%20stroke-width%3D%221%22%20stroke-linecap%3D%22round%22%3E%3Cline%20x1%3D%229%22%20y1%3D%227.5%22%20x2%3D%2211%22%20y2%3D%226.8%22%2F%3E%3Cline%20x1%3D%2211%22%20y1%3D%2213%22%20x2%3D%2213%22%20y2%3D%2212%22%2F%3E%3Cline%20x1%3D%2215%22%20y1%3D%2212%22%20x2%3D%2217.5%22%20y2%3D%2210.8%22%2F%3E%3Cline%20x1%3D%2215%22%20y1%3D%2219%22%20x2%3D%2217.5%22%20y2%3D%2218.5%22%2F%3E%3Cline%20x1%3D%2220%22%20y1%3D%2217%22%20x2%3D%2222%22%20y2%3D%2215.5%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M5%205%20L18%2013%22%20stroke%3D%22%23ffc58a%22%20stroke-width%3D%221.2%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.8%22%2F%3E%3C%2Fsvg%3E") 2 2,pointer}
@@ -523,7 +528,7 @@ document.documentElement.className+=' js';
       </div>
     </div>
     <div class="flow" aria-label="Путь на сайте">
-      <span>Instagram</span><i>→</i><span>бесплатный тест</span><i>→</i><span>диагностика</span><i>→</i><span>курс или занятия</span>
+      <span>бесплатный тест</span><i>→</i><span>диагностика</span><i>→</i><span>курс или занятия</span>
     </div>
   </div>
 
@@ -546,9 +551,9 @@ document.documentElement.className+=' js';
   </div></div>
       <div class="panel" id="panel-lessons">
         <div class="lessons">
-          <article class="lesson"><div class="thumb">Клетка</div><span class="meta">ЕГЭ · линия 2–6 · 18 мин</span><h3>Органоиды клетки за один урок</h3><p class="muted">Строение и функции, которые чаще всего путают на экзамене.</p><a class="btn ghost" href="https://t.me/bio_capybara" target="_blank" rel="noopener">Смотреть в Telegram</a></article>
-          <article class="lesson"><div class="thumb">Генетика</div><span class="meta">ЕГЭ · линия 28 · 25 мин</span><h3>Задачи на сцепленное наследование</h3><p class="muted">Алгоритм оформления, за который эксперт ставит полный балл.</p><a class="btn ghost" href="https://t.me/bio_capybara" target="_blank" rel="noopener">Смотреть в Telegram</a></article>
-          <article class="lesson"><div class="thumb">Человек</div><span class="meta">ОГЭ · 15 мин</span><h3>Кровь и иммунитет</h3><p class="muted">Короткий разбор с примерами из врачебной практики.</p><a class="btn ghost" href="https://t.me/bio_capybara" target="_blank" rel="noopener">Смотреть в Telegram</a></article>
+          <article class="lesson"><div class="thumb">Клетка</div><span class="meta">ЕГЭ · линия 2–6 · 18 мин</span><h3>Органоиды клетки за один урок</h3><p class="muted">Строение и функции, которые чаще всего путают на экзамене.</p><a class="btn ghost" href="#diagnostics">Записаться на урок</a></article>
+          <article class="lesson"><div class="thumb">Генетика</div><span class="meta">ЕГЭ · линия 28 · 25 мин</span><h3>Задачи на сцепленное наследование</h3><p class="muted">Алгоритм оформления, за который эксперт ставит полный балл.</p><a class="btn ghost" href="#diagnostics">Записаться на урок</a></article>
+          <article class="lesson"><div class="thumb">Человек</div><span class="meta">ОГЭ · 15 мин</span><h3>Кровь и иммунитет</h3><p class="muted">Короткий разбор с примерами из врачебной практики.</p><a class="btn ghost" href="#diagnostics">Записаться на урок</a></article>
         </div>
       </div>
     </div>
@@ -598,9 +603,11 @@ document.documentElement.className+=' js';
             <label for="f-who">Кто записывается<select id="f-who"><option>Ученик</option><option>Родитель</option></select></label>
             <label for="f-exam">Экзамен<select id="f-exam"><option>ЕГЭ</option><option>ОГЭ</option></select></label>
           </div>
-          <label for="f-contact">Telegram или телефон<input id="f-contact" required placeholder="@username или +7…"></label>
+          <label for="f-contact">Телефон<input id="f-contact" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="+7 900 000-00-00" maxlength="16"></label>
+          <p class="f-err" id="f-err" hidden></p>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
           <button class="btn orange" type="submit" style="justify-content:center">Записаться на диагностику</button>
-          <p style="font-size:.8rem;opacity:.7">Демо: заявка никуда не отправляется. На рабочем сайте здесь будет связь с Telegram или CRM.</p>
+          <p style="font-size:.8rem;opacity:.7">Нажимая кнопку, вы соглашаетесь, что мы перезвоним по этому номеру.</p>
           <div class="sent" id="sent" hidden></div>
         </form>
       </div>
@@ -618,7 +625,7 @@ document.documentElement.className+=' js';
         <div class="stat"><b>300+</b><span>учеников</span></div>
         <div class="stat"><b>0</b><span>несдач</span></div>
         <div class="stat"><b>8 лет</b><span>онлайн-преподавания</span></div>
-        <div class="stat"><b>10,4K</b><span>подписчиков в Instagram</span></div>
+        <div class="stat"><b>2</b><span>диплома: врач и педагог</span></div>
       </div>
 
       <p class="sub">Преподаватели</p>
@@ -629,7 +636,7 @@ document.documentElement.className+=' js';
 
       <p class="sub">Отзывы и результаты <span class="demo-tag">шаблон</span></p>
       <div class="reviews">
-        <article class="review"><span class="sc">— баллов</span><p>Сюда — отзыв ученика из хайлайта «отзывы» в Instagram.</p><span class="muted" style="font-size:.85rem">Имя, ЕГЭ 2026, вуз</span></article>
+        <article class="review"><span class="sc">— баллов</span><p>Сюда — отзыв ученика о подготовке и результате экзамена.</p><span class="muted" style="font-size:.85rem">Имя, ЕГЭ 2026, вуз</span></article>
         <article class="review"><span class="sc">— баллов</span><p>Скриншот или цитата родителя о результате и о том, как шла подготовка.</p><span class="muted" style="font-size:.85rem">Имя, родитель ученика</span></article>
         <article class="review"><span class="sc">— баллов</span><p>Видео-отзыв из рилс «Результаты учеников» — превью со ссылкой.</p><span class="muted" style="font-size:.85rem">Имя, ОГЭ 2026</span></article>
         <article class="review"><span class="sc">— баллов</span><p>Поступление: «был на 40 баллах — поступил в медицинский».</p><span class="muted" style="font-size:.85rem">Имя, медвуз</span></article>
@@ -707,10 +714,7 @@ document.documentElement.className+=' js';
 <footer>
   <div class="wrap foot">
     <a class="logo" href="#top"><svg><use href="#capy"/></svg>bio_capybara</a>
-    <div class="links">
-      <a href="https://www.instagram.com/bio_capybara/" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://t.me/bio_capybara" target="_blank" rel="noopener">Telegram</a>
-    </div>
+    
     <span class="muted" style="font-size:.85rem">Демо-версия сайта · попробуйте убежать морковкой от капибары</span>
   </div>
 </footer>
@@ -935,12 +939,40 @@ home();
 window.__siteReady=true;
 
 // ---------- form ----------
-document.getElementById('lead').addEventListener('submit',e=>{
-  e.preventDefault();
-  const s=document.getElementById('sent');
-  s.textContent=`Спасибо, ${document.getElementById('f-name').value}! В рабочей версии сайта менеджер напишет вам в течение дня. Это демо — заявка не отправлена.`;
-  s.hidden=false;
-});
+// ---------- форма заявки ----------
+(()=>{
+  const form=document.getElementById('lead'),phone=document.getElementById('f-contact'),err=document.getElementById('f-err'),sent=document.getElementById('sent');
+  const digits=v=>{let d=String(v).replace(/\D/g,'');if(!d)return '';if(d[0]==='8')d='7'+d.slice(1);else if(d[0]!=='7')d='7'+d;return d.slice(0,11)};
+  const fmt=d=>{if(!d)return '';let r='+7';if(d.length>1)r+=' '+d.slice(1,4);if(d.length>4)r+=' '+d.slice(4,7);if(d.length>7)r+='-'+d.slice(7,9);if(d.length>9)r+='-'+d.slice(9,11);return r};
+  let prev='';
+  const apply=()=>{let raw=phone.value.replace(/\D/g,'');
+    // «+7» уже стоит, а человек начал номер с 8 (или вставил 8XXXXXXXXXX) — восьмёрку отбрасываем
+    if(raw.startsWith('78')&&(prev==='7'||prev===''||raw.length>11))raw='7'+raw.slice(2);
+    else if(raw.startsWith('77')&&(prev==='7'||raw.length>11))raw=raw.slice(1);
+    const d=digits(raw);phone.value=fmt(d);prev=d;try{phone.setSelectionRange(phone.value.length,phone.value.length)}catch(e){}};
+  phone.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey||e.key.length!==1)return;if(!/\d/.test(e.key))e.preventDefault()});
+  phone.addEventListener('input',()=>{apply();err.hidden=true});
+  phone.addEventListener('paste',()=>setTimeout(apply,0));
+  phone.addEventListener('focus',()=>{if(!phone.value){phone.value='+7 ';prev='7'}});
+  phone.addEventListener('blur',()=>{if(digits(phone.value).length<=1){phone.value='';prev=''}});
+  form.addEventListener('reset',()=>{prev=''});
+  const show=(el,t)=>{el.textContent=t;el.hidden=false};
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();err.hidden=true;sent.hidden=true;
+    const d=digits(phone.value);
+    if(d.length!==11){show(err,'Введите номер полностью: +7 и ещё 10 цифр.');phone.focus();return}
+    const btn=form.querySelector('button[type="submit"]');btn.disabled=true;
+    const data={name:document.getElementById('f-name').value.trim(),who:document.getElementById('f-who').value,exam:document.getElementById('f-exam').value,phone:'+'+d,website:(form.querySelector('[name="website"]')||{}).value||''};
+    try{
+      const r=await fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+      if(r.ok){show(sent,`Спасибо, ${data.name}! Заявка принята, мы перезвоним вам по номеру ${fmt(d)} в течение дня.`);form.reset();}
+      else if(r.status===429)show(err,'Слишком много заявок подряд. Попробуйте через несколько минут.');
+      else if(r.status===404||r.status===405)show(err,'Это предпросмотр страницы без сервера, заявки здесь не сохраняются. На опубликованном сайте форма работает.');
+      else show(err,'Не удалось отправить заявку. Проверьте имя и номер и попробуйте ещё раз.');
+    }catch(x){show(err,'Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.')}
+    finally{btn.disabled=false}
+  });
+})();
 
 // ---------- pricing toggle ----------
 function price(period){
@@ -956,6 +988,7 @@ price('month');
 // ---------- капибара гонится за морковкой ----------
 (()=>{
   const pet=document.getElementById('pet'); if(!pet) return;
+  const desk=matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)'); if(!desk.matches) return;
   const sprite=pet.querySelector('.sprite'), nom=pet.querySelector('.nom'), root=document.documentElement;
   const W=68,H=52,MOUTH={x:65,y:31},SPEED=100;
   let mx=null,my=null,px=24,py=innerHeight-70,face=1,busyUntil=0,bites=0,last=0,started=false,regrow=null;
@@ -983,8 +1016,8 @@ price('month');
     sprite.style.transform=`scaleX(${face})`;
     requestAnimationFrame(loop);
   }
-  addEventListener('mousemove',e=>{
-    if(e.sourceCapabilities&&e.sourceCapabilities.firesTouchEvents)return;
+  addEventListener('pointermove',e=>{
+    if(e.pointerType!=='mouse'||!desk.matches)return;
     mx=e.clientX;my=e.clientY;
     if(!started){started=true;pet.hidden=false;requestAnimationFrame(loop)}
   },{passive:true});
