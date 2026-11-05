@@ -429,6 +429,12 @@ html.js .nojs-note{display:none}
 .adm-link{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
 .tm-body.adm-body{padding:0;overflow:hidden;display:flex}
 .adm-frame{flex:1;width:100%;height:100%;border:0;background:var(--bg)}
+/* панель заявок — выезжает справа */
+.tmodal.side{justify-content:flex-end;padding:0}
+.tmodal.side .tm-box{width:620px;max-width:100%;height:100%;max-height:none;border-radius:0;border-width:0 0 0 2px;box-shadow:-8px 0 0 var(--orange);animation:slidein .28s ease-out;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@keyframes slidein{from{transform:translateX(100%)}to{transform:none}}
+@media (max-width:560px){.tmodal.side .tm-box{width:100%;box-shadow:none;border-width:0}}
+@media (prefers-reduced-motion:reduce){.tmodal.side .tm-box{animation:none}}
 /* курсор — морковка: кончик — точка клика; .bite-N на html — сколько раз её надкусила капибара (съедается с кончика, точка клика переезжает) */
 html,body{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cg%20fill%3D%22%233d9a5c%22%20stroke%3D%22%231f5a33%22%20stroke-width%3D%221%22%3E%3Cpath%20d%3D%22M22%2023%20Q24%2031%2030%2031%20Q29%2025%2022%2023Z%22%2F%3E%3Cpath%20d%3D%22M23%2022%20Q31%2024%2031%2030%20Q25%2029%2023%2022Z%22%2F%3E%3Cpath%20d%3D%22M22.5%2022.5%20Q30%2020%2031%2023%20Q27%2027%2022.5%2022.5Z%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M2%202%20L25%2016%20Q27%2025%2016%2025%20Z%22%20fill%3D%22%23f07f1e%22%20stroke%3D%22%237a3a0c%22%20stroke-width%3D%221.2%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23b4560a%22%20stroke-width%3D%221%22%20stroke-linecap%3D%22round%22%3E%3Cline%20x1%3D%229%22%20y1%3D%227.5%22%20x2%3D%2211%22%20y2%3D%226.8%22%2F%3E%3Cline%20x1%3D%2211%22%20y1%3D%2213%22%20x2%3D%2213%22%20y2%3D%2212%22%2F%3E%3Cline%20x1%3D%2215%22%20y1%3D%2212%22%20x2%3D%2217.5%22%20y2%3D%2210.8%22%2F%3E%3Cline%20x1%3D%2215%22%20y1%3D%2219%22%20x2%3D%2217.5%22%20y2%3D%2218.5%22%2F%3E%3Cline%20x1%3D%2220%22%20y1%3D%2217%22%20x2%3D%2222%22%20y2%3D%2215.5%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M5%205%20L18%2013%22%20stroke%3D%22%23ffc58a%22%20stroke-width%3D%221.2%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.8%22%2F%3E%3C%2Fsvg%3E") 2 2,auto}
 a,button,select,label,.choice,.opt,.tab{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cg%20fill%3D%22%233d9a5c%22%20stroke%3D%22%231f5a33%22%20stroke-width%3D%221%22%3E%3Cpath%20d%3D%22M22%2023%20Q24%2031%2030%2031%20Q29%2025%2022%2023Z%22%2F%3E%3Cpath%20d%3D%22M23%2022%20Q31%2024%2031%2030%20Q25%2029%2023%2022Z%22%2F%3E%3Cpath%20d%3D%22M22.5%2022.5%20Q30%2020%2031%2023%20Q27%2027%2022.5%2022.5Z%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22%235cc489%22%20stroke%3D%22%231f5a33%22%20stroke-width%3D%221%22%3E%3Cpath%20d%3D%22M23%2024%20Q22%2031%2026%2032%20Q27%2027%2023%2024Z%22%2F%3E%3Cpath%20d%3D%22M24%2023%20Q31%2022%2032%2026%20Q27%2027%2024%2023Z%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M2%202%20L25%2016%20Q27%2025%2016%2025%20Z%22%20fill%3D%22%23f07f1e%22%20stroke%3D%22%237a3a0c%22%20stroke-width%3D%221.2%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23b4560a%22%20stroke-width%3D%221%22%20stroke-linecap%3D%22round%22%3E%3Cline%20x1%3D%229%22%20y1%3D%227.5%22%20x2%3D%2211%22%20y2%3D%226.8%22%2F%3E%3Cline%20x1%3D%2211%22%20y1%3D%2213%22%20x2%3D%2213%22%20y2%3D%2212%22%2F%3E%3Cline%20x1%3D%2215%22%20y1%3D%2212%22%20x2%3D%2217.5%22%20y2%3D%2210.8%22%2F%3E%3Cline%20x1%3D%2215%22%20y1%3D%2219%22%20x2%3D%2217.5%22%20y2%3D%2218.5%22%2F%3E%3Cline%20x1%3D%2220%22%20y1%3D%2217%22%20x2%3D%2222%22%20y2%3D%2215.5%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M5%205%20L18%2013%22%20stroke%3D%22%23ffc58a%22%20stroke-width%3D%221.2%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.8%22%2F%3E%3C%2Fsvg%3E") 2 2,pointer}
@@ -610,7 +616,7 @@ document.documentElement.className+=' js';
           <p class="f-err" id="f-err" hidden></p>
           <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
           <button class="btn orange" type="submit" style="justify-content:center">Записаться на диагностику</button>
-          <p style="font-size:.8rem;opacity:.7">Нажимая кнопку, вы соглашаетесь, что мы перезвоним по этому номеру.</p>
+          <p style="font-size:.8rem;opacity:.7">Нажимая кнопку, вы соглашаетесь, что мы перезвоним по этому номеру. Вместе с заявкой преподаватель увидит результаты тестов, которые вы прошли на сайте, — так диагностика будет точнее.</p>
           <div class="sent" id="sent" hidden></div>
         </form>
       </div>
@@ -819,13 +825,17 @@ const MENUS={
     ['topic-evo','4 вопроса','Эволюция и экология','Отбор, ароморфозы, экосистемы']]}
 };
 const P=document.getElementById('panel-tests');
+// ---------- результаты тестов посетителя (хранятся в его браузере, уходят вместе с заявкой) ----------
+const RES_KEY='bc_results';
+function getResults(){try{const v=JSON.parse(localStorage.getItem(RES_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}}
+function recordResult(r){const list=getResults();list.unshift(Object.assign({at:new Date().toISOString()},r));try{localStorage.setItem(RES_KEY,JSON.stringify(list.slice(0,30)))}catch(e){}}
 const DLG=document.getElementById('test-modal'),DLG_BODY=document.getElementById('tm-body');
-function openModal(title,closeLabel){document.getElementById('tm-title').textContent=title;document.getElementById('tm-close').textContent=closeLabel||'Выйти из теста ✕';if(DLG.hidden){DLG.hidden=false;document.documentElement.classList.add('modal-open');try{document.getElementById('tm-close').focus({preventScroll:true})}catch(e){}}DLG_BODY.scrollTop=0;return DLG_BODY}
+function openModal(title,closeLabel,side){DLG.classList.toggle('side',!!side);document.getElementById('tm-title').textContent=title;document.getElementById('tm-close').textContent=closeLabel||'Выйти из теста ✕';if(DLG.hidden){DLG.hidden=false;document.documentElement.classList.add('modal-open');try{document.getElementById('tm-close').focus({preventScroll:true})}catch(e){}}DLG_BODY.scrollTop=0;return DLG_BODY}
 function closeModal(){if(!DLG.hidden){DLG.hidden=true;DLG.dispatchEvent(new Event('close'))}}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!DLG.hidden)closeModal()});
 DLG.addEventListener('close',()=>{document.documentElement.classList.remove('modal-open');DLG_BODY.innerHTML='';DLG_BODY.classList.remove('adm-body');if(location.hash==='#admin'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}});
 // ---------- панель заявок внутри сайта (видна только после ввода пароля) ----------
-function openAdmin(){const B=openModal('Панель заявок','Закрыть ✕');B.classList.add('adm-body');B.innerHTML='<iframe class="adm-frame" src="/admin?embed=1" title="Панель заявок"></iframe>';}
+function openAdmin(){const B=openModal('Панель заявок','Закрыть ✕',true);B.classList.add('adm-body');B.innerHTML='<iframe class="adm-frame" src="/admin?embed=1" title="Панель заявок"></iframe>';}
 document.getElementById('adm-link').addEventListener('click',e=>{e.preventDefault();openAdmin()});
 if(location.hash==='#admin')setTimeout(openAdmin,0);
 addEventListener('hashchange',()=>{if(location.hash==='#admin')openAdmin()});
@@ -913,6 +923,7 @@ function run(key){
         rows+=`<tr class="${ok?'ok':'no'}"><td>${Q.n}</td><td>${given?given.replace(/</g,'&lt;'):'—'}</td><td>${Q.text?Q.alts.join(' / '):Q.a}</td><td>${ok?'Верно':'Неверно'}</td></tr>`;
       });
       const n=T.qs.length,r=score/n,c=r>=.8?'var(--leaf)':r>=.5?'var(--orange)':'#d0573f',z=r>=.8?'Сильная база':r>=.5?'Есть пробелы':'Нужна подготовка с нуля';
+      recordResult({test:T.title,score,max:n,label:z,wrong:T.qs.filter((Q,k)=>!check(Q,boxes(k).map(x=>x.value.trim()).join(''))).map(Q=>Q.n)});
       const sm=P.querySelector('#summary');
       sm.innerHTML=`<div class="result"><p class="eyebrow">Результат · ${T.title}</p>
         <p class="score">${score}<span style="font-size:.4em;color:var(--muted)"> / ${n}</span></p>
@@ -934,6 +945,7 @@ function run(key){
     else{const n=T.qs.length,r=score/n;head=`${score}<span style="font-size:.4em;color:var(--muted)"> / ${n}</span>`;
       z=r>=.8?'Сильная база':r>=.5?'Есть пробелы':'Нужна подготовка с нуля';c=r>=.8?'var(--leaf)':r>=.5?'var(--orange)':'#d0573f';
       t=r>=.8?'Хороший результат. На диагностике проверим полный пробник и задания второй части.':'Ошибки в базовых темах стоят баллов в первой части. Диагностика покажет все пробелы и даст план.'}
+    recordResult(T.kind==='score'?{test:T.title,score,max:T.max,label:z}:T.kind==='type'?{test:T.title,score:null,max:null,label:head}:{test:T.title,score,max:T.qs.length,label:z});
     P.innerHTML=`<div class="result"><p class="eyebrow">Результат · ${T.title}</p>
       <p class="score">${head}</p>
       <span class="zone" style="background:color-mix(in srgb,${c} 18%,transparent);color:${c};justify-self:start">${z}</span>
@@ -970,7 +982,7 @@ window.__siteReady=true;
     const d=digits(phone.value);
     if(d.length!==11){show(err,'Введите номер полностью: +7 и ещё 10 цифр.');phone.focus();return}
     const btn=form.querySelector('button[type="submit"]');btn.disabled=true;
-    const data={name:document.getElementById('f-name').value.trim(),who:document.getElementById('f-who').value,exam:document.getElementById('f-exam').value,phone:'+'+d,website:(form.querySelector('[name="website"]')||{}).value||''};
+    const data={name:document.getElementById('f-name').value.trim(),who:document.getElementById('f-who').value,exam:document.getElementById('f-exam').value,phone:'+'+d,results:getResults(),website:(form.querySelector('[name="website"]')||{}).value||''};
     try{
       const r=await fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
       if(r.ok){show(sent,`Спасибо, ${data.name}! Заявка принята, мы перезвоним вам по номеру ${fmt(d)} в течение дня.`);form.reset();}
@@ -1046,6 +1058,7 @@ function miniQuiz(el,qs,again){
   const draw=()=>{
     if(i>=qs.length){
       const r=score/qs.length,c=r>=.8?'var(--leaf)':r>=.5?'var(--orange)':'#d0573f';
+      recordResult({test:'Тренажёр: '+(document.getElementById('tm-title').textContent||''),score,max:qs.length,label:r>=.8?'Тема понятна':r>=.5?'Почти получилось':'Нужно повторить'});
       el.innerHTML=`<div class="result"><p class="eyebrow">Результат</p><p class="score">${score}<span style="font-size:.4em;color:var(--muted)"> / ${qs.length}</span></p>
         <span class="zone" style="background:color-mix(in srgb,${c} 18%,transparent);color:${c};justify-self:start">${r>=.8?'Тема понятна':r>=.5?'Почти получилось':'Посмотрите анимацию ещё раз'}</span>
         <div class="row"><button class="btn" id="mq-again">Пройти ещё раз</button></div></div>`;

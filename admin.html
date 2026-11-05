@@ -61,6 +61,14 @@ input,select,textarea{font:500 1rem var(--body);color:var(--ink);background:var(
 .empty{text-align:center;padding:2.5rem 1rem;color:var(--muted)}
 .toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:.6rem 1rem;border-radius:999px;font-weight:600;font-size:.9rem;opacity:0;transition:opacity .25s;pointer-events:none}
 .toast.show{opacity:1}
+.res{grid-column:1/-1;font-size:.9rem}
+.res summary{cursor:pointer;font-weight:700;color:var(--ink)}
+.res ul{list-style:none;margin:.5rem 0 0;padding:0;display:grid;gap:.4rem}
+.res li{display:flex;flex-wrap:wrap;gap:.2rem .7rem;align-items:baseline;border-left:3px solid var(--c);padding:.35rem .6rem;background:var(--bg);border-radius:8px}
+.res .sc{font:700 .9rem var(--mono);color:var(--c)}
+.res .lb{color:var(--ink)}
+.res .wr{color:var(--danger);font-size:.85rem;flex-basis:100%}
+.res .dt{color:var(--muted);font-size:.78rem;margin-left:auto}
 [hidden]{display:none!important}
 html.embed body{padding:14px 16px 20px}
 html.embed .login{margin-top:6vh}
@@ -131,7 +139,7 @@ if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add('e
       '<div class="meta"><span class="tag">'+esc(l.exam)+'</span><span class="tag">'+esc(l.who)+'</span><br>'+fmtDate(l.createdAt)+'</div>'+
       '<div class="acts"><select aria-label="Статус">'+Object.keys(STATUS).map(function(k){return '<option value="'+k+'"'+(k===l.status?' selected':'')+'>'+STATUS[k][0]+'</option>'}).join('')+'</select>'+
       '<button class="btn ghost" type="button" data-copy>Копировать номер</button><button class="btn danger" type="button" data-del>Удалить</button></div>'+
-      '<div class="note"><textarea placeholder="Заметка: когда перезвонить, о чём договорились" aria-label="Заметка">'+esc(l.note||'')+'</textarea></div></article>'}).join('');
+      resultsHTML(l)+'<div class="note"><textarea placeholder="Заметка: когда перезвонить, о чём договорились" aria-label="Заметка">'+esc(l.note||'')+'</textarea></div></article>'}).join('');
   }
   $('#list').addEventListener('change',function(e){var art=e.target.closest('.lead');if(!art)return;var id=art.dataset.id;
     if(e.target.tagName==='SELECT'){api('PATCH','/api/admin/leads/'+id,{status:e.target.value}).then(function(d){replace(d.lead);render();toast('Статус: '+STATUS[d.lead.status][0])}).catch(function(){toast('Не сохранилось')})}
@@ -143,6 +151,12 @@ if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add('e
     if(e.target.hasAttribute('data-no'))e.target.closest('.confirm').remove();
     if(e.target.hasAttribute('data-yes')){api('DELETE','/api/admin/leads/'+id).then(function(){leads=leads.filter(function(x){return x.id!==id});render();toast('Заявка удалена')}).catch(function(){toast('Не удалось удалить')})}
   });
+  function resultsHTML(l){var R=l.results||[];
+    if(!R.length)return '<div class="res"><span class="muted">Тестов на сайте не проходил</span></div>';
+    return '<details class="res"'+(R.length<=3?' open':'')+'><summary>Тесты на сайте: '+R.length+'</summary><ul>'+R.map(function(r){
+      var pct=r.max?Math.round(r.score/r.max*100):null,c=pct==null?'var(--called)':pct>=80?'var(--enrolled)':pct>=50?'var(--new)':'var(--danger)';
+      return '<li style="--c:'+c+'"><b>'+esc(r.test)+'</b>'+(r.max?'<span class="sc">'+r.score+' / '+r.max+'</span>':'')+(r.label?'<span class="lb">'+esc(r.label)+'</span>':'')+
+        (r.wrong&&r.wrong.length?'<span class="wr">Ошибки в заданиях: '+r.wrong.join(', ')+'</span>':'')+(r.at?'<span class="dt">'+fmtDate(r.at)+'</span>':'')+'</li>'}).join('')+'</ul></details>'}
   function replace(n){for(var i=0;i<leads.length;i++)if(leads[i].id===n.id)leads[i]=n}
   $('#q').addEventListener('input',function(e){query=e.target.value;render()});
   $('#refresh').onclick=function(){load()};

@@ -64,7 +64,7 @@ function send(res, code, body, type = 'application/json; charset=utf-8', extra =
   res.writeHead(code, { 'Content-Type': type, ...SEC, ...extra });
   res.end(typeof body === 'string' || Buffer.isBuffer(body) ? body : JSON.stringify(body));
 }
-function readBody(req, limit = 20000) {
+function readBody(req, limit = 40000) {
   return new Promise((resolve, reject) => {
     let size = 0; const chunks = [];
     req.on('data', (c) => { size += c.length; if (size > limit) { reject(new Error('too big')); req.destroy(); } else chunks.push(c); });
@@ -74,6 +74,20 @@ function readBody(req, limit = 20000) {
 }
 const clip = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, n);
 const clientIp = (req) => String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+
+// результаты тестов, которые посетитель прошёл на сайте (приходят вместе с заявкой)
+function cleanResults(list) {
+  if (!Array.isArray(list)) return [];
+  const num = (v) => (Number.isFinite(v) && v >= 0 && v <= 1000 ? Math.round(v) : null);
+  return list.slice(0, 30).map((r) => ({
+    test: clip(r && r.test, 80),
+    score: num(r && r.score),
+    max: num(r && r.max),
+    label: clip(r && r.label, 80),
+    wrong: Array.isArray(r && r.wrong) ? r.wrong.slice(0, 40).map(Number).filter((n) => Number.isInteger(n) && n > 0 && n < 100) : [],
+    at: (r && typeof r.at === 'string' && !isNaN(Date.parse(r.at))) ? new Date(r.at).toISOString() : null,
+  })).filter((r) => r.test);
+}
 
 // ---------- статические файлы ----------
 const FILES = {
@@ -117,6 +131,7 @@ const server = http.createServer(async (req, res) => {
         exam: ['ЕГЭ', 'ОГЭ'].includes(data.exam) ? data.exam : 'ЕГЭ',
         status: 'new',
         note: '',
+        results: cleanResults(data.results),
       };
       leads.unshift(lead);
       await save();
