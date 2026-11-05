@@ -86,7 +86,7 @@ const cache = {};
 function serveFile(res, name, type, head) {
   try {
     if (!cache[name] || process.env.NODE_ENV === 'development') cache[name] = fs.readFileSync(path.join(ROOT, name));
-    const extra = name === 'admin.html' ? { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' } : { 'Cache-Control': 'public, max-age=300' };
+    const extra = name === 'admin.html' ? { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' } : { 'Cache-Control': 'no-cache' };
     res.writeHead(200, { 'Content-Type': type, ...SEC, ...extra });
     res.end(head ? undefined : cache[name]);
   } catch { send(res, 404, 'Not found', 'text/plain; charset=utf-8'); }
