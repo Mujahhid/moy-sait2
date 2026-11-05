@@ -57,7 +57,8 @@ function isAdmin(req) {
 const SEC = {
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'same-origin',
-  'X-Frame-Options': 'DENY',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'Content-Security-Policy': "frame-ancestors 'self'",
 };
 function send(res, code, body, type = 'application/json; charset=utf-8', extra = {}) {
   res.writeHead(code, { 'Content-Type': type, ...SEC, ...extra });

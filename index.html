@@ -426,6 +426,9 @@ html.js .nojs-note{display:none}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .f-err{margin:0;color:#ffb3a3;font-weight:600;font-size:.9rem}
 #lead button:disabled{opacity:.6;cursor:wait}
+.adm-link{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+.tm-body.adm-body{padding:0;overflow:hidden;display:flex}
+.adm-frame{flex:1;width:100%;height:100%;border:0;background:var(--bg)}
 /* курсор — морковка: кончик — точка клика; .bite-N на html — сколько раз её надкусила капибара (съедается с кончика, точка клика переезжает) */
 html,body{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cg%20fill%3D%22%233d9a5c%22%20stroke%3D%22%231f5a33%22%20stroke-width%3D%221%22%3E%3Cpath%20d%3D%22M22%2023%20Q24%2031%2030%2031%20Q29%2025%2022%2023Z%22%2F%3E%3Cpath%20d%3D%22M23%2022%20Q31%2024%2031%2030%20Q25%2029%2023%2022Z%22%2F%3E%3Cpath%20d%3D%22M22.5%2022.5%20Q30%2020%2031%2023%20Q27%2027%2022.5%2022.5Z%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M2%202%20L25%2016%20Q27%2025%2016%2025%20Z%22%20fill%3D%22%23f07f1e%22%20stroke%3D%22%237a3a0c%22%20stroke-width%3D%221.2%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23b4560a%22%20stroke-width%3D%221%22%20stroke-linecap%3D%22round%22%3E%3Cline%20x1%3D%229%22%20y1%3D%227.5%22%20x2%3D%2211%22%20y2%3D%226.8%22%2F%3E%3Cline%20x1%3D%2211%22%20y1%3D%2213%22%20x2%3D%2213%22%20y2%3D%2212%22%2F%3E%3Cline%20x1%3D%2215%22%20y1%3D%2212%22%20x2%3D%2217.5%22%20y2%3D%2210.8%22%2F%3E%3Cline%20x1%3D%2215%22%20y1%3D%2219%22%20x2%3D%2217.5%22%20y2%3D%2218.5%22%2F%3E%3Cline%20x1%3D%2220%22%20y1%3D%2217%22%20x2%3D%2222%22%20y2%3D%2215.5%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M5%205%20L18%2013%22%20stroke%3D%22%23ffc58a%22%20stroke-width%3D%221.2%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.8%22%2F%3E%3C%2Fsvg%3E") 2 2,auto}
 a,button,select,label,.choice,.opt,.tab{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cg%20fill%3D%22%233d9a5c%22%20stroke%3D%22%231f5a33%22%20stroke-width%3D%221%22%3E%3Cpath%20d%3D%22M22%2023%20Q24%2031%2030%2031%20Q29%2025%2022%2023Z%22%2F%3E%3Cpath%20d%3D%22M23%2022%20Q31%2024%2031%2030%20Q25%2029%2023%2022Z%22%2F%3E%3Cpath%20d%3D%22M22.5%2022.5%20Q30%2020%2031%2023%20Q27%2027%2022.5%2022.5Z%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22%235cc489%22%20stroke%3D%22%231f5a33%22%20stroke-width%3D%221%22%3E%3Cpath%20d%3D%22M23%2024%20Q22%2031%2026%2032%20Q27%2027%2023%2024Z%22%2F%3E%3Cpath%20d%3D%22M24%2023%20Q31%2022%2032%2026%20Q27%2027%2024%2023Z%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M2%202%20L25%2016%20Q27%2025%2016%2025%20Z%22%20fill%3D%22%23f07f1e%22%20stroke%3D%22%237a3a0c%22%20stroke-width%3D%221.2%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23b4560a%22%20stroke-width%3D%221%22%20stroke-linecap%3D%22round%22%3E%3Cline%20x1%3D%229%22%20y1%3D%227.5%22%20x2%3D%2211%22%20y2%3D%226.8%22%2F%3E%3Cline%20x1%3D%2211%22%20y1%3D%2213%22%20x2%3D%2213%22%20y2%3D%2212%22%2F%3E%3Cline%20x1%3D%2215%22%20y1%3D%2212%22%20x2%3D%2217.5%22%20y2%3D%2210.8%22%2F%3E%3Cline%20x1%3D%2215%22%20y1%3D%2219%22%20x2%3D%2217.5%22%20y2%3D%2218.5%22%2F%3E%3Cline%20x1%3D%2220%22%20y1%3D%2217%22%20x2%3D%2222%22%20y2%3D%2215.5%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M5%205%20L18%2013%22%20stroke%3D%22%23ffc58a%22%20stroke-width%3D%221.2%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.8%22%2F%3E%3C%2Fsvg%3E") 2 2,pointer}
@@ -715,7 +718,7 @@ document.documentElement.className+=' js';
   <div class="wrap foot">
     <a class="logo" href="#top"><svg><use href="#capy"/></svg>bio_capybara</a>
     
-    <span class="muted" style="font-size:.85rem">Демо-версия сайта · попробуйте убежать морковкой от капибары</span>
+    <span class="muted" style="font-size:.85rem">Попробуйте убежать морковкой от капибары · <a href="#admin" class="adm-link" id="adm-link">Вход для администратора</a></span>
   </div>
 </footer>
 
@@ -817,10 +820,15 @@ const MENUS={
 };
 const P=document.getElementById('panel-tests');
 const DLG=document.getElementById('test-modal'),DLG_BODY=document.getElementById('tm-body');
-function openModal(title){document.getElementById('tm-title').textContent=title;if(DLG.hidden){DLG.hidden=false;document.documentElement.classList.add('modal-open');try{document.getElementById('tm-close').focus({preventScroll:true})}catch(e){}}DLG_BODY.scrollTop=0;return DLG_BODY}
+function openModal(title,closeLabel){document.getElementById('tm-title').textContent=title;document.getElementById('tm-close').textContent=closeLabel||'Выйти из теста ✕';if(DLG.hidden){DLG.hidden=false;document.documentElement.classList.add('modal-open');try{document.getElementById('tm-close').focus({preventScroll:true})}catch(e){}}DLG_BODY.scrollTop=0;return DLG_BODY}
 function closeModal(){if(!DLG.hidden){DLG.hidden=true;DLG.dispatchEvent(new Event('close'))}}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!DLG.hidden)closeModal()});
-DLG.addEventListener('close',()=>{document.documentElement.classList.remove('modal-open');DLG_BODY.innerHTML=''});
+DLG.addEventListener('close',()=>{document.documentElement.classList.remove('modal-open');DLG_BODY.innerHTML='';DLG_BODY.classList.remove('adm-body');if(location.hash==='#admin'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}});
+// ---------- панель заявок внутри сайта (видна только после ввода пароля) ----------
+function openAdmin(){const B=openModal('Панель заявок','Закрыть ✕');B.classList.add('adm-body');B.innerHTML='<iframe class="adm-frame" src="/admin?embed=1" title="Панель заявок"></iframe>';}
+document.getElementById('adm-link').addEventListener('click',e=>{e.preventDefault();openAdmin()});
+if(location.hash==='#admin')setTimeout(openAdmin,0);
+addEventListener('hashchange',()=>{if(location.hash==='#admin')openAdmin()});
 document.getElementById('tm-close').onclick=closeModal;
 DLG.addEventListener('click',e=>{if(e.target===DLG)closeModal();const a=e.target.closest('a[href^="#"]');if(a)closeModal()});
 const go=k=>{closeModal();k==='home'?home():MENUS[k]?menu(k):window.TRAINERS&&TRAINERS[k]?openTrainer(k):run(k)};

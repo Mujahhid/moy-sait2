@@ -62,6 +62,8 @@ input,select,textarea{font:500 1rem var(--body);color:var(--ink);background:var(
 .toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:.6rem 1rem;border-radius:999px;font-weight:600;font-size:.9rem;opacity:0;transition:opacity .25s;pointer-events:none}
 .toast.show{opacity:1}
 [hidden]{display:none!important}
+html.embed body{padding:14px 16px 20px}
+html.embed .login{margin-top:6vh}
 </style>
 </head>
 <body>
@@ -95,6 +97,7 @@ input,select,textarea{font:500 1rem var(--body);color:var(--ink);background:var(
 <div class="toast" id="toast" role="status"></div>
 
 <script>
+if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add('embed');
 (function(){
   var KEY='bc_admin', token='';
   try{token=sessionStorage.getItem(KEY)||''}catch(e){}
