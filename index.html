@@ -603,6 +603,10 @@ input,textarea{cursor:text}
 .share-done{margin:0;font-weight:600;color:var(--leaf)}
 .plans{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
 .plan{min-width:0;grid-template-rows:auto auto auto 1fr auto}.plan .eyebrow,.plan h3{overflow-wrap:anywhere}.plan ul{align-content:start}.plan .p[data-tbd]{font:600 1rem/1.3 var(--body);color:var(--muted)}
+.tl{list-style:none;padding:0!important;margin:0;display:grid;gap:.5rem}
+.tl li{display:flex;gap:.6rem;align-items:flex-start}
+.dot{flex:none;width:12px;height:12px;border-radius:50%;margin-top:.4em}
+.btn.sm{padding:.35em .9em;font-size:.85rem;margin-left:.3rem}
 </style>
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23fde9d6%22/%3E%3Cg transform=%22translate(-1 0) scale(1.04) translate(-1 -2)%22%3E%3Cellipse cx=%2252%22 cy=%2258%22 rx=%2234%22 ry=%2226%22 fill=%22%239b6a45%22/%3E%3Crect x=%2230%22 y=%2234%22 width=%2244%22 height=%2240%22 rx=%2218%22 fill=%22%23a9774f%22/%3E%3Cellipse cx=%2238%22 cy=%2233%22 rx=%226%22 ry=%225%22 fill=%22%237a5236%22/%3E%3Cellipse cx=%2266%22 cy=%2233%22 rx=%226%22 ry=%225%22 fill=%22%237a5236%22/%3E%3Crect x=%2240%22 y=%2256%22 width=%2226%22 height=%2218%22 rx=%229%22 fill=%22%237a5236%22/%3E%3Ccircle cx=%2244%22 cy=%2247%22 r=%223%22 fill=%22%232b2119%22/%3E%3Ccircle cx=%2262%22 cy=%2247%22 r=%223%22 fill=%22%232b2119%22/%3E%3Cellipse cx=%2249%22 cy=%2261%22 rx=%222%22 ry=%221.5%22 fill=%22%232b2119%22/%3E%3Cellipse cx=%2257%22 cy=%2261%22 rx=%222%22 ry=%221.5%22 fill=%22%232b2119%22/%3E%3Crect x=%2270%22 y=%2220%22 width=%226%22 height=%2246%22 rx=%222%22 transform=%22rotate(20 73 43)%22 fill=%22%23f6c443%22/%3E%3C/g%3E%3C/svg%3E">
@@ -1305,7 +1309,8 @@ function run(key){
   const norm=v=>v.replace(/[\s,.;]/g,'').toUpperCase();
   const check=(Q,raw)=>{const v=norm(raw);if(!v)return false;
     return Q.text?Q.alts.some(x=>norm(x).replace(/Ё/g,'Е')===v.replace(/Ё/g,'Е')):Q.set?[...v].sort().join('')===[...Q.a].sort().join('')&&v.length===Q.a.length:v===Q.a};
-  const drawExam=()=>{
+  const drawExam=(M,G)=>{
+    const t0=Date.now();
     const taskHTML=(Q,k)=>{
       const list=Q.cols?`<div class="cols"><ul>${Q.cols[0].map(x=>`<li>${x}</li>`).join('')}</ul><ul>${Q.cols[1].map(x=>`<li>${x}</li>`).join('')}</ul></div>`
         :Q.o.length?`<ul class="${Q.grid?'grid-list':''}">${Q.o.map(x=>`<li>${x}</li>`).join('')}</ul>`:'';
@@ -1340,18 +1345,39 @@ function run(key){
         sol.innerHTML=`<p class="verdict ${ok?'ok':'no'}">${ok?'Верно':given?'Неверно':'Нет ответа'} · правильный ответ: ${Q.text?Q.alts.join(' или '):Q.a}</p><p class="explain">${Q.e}</p>`;sol.hidden=false;
         rows+=`<tr class="${ok?'ok':'no'}"><td>${Q.n}</td><td>${given?given.replace(/</g,'&lt;'):'—'}</td><td>${Q.text?Q.alts.join(' / '):Q.a}</td><td>${ok?'Верно':'Неверно'}</td></tr>`;
       });
-      const n=T.qs.length,r=score/n,F=feedback(key,score)||{},c=F.c||(r>=.8?'var(--leaf)':r>=.5?'var(--orange)':'#d0573f'),z=F.z||(r>=.8?'Сильная база':r>=.5?'Есть пробелы':'Нужна подготовка с нуля');
-      recordResult({test:T.title,score,max:n,label:z,wrong:T.qs.filter((Q,k)=>!check(Q,boxes(k).map(x=>x.value.trim()).join(''))).map(Q=>Q.n)});
+      const n=T.qs.length,EX=M.exams[key]||{},wrong=[],topics={},answersRec=[];let earned=0,max=0;
+      T.qs.forEach((Q,k)=>{const d=EX[Q.n]||{t:'cell',p:1},tp=topics[d.t]=topics[d.t]||{of:0,err:0,lost:0};
+        const ok=check(Q,boxes(k).map(x=>x.value.trim()).join('')),bsv=boxes(k).map(x=>x.value.trim());
+        max+=d.p;tp.of++;if(ok)earned+=d.p;else{tp.err++;tp.lost+=d.p;wrong.push(Q.n)}
+        answersRec.push({q:`Задание ${Q.n} · ${M.topics[d.t].name}`,a:`${bsv.some(Boolean)?bsv.join(' '):'—'} · ${ok?'верно':'неверно'}`})});
+      const share=earned/max*100,zone=share>=G.green?'green':share>=G.yellow?'yellow':'red',pos=100-share;
+      const tl=Object.keys(topics).map(t=>Object.assign({k:t,name:M.topics[t].name},topics[t])).sort((x,y)=>y.lost-x.lost||y.err/y.of-x.err/x.of);
+      const bad=tl.filter(t=>t.err),clean=tl.filter(t=>!t.err),N=weeksLeft(0),correct=T.qs.length-wrong.length;
+      const kt=bad.length+' '+plural(bad.length,'теме','темах','темах'),lostP=(max-earned)+' '+plural(max-earned,'балл','балла','баллов');
+      const Z=M.zones[zone],fill=x=>x.replace('{goal}',G.gen).replace('{kt}',kt).replace('{m}',tl.length).replace('{lost}',lostP).replace('{W}',weeksPhrase(N));
+      const dot=t=>t.err/t.of>=.5?'#d0573f':'var(--orange)';
+      const worst=bad[0],tr=worst&&M.topics[worst.k].trainer;
+      const secs=Math.round((Date.now()-t0)/1000);
+      recordResult({test:T.title,score:earned,max,label:ZN[zone].n,wrong});
       const sm=P.querySelector('#summary');
-      sm.innerHTML=`<div class="result"><p class="eyebrow">Результат · ${T.title}</p>
-        <p class="score">${score}<span style="font-size:.4em;color:var(--muted)"> / ${n}</span></p>
-        <span class="zone" style="background:color-mix(in srgb,${c} 18%,transparent);color:${c};justify-self:start">${z}</span>
-        <div class="res-wrap"><table class="res"><thead><tr><th>Задание</th><th>Ваш ответ</th><th>Правильный ответ</th><th>Результат</th></tr></thead><tbody>${rows}</tbody></table></div>
-        <p>${F.t||(r>=.8?'На диагностике проверим вторую часть и полный пробник.':'На диагностике разберём ошибки и составим план подготовки.')} Разбор каждого задания — ниже, под заданием.</p>
-        ${offerHTML()}
-        <div class="row"><button class="btn ghost" id="again2">Решить заново</button><button class="back" id="other">Выбрать другой тест</button></div></div>`;
+      sm.innerHTML=`<div class="result docres"><p class="eyebrow">Результат · ${T.title}</p>
+        <p class="q-text" style="margin:0">${M.scoreLine.replace('{s}','<b>'+earned+'</b>').replace('{m}','<b>'+max+'</b>')}</p>
+        ${scaleHTML(pos,zone)}
+        ${correct<=M.zeroMax?`<p class="zone reveal" style="background:color-mix(in srgb,#d0573f 18%,transparent);color:#d0573f;justify-self:start;margin:0">${M.zeroLine}</p>`:''}
+        <div class="reveal"><h3 class="zh">${fill(Z.h)}</h3><p>${fill(Z.t)}</p></div>
+        <p class="weeks reveal">${weekLine(window.__C,N)}</p>
+        <section class="risks reveal"><h3>${M.lostTitle}</h3>${bad.length?`<ul class="tl">${bad.map(t=>`<li><i class="dot" style="background:${dot(t)}"></i><span><b>${t.name}</b> — ${t.err} ${plural(t.err,'ошибка','ошибки','ошибок')} из ${t.of}</span></li>`).join('')}</ul>`:''}${clean.length?`<p class="muted">${M.cleanLine.replace('{list}',clean.map(t=>t.name.toLowerCase()).join(', '))}</p>`:''}</section>
+        <p class="strap reveal">${M.written}</p>
+        <section class="acts reveal"><h3>${M.weekTitle}</h3><ol>${worst?`<li>${tr?M.stepTrainer.replace('{t}',TESTS[tr].title):M.stepNoTrainer}${tr?` <button class="btn ghost sm" type="button" data-trainer="${tr}">${M.stepTrainerBtn}</button>`:''}</li>`:''}<li>${M.stepRetry}</li></ol></section>
+        ${shareHTML(window.__C)}
+        <section class="cta reveal"><h3>${M.ctaHead[zone]}</h3><p>${M.ctaNote}</p>${offerHTML()}<p class="muted fine">${M.ctaSub}</p></section>
+        <section class="reveal"><h3 class="zh">${M.tableTitle}</h3><div class="res-wrap"><table class="res"><thead><tr><th>Задание</th><th>Ваш ответ</th><th>Правильный ответ</th><th>Результат</th></tr></thead><tbody>${rows}</tbody></table></div><p class="muted fine">Разбор каждого задания — ниже, под заданием.</p></section>
+        <div class="row reveal"><button class="btn ghost" id="again2">Решить заново</button><button class="back" id="other">Выбрать другой тест</button></div></div>`;
       sm.hidden=false;
-      loadDoc('common').then(C=>examExtras(sm,C,key,T,T.qs.filter((Q,k)=>!check(Q,boxes(k).map(x=>x.value.trim()).join(''))).map(Q=>Q.n))).catch(()=>{});
+      const ridP=saveRecord({test:'mock-'+key,title:T.title,role:'Ученик',exam:key==='oge'?'ОГЭ':'ЕГЭ',goal:G.id,zone,pos,score:earned,max,seconds:secs,result:T.title,wrong,topics:bad.concat(clean).map(t=>({name:t.name,err:t.err,of:t.of,lost:t.lost})),answers:answersRec});
+      bindShare(sm,window.__C,{ridP,msg:c=>bad.length?c.share.mock.replace('{zone}',c.share.zoneWord[zone]).replace('{n}',kt):c.share.mock.replace('{zone}',c.share.zoneWord[zone]).replace('ошибки в {n}','почти без ошибок')});
+      sm.querySelectorAll('[data-trainer]').forEach(b=>b.onclick=async()=>{recEvent(await ridP,'trainer');go(b.dataset.trainer)});
+      animateResult(sm);
       P.querySelector('#fin-row').innerHTML=`<button class="btn ghost" id="again3">Решить заново</button><button class="back" id="bk2">← К выбору теста</button>`;
       P.querySelector('#again2').onclick=P.querySelector('#again3').onclick=()=>run(key);
       P.querySelector('#other').onclick=P.querySelector('#bk2').onclick=()=>go(backTo);
@@ -1375,11 +1401,19 @@ function run(key){
       <div class="row"><button class="back" id="again">${T.back==='close'?'Закрыть':T.back?'Выбрать другой тест':'Пройти другой тест'}</button></div></div>`;
     P.querySelector('#again').onclick=()=>go(backTo);
   };
-  T.kind==='input'?drawExam():draw();
+  // пробник: сначала вопрос о цели, от неё зависят пороги зон и текст результата
+  const examStart=async()=>{
+    let M;try{M=await loadDoc('mock');window.__C=await loadDoc('common')}catch(e){P.innerHTML='<div class="result"><p>Пробник не загрузился. Проверьте интернет и попробуйте ещё раз.</p><div class="row"><button class="btn ghost" id="rt">Повторить</button></div></div>';P.querySelector('#rt').onclick=()=>run(key);return}
+    P.innerHTML=`<div class="quiz"><p class="eyebrow">${T.title}</p><p class="q-text">${M.goalQ}</p><p class="muted" style="margin:0">${M.goalHint}</p><div class="opts">${M.goals.map(g=>`<button class="opt" data-g="${g.id}">${g.t}</button>`).join('')}</div><button class="back" id="bk" style="justify-self:start">← К выбору теста</button></div>`;
+    P.querySelector('#bk').onclick=()=>go(backTo);
+    P.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>drawExam(M,M.goals.find(g=>g.id===b.dataset.g)));
+  };
+  T.kind==='input'?examStart():draw();
 }
 // ---------- тесты из файлов данных: tests/t1.json, t2.json, t3.json, common.json ----------
 // Вопросы, баллы, пороги зон и тексты лежат в этих файлах, а не в коде — их можно править отдельно.
 const BASE=location.pathname.indexOf('/r/')===0?'/':'';
+window.__C=null; // общие тексты (tests/common.json), подгружаются заранее
 const DOCS={};
 async function loadDoc(id){if(DOCS[id])return DOCS[id];const r=await fetch(BASE+'tests/'+id+'.json');if(!r.ok)throw new Error('load');return DOCS[id]=await r.json()}
 const ZN={green:{n:'Зелёная зона',c:'var(--leaf)'},yellow:{n:'Жёлтая зона',c:'var(--orange)'},red:{n:'Красная зона',c:'#d0573f'}};
@@ -1431,6 +1465,7 @@ function bindShare(root,C,ctx){const wrap=root.querySelector('.share');if(!wrap)
     box.querySelector('[data-copy]').onclick=copy;
     const sd=box.querySelector('[data-send]');if(sd)sd.onclick=async()=>{try{await navigator.share({text:ta.value});ok(C.share.sent)}catch(e){if(!e||e.name!=='AbortError')copy()}}}}
 // ---------- запуск теста из файла данных ----------
+loadDoc('common').then(c=>{window.__C=c}).catch(()=>{});
 async function runDoc(id){
   const B0=openModal({t1:'Тест для родителей',t2:'Подбор формата',t3:'Тест на специальность'}[id]||'Тест');
   B0.innerHTML='<p class="muted">Загружаем тест…</p>';
@@ -1506,15 +1541,6 @@ async function runDoc(id){
   };
   start();
 }
-// пробник: шкала, счётчик недель и «Показать родителям» в итоге экзамена
-function examExtras(sm,C,key,T,wrong){const n=T.qs.length,share=wrong.length/n*100,zone=share<=25?'green':share<=50?'yellow':'red';
-  const N=weeksLeft(0);
-  sm.querySelector('.score').insertAdjacentHTML('afterend',scaleHTML(share,zone));
-  const off=sm.querySelector('.offer');
-  off.insertAdjacentHTML('beforebegin',`<p class="weeks reveal">${weekLine(C,N)}</p>${shareHTML(C)}`);
-  const ridP=saveRecord({test:'mock-'+key,title:T.title,role:'Ученик',exam:key==='oge'?'ОГЭ':'ЕГЭ',zone,pos:share,score:n-wrong.length,max:n,result:T.title,wrong});
-  bindShare(sm,C,{ridP,msg:c=>c.share.mock.replace('{zone}',c.share.zoneWord[zone]).replace('{n}',wrong.length+' '+plural(wrong.length,'задании','заданиях','заданиях'))});
-  animateResult(sm)}
 // ---------- страница для родителя: /r/<номер записи> ----------
 (async function(){const m=location.pathname.match(/^\/r\/([\w-]{4,16})$/);if(!m)return;
   const id=m[1];
@@ -1525,13 +1551,16 @@ function examExtras(sm,C,key,T,wrong){const n=T.qs.length,share=wrong.length/n*1
   startDiscount();
   recEvent(id,'viewed');
   const kind=rec.test==='t3'?'t3':'mock',N=weeksLeft(0),P=C.parent;
+  let MK=null;if(kind==='mock')try{MK=await loadDoc('mock')}catch(e){}
+  const topicsHTML=()=>{const tl=rec.topics||[],bad=tl.filter(t=>t.err),clean=tl.filter(t=>!t.err);
+    return `<h3>${P.topicsTitle}</h3>${bad.length?`<ul class="tl">${bad.map(t=>`<li><i class="dot" style="background:${t.err/t.of>=.5?'#d0573f':'var(--orange)'}"></i><span><b>${escH(t.name)}</b> — ${t.err} ${plural(t.err,'ошибка','ошибки','ошибок')} из ${t.of}</span></li>`).join('')}</ul>`:''}${clean.length?`<p class="muted">Без ошибок: ${clean.map(t=>escH(t.name.toLowerCase())).join(', ')}</p>`:''}`};
   const mid=kind==='t3'
-    ?`<section class="risks"><h3>${P.specTitle}</h3><p><b>${escH(rec.shown[0]||'')}</b>${rec.shown.length>1?`<br><span class="muted">Также подходит: ${rec.shown.slice(1).map(escH).join(', ')}</span>`:''}</p><h3>${P.readyTitle}</h3><p>${ZN[rec.zone].n}</p></section>`
-    :`<section class="risks"><h3>${P.wrongTitle}</h3><p>${rec.wrong&&rec.wrong.length?`Задания: <b>${rec.wrong.join(', ')}</b>. `:'Ошибок нет. '}${rec.max?`Верно: ${rec.score} из ${rec.max}.`:''}</p></section>`;
+    ?`<section class="risks"><h3>${P.specTitle}</h3><p><b>${escH(rec.shown[0]||'')}</b>${rec.shown.length>1?`<br><span class="muted">Также подходит: ${rec.shown.slice(1).map(escH).join(', ')}</span>`:''}</p><h3>${P.readyTitle}</h3><p>${ZN[rec.zone]?ZN[rec.zone].n:''}</p></section>`
+    :`<section class="risks">${rec.topics&&rec.topics.length?topicsHTML():`<h3>${P.wrongTitle}</h3><p>${rec.wrong&&rec.wrong.length?`Задания: <b>${rec.wrong.join(', ')}</b>.`:'Ошибок нет.'}</p>`}</section>`;
   if(!ZN[rec.zone]){B.innerHTML=`<div class="result"><p>${P.gone}</p></div>`;return}
   B.innerHTML=`<div class="result docres"><p class="q-text" style="margin:0">${P.lead[kind]}</p>${scaleHTML(rec.pos||0,rec.zone)}
-    <div class="reveal"><p>${fillN(P.zones[rec.zone],N)}</p></div><p class="weeks reveal">${weekLine(C,N)}</p>
-    <div class="reveal">${mid}</div>${ctaHTML(C,rec.zone,false)}
+    <div class="reveal"><p>${fillN((kind==='mock'&&P.zonesMock?P.zonesMock:P.zones)[rec.zone],N)}</p></div><p class="weeks reveal">${weekLine(C,N)}</p>
+    <div class="reveal">${mid}</div>${kind==='mock'&&MK?`<section class="cta reveal"><h3>${MK.ctaHead[rec.zone]}</h3>${offerHTML()}</section>`:ctaHTML(C,rec.zone,false)}
     <div class="row reveal"><button class="back" id="tp">${P.secondary}</button></div></div>`;
   B.querySelector('#tp').onclick=()=>{closeModal();location.hash='#tests';setTimeout(()=>runDoc('t1'),60)};
   animateResult(B)})();

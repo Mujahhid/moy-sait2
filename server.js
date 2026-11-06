@@ -119,6 +119,9 @@ function cleanRecord(d) {
     pos: num(d.pos, 100),
     score: num(d.score, 1000),
     max: num(d.max, 1000),
+    goal: ['med', 'vuz', 'pass'].includes(d.goal) ? d.goal : '',
+    seconds: num(d.seconds, 86400),
+    topics: Array.isArray(d.topics) ? d.topics.slice(0, 12).map((t) => ({ name: clip(t && t.name, 60), err: num(t && t.err, 100), of: num(t && t.of, 100), lost: num(t && t.lost, 1000) })).filter((t) => t.name) : [],
     result: clip(d.result, 200),          // тариф / специальность(и) / «пробник»
     shown: Array.isArray(d.shown) ? d.shown.slice(0, 12).map((x) => clip(x, 200)) : [],
     wrong: Array.isArray(d.wrong) ? d.wrong.slice(0, 40).map(Number).filter((n) => Number.isInteger(n) && n > 0 && n < 100) : [],
@@ -132,7 +135,7 @@ function cleanRecord(d) {
   return rec;
 }
 // что видит родитель по ссылке /r/<id> — только нужное для страницы, без телефонов и прочего
-const publicRecord = (r) => ({ id: r.id, test: r.test, title: r.title, exam: r.exam, zone: r.zone, pos: r.pos, score: r.score, max: r.max, result: r.result, shown: r.shown, wrong: r.wrong, createdAt: r.createdAt });
+const publicRecord = (r) => ({ goal: r.goal, topics: r.topics, id: r.id, test: r.test, title: r.title, exam: r.exam, zone: r.zone, pos: r.pos, score: r.score, max: r.max, result: r.result, shown: r.shown, wrong: r.wrong, createdAt: r.createdAt });
 
 // ---------- статические файлы ----------
 const FILES = {
@@ -149,7 +152,7 @@ const ICONS = {
 };
 Object.assign(FILES, ICONS);
 // данные тестов: вопросы, баллы, тексты лежат в отдельных файлах, их можно править без программиста
-for (const n of ['t1', 't2', 't3', 'common']) FILES['/tests/' + n + '.json'] = ['tests/' + n + '.json', 'application/json; charset=utf-8'];
+for (const n of ['t1', 't2', 't3', 'common', 'mock']) FILES['/tests/' + n + '.json'] = ['tests/' + n + '.json', 'application/json; charset=utf-8'];
 const ICON_FILES = new Set(Object.values(ICONS).map((x) => x[0]));
 const cache = {};
 function serveFile(res, name, type, head) {
@@ -193,6 +196,7 @@ const server = http.createServer(async (req, res) => {
       if (rm[2] && req.method === 'POST') {
         if (rateLimited('ev:' + clientIp(req), 120)) return send(res, 429, { error: 'too_many' });
         let data; try { data = JSON.parse(await readBody(req)); } catch { return send(res, 400, { error: 'bad_json' }); }
+        if (data.type === 'trainer') { rec.events = rec.events || {}; if (!rec.events.trainer) { rec.events.trainer = new Date().toISOString(); await saveRecords(); } return send(res, 200, { ok: true }); }
         if (['shared', 'viewed', 'cta'].includes(data.type)) {
           bumpStage(rec, data.type);
           if (data.type === 'viewed') rec.viewedBy = 'parent';

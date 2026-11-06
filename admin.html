@@ -197,6 +197,8 @@ if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add('e
     $('#rlist').innerHTML=rows.map(function(r){var lead=r.leadId&&leads.find(function(l){return l.id===r.leadId});
       return '<article class="rec" data-id="'+esc(r.id)+'" style="--c:'+(ZC[r.zone]||'var(--called)')+'"><div class="h"><b>'+esc(TESTN[r.test]||r.test)+'</b><span class="st">'+esc(STAGES[stIdx(r)][1])+'</span><span class="meta">'+fmtDate(r.createdAt)+' · '+esc(r.role)+(r.exam?' · '+esc(r.exam):'')+' · № '+esc(r.id)+'</span></div>'+
         '<div>'+(r.zone?'<span class="tag" style="background:'+ZC[r.zone]+';color:#fff">'+({green:'Зелёная',yellow:'Жёлтая',red:'Красная'})[r.zone]+' зона</span>':'')+esc(r.result||'')+(r.max?' <span class="muted">('+r.score+' / '+r.max+')</span>':'')+'</div>'+
+        (r.goal?'<div class="meta">Цель: <b>'+esc(({med:'бюджет в мед',vuz:'другой вуз с биологией',pass:'просто сдать хорошо'})[r.goal]||r.goal)+'</b>'+(r.seconds?' · время решения: '+Math.floor(r.seconds/60)+' мин '+(r.seconds%60)+' с':'')+((r.events||{}).trainer?' · <b>открывал тренажёр</b>':'')+'</div>':'')+
+        ((r.topics||[]).length?'<div class="meta">Темы: '+r.topics.map(function(t){return (t.err?'<b>':'')+esc(t.name)+' '+t.err+'/'+t.of+(t.err?'</b>':'')}).join(' · ')+'</div>':'')+
         (lead?'<div class="meta">Контакт: <b>'+esc(lead.name)+'</b> '+fmtPhone(lead.phone)+'</div>':'')+
         (utmStr(r.utm)?'<div class="meta">Метка: '+esc(utmStr(r.utm))+'</div>':'')+
         (r.wrong&&r.wrong.length?'<div class="meta">Ошибки в заданиях: '+r.wrong.join(', ')+'</div>':'')+
