@@ -618,7 +618,7 @@ document.documentElement.className+=' js';
             <li>Даём план подготовки до экзамена</li>
             <li>Подбираем идеальный формат под вас: курс, индивидуальные занятия или комплекс</li>
           </ol>
-          <div class="price" id="price-box"><span class="pl">Стоимость</span><b class="reg">2 500 ₽</b><small>Пройдите один из тестов — стоимость снизится до 2 000 ₽.</small></div>
+          <div class="price" id="price-box"><span class="pl">Стоимость</span><b class="reg">2 500 ₽</b></div>
         </div>
         <form id="lead">
           <label for="f-name">Имя<input id="f-name" required placeholder="Как к вам обращаться"></label>
@@ -860,7 +860,7 @@ const cdHTML=()=>`<span class="cd" data-cd>${fmtLeft(discUntil()-Date.now())}</s
 function renderPrice(){const el=document.getElementById('price-box');if(!el)return;const st=discState();
   el.innerHTML=st==='on'?`<span class="pl">Стоимость</span><s>${money(DISC.old)}</s><b>${money(DISC.now)}</b><small>Скидка за пройденный тест действует ещё ${cdHTML()}</small>`
     :st==='off'?`<span class="pl">Стоимость</span><b class="reg">${money(DISC.old)}</b><small>Время скидки вышло: она действовала ${hoursWord(DISC.hours)} после теста.</small>`
-    :`<span class="pl">Стоимость</span><b class="reg">${money(DISC.old)}</b><small>Пройдите один из тестов — стоимость снизится до ${money(DISC.now)} на ${hoursWord(DISC.hours)}.</small>`}
+    :`<span class="pl">Стоимость</span><b class="reg">${money(DISC.old)}</b>`}
 function offerHTML(){
   if(discState()==='on')return `<div class="offer"><p class="eyebrow">Ваша выгода за тест</p><div class="op"><s>${money(DISC.old)}</s><b>${money(DISC.now)}</b><i>−${money(DISC.old-DISC.now)}</i></div><p class="tm">Скидка на диагностику действует ещё ${cdHTML()}</p><a class="btn orange" href="#diagnostics">Записаться со скидкой</a></div>`;
   return `<div class="offer off"><p class="tm">Скидка за тест закончилась. Диагностика — ${money(DISC.old)}.</p><a class="btn orange" href="#diagnostics">Записаться на диагностику</a></div>`}
