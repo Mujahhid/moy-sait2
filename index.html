@@ -185,9 +185,18 @@ input,select{font:500 1rem var(--body);padding:.75rem .9rem;border-radius:12px;b
 .toggle button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 @media (max-width:860px){.plans{grid-template-columns:1fr}}
 
-footer{border-top:1px solid var(--line);padding-block:2.5rem;margin-top:2rem}
-.foot{display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:space-between;align-items:center}
-.foot .links{display:flex;gap:1rem;flex-wrap:wrap;font-weight:600}
+footer{background:var(--ink);color:var(--bg);padding-block:2.6rem 2rem;margin-top:3rem}
+.fcols{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:2rem 2.5rem}
+.fcol{display:grid;gap:.7rem;align-content:start}
+.fcol h4{margin:0 0 .2rem;font:700 1rem var(--display)}
+.fcol p{margin:0;font-size:.92rem;line-height:1.6;opacity:.88}
+.fcol a{color:inherit;text-decoration:none;opacity:.85;font-size:.92rem}
+.fcol a:hover,.fcol a:focus-visible{opacity:1;text-decoration:underline;text-underline-offset:3px}
+.fcol .freq{font-size:.78rem;opacity:.6}
+.fbrand .logo{color:var(--bg);margin-bottom:.2rem}
+.fnote{grid-column:1/-1;margin:.6rem 0 0;padding-top:1.1rem;border-top:1px solid color-mix(in srgb,var(--bg) 18%,transparent);font-size:.82rem;opacity:.65}
+.fnote a{color:inherit}
+@media (max-width:760px){.fcols{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 html{scroll-behavior:smooth;scroll-padding-top:80px}
 
@@ -451,7 +460,7 @@ html.js .nojs-note{display:none}
 .policy p{margin:0}
 .policy .ed{color:var(--muted);font-size:.85rem}
 .policy ul{margin:0;padding-left:1.2rem;display:grid;gap:.35rem}
-.policy .todo{background:color-mix(in srgb,var(--orange) 25%,transparent);border-radius:4px;padding:0 .25rem}
+.todo{background:color-mix(in srgb,var(--orange) 25%,transparent);border-radius:4px;padding:0 .25rem}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .f-err{margin:0;color:#ffb3a3;font-weight:600;font-size:.9rem}
 #lead button:disabled{opacity:.6;cursor:wait}
@@ -756,10 +765,27 @@ document.documentElement.className+=' js';
   </div>
 </div>
 <footer>
-  <div class="wrap foot">
-    <a class="logo" href="#top"><svg><use href="#capy"/></svg>bio_capybara</a>
-    
-    <span class="muted" style="font-size:.85rem"><a href="#privacy" class="pol" id="pol-link">Политика обработки персональных данных</a> · Попробуйте убежать морковкой от капибары · <a href="#admin" class="adm-link" id="adm-link">Вход для администратора</a></span>
+  <div class="wrap fcols">
+    <div class="fcol fbrand">
+      <a class="logo" href="#top"><svg><use href="#capy"/></svg>bio_capybara</a>
+      <p>Подготовка к ОГЭ и ЕГЭ по биологии: тесты, тренажёры и диагностика с преподавателем-врачом.</p>
+      <p class="freq" id="f-req"></p>
+    </div>
+    <div class="fcol">
+      <h4>Ученикам и родителям</h4>
+      <a href="#benefit">Тесты и уроки</a>
+      <a href="#diagnostics">Диагностика</a>
+      <a href="#about">Преподаватели</a>
+      <a href="#plans">Курсы и занятия</a>
+      <a href="#privacy" class="pol" id="pol-link">Обработка персональных данных</a>
+    </div>
+    <div class="fcol">
+      <h4>Связь</h4>
+      <p id="f-phone"></p>
+      <p id="f-mail"></p>
+      <a href="#diagnostics">Записаться на диагностику</a>
+    </div>
+    <p class="fnote">Попробуйте убежать морковкой от капибары · <a href="#admin" class="adm-link" id="adm-link">Вход для администратора</a></p>
   </div>
 </footer>
 
@@ -961,6 +987,11 @@ function policyHTML(){const O=OPERATOR,f=v=>/^\[/.test(v)?`<span class="todo">${
   <h3>11. Изменения политики</h3>
   <p>Оператор вправе вносить изменения в настоящую политику. Действующая редакция всегда размещена на этой странице.</p>
   </div>`}
+(function(){const O=OPERATOR,f=v=>/^\[/.test(v)?`<span class="todo">${v}</span>`:v,
+  req=document.getElementById('f-req'),ph=document.getElementById('f-phone'),ml=document.getElementById('f-mail');
+  if(req)req.innerHTML=`${f(O.name)} · ИНН ${f(O.inn)} · ОГРНИП ${f(O.ogrnip)}`;
+  if(ph)ph.innerHTML=/^\[/.test(O.phone)?f(O.phone):`<a href="tel:${O.phone.replace(/[^\d+]/g,'')}">${O.phone}</a>`;
+  if(ml)ml.innerHTML=/^\[/.test(O.email)?f(O.email):`<a href="mailto:${O.email}">${O.email}</a>`})();
 function openPolicy(){const B=openModal('Политика обработки персональных данных','Закрыть ✕');B.innerHTML=policyHTML();B.scrollTop=0}
 document.addEventListener('click',e=>{const a=e.target.closest('a[href="#privacy"]');if(a){e.preventDefault();openPolicy()}});
 if(location.hash==='#privacy')setTimeout(openPolicy,0);
