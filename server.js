@@ -98,7 +98,7 @@ function cleanResults(list) {
 // ---------- CRM: записи семей ----------
 // stage двигается с сайта только вперёд; shared и parent_opened этап не меняют, только пишутся в events
 const SITE_ORDER = ['test_done', 'clicked_signup', 'claimed', 'paid', 'scheduled', 'diag_done', 'bought'];
-const ALL_STAGES = [...SITE_ORDER, 'lost'];
+const ALL_STAGES = [...SITE_ORDER, 'shared', 'parent_opened', 'lost'];
 const TRACK_EVENTS = ['test_done', 'shared', 'parent_opened', 'clicked_signup', 'claimed', 'trainer'];
 const ID_RE = /^[\w-]{4,16}$/;
 const KINDS = ['probnik', 'risk', 'specialty', 'format', 'trainer'];
@@ -183,6 +183,18 @@ function applyTrack(d) {
   if (advance && rec.stage !== 'lost' && SITE_ORDER.indexOf(advance) > SITE_ORDER.indexOf(rec.stage)) rec.stage = advance;
   rec.updated_at = nowIso();
   return { code: 200, body: { ok: true } };
+}
+// Как запись видит CRM. Пока платёжный сервис не подключён (шаг 7 инструкции), оплата диагностики идёт переводом
+// по СБП и кнопкой «Я оплатил» (этап claimed). В новой CRM такого этапа нет, поэтому показываем его как «paid»,
+// чтобы человек попал в колонку «Оплатил — позвонить», и добавляем заметку с суммой — команда сверяет поступление.
+// В payments ничего не пишем: это не подтверждённый платёж, выручка в CRM его не считает. В базе этап остаётся claimed.
+function crmView(r) {
+  if (r.stage !== 'claimed') return r;
+  const ev = (r.events || []).find((e) => e.type === 'claimed');
+  const pay = r.payment || {};
+  const text = `Сообщил о переводе по СБП${pay.amount ? ' ' + pay.amount + ' ₽' : ''}${pay.payer ? ', отправитель: ' + pay.payer : ''}${r.diagnostic && r.diagnostic.teacher ? ', преподаватель: ' + r.diagnostic.teacher : ''}. Проверьте поступление в банке.`;
+  return { ...r, stage: 'paid', events: [...(r.events || []), { at: (ev && ev.at) || r.updated_at || r.created_at, type: 'paid' }],
+    notes: [{ at: (ev && ev.at) || r.updated_at || r.created_at, author: 'Сайт', text }, ...(r.notes || [])] };
 }
 // что видит родитель по ссылке /r/<id>: последний тест семьи, без контактов и платежей
 function publicRecord(r) {
@@ -280,7 +292,7 @@ const server = http.createServer(async (req, res) => {
     }
     if (p.startsWith('/api/crm/')) {
       if (!crmAuthed(req)) return send(res, 401, { error: 'unauthorized' }, undefined, { 'Cache-Control': 'no-store' });
-      if (p === '/api/crm/records' && req.method === 'GET') return send(res, 200, { records }, undefined, { 'Cache-Control': 'no-store' });
+      if (p === '/api/crm/records' && req.method === 'GET') return send(res, 200, { records: records.map(crmView) }, undefined, { 'Cache-Control': 'no-store' });
       const cm = p.match(/^\/api\/crm\/records\/([\w-]{4,16})(\/notes)?$/);
       if (cm) {
         const rec = records.find((r) => r.id === cm[1]);
@@ -295,19 +307,22 @@ const server = http.createServer(async (req, res) => {
           return send(res, 201, { ok: true });
         }
         if (!cm[2] && req.method === 'PATCH') {
-          if (ALL_STAGES.includes(data.stage)) rec.stage = data.stage;
+          // CRM показывает claimed как paid (см. crmView): если команда не трогала этап, не перезаписываем claimed
+          if (ALL_STAGES.includes(data.stage) && !(rec.stage === 'claimed' && data.stage === 'paid')) rec.stage = data.stage;
           // события только дополняем: сайт мог добавить свои, пока CRM была открыта
           if (Array.isArray(data.events)) {
             const have = new Set((rec.events || []).map((e) => e.type + '|' + e.at));
             for (const e of data.events.slice(0, 100)) {
+              if (e && e.type === 'paid' && rec.stage === 'claimed') continue; // «paid» — из crmView, а не настоящая оплата
               const type = clip(e && e.type, 30), at = (e && typeof e.at === 'string' && !isNaN(Date.parse(e.at))) ? new Date(e.at).toISOString() : null;
               if (type && at && !have.has(type + '|' + at)) { rec.events.push({ at, type }); have.add(type + '|' + at); }
             }
           }
-          for (const k of ['contact', 'payment', 'diagnostic', 'sale']) if (data[k] && typeof data[k] === 'object' && !Array.isArray(data[k])) rec[k] = JSON.parse(JSON.stringify(data[k]));
+          // по инструкции CRM меняет только contact и diagnostic; оплаты (payment/payments) через CRM не меняются
+          for (const k of ['contact', 'diagnostic']) if (data[k] && typeof data[k] === 'object' && !Array.isArray(data[k])) rec[k] = JSON.parse(JSON.stringify(data[k]));
           if (typeof data.lost_reason === 'string') rec.lost_reason = clip(data.lost_reason, 200);
           rec.updated_at = nowIso(); await saveRecords();
-          return send(res, 200, { record: rec });
+          return send(res, 200, { record: crmView(rec) });
         }
       }
       return send(res, 404, { error: 'not_found' });
