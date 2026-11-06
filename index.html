@@ -565,6 +565,43 @@ input,textarea{cursor:text}
 #pet .nom.show{animation:nom 1.1s ease-out}
 @keyframes nom{0%{opacity:0;transform:translate(-50%,6px) scale(.6)}20%{opacity:1;transform:translate(-50%,0) scale(1.1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-14px)}}
 @media (prefers-reduced-motion:reduce){#pet.walk .la,#pet.walk .lb,#pet.walk .sprite svg{animation:none}}
+
+/* ---------- шкала и результаты тестов из файлов данных ---------- */
+.docres{max-width:680px}
+.scale{display:grid;gap:.5rem;margin:.4rem 0}
+.sc-bar{position:relative;height:22px;border-radius:999px;background:linear-gradient(90deg,#3fa66b 0%,#e9b93a 50%,#d0573f 100%)}
+.sc-mk{position:absolute;top:50%;left:4%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:var(--bg);border:4px solid var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.35);transition:left 1.5s cubic-bezier(.3,.1,.25,1)}
+.sc-mk em{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;font:600 .75rem var(--body);font-style:normal;background:var(--ink);color:var(--bg);padding:.2rem .6rem;border-radius:999px}
+.sc-mk em::after{content:"";position:absolute;top:100%;left:50%;margin-left:-5px;border:5px solid transparent;border-top-color:var(--ink)}
+.sc-bar{margin-top:2.2rem}
+.sc-mk.end em{left:auto;right:-8px;transform:none}.sc-mk.end em::after{left:auto;right:20px;margin:0}
+.sc-lb{display:flex;justify-content:space-between;font:500 .75rem var(--mono);color:var(--muted)}
+.sc-zone{font:800 clamp(1.8rem,6vw,2.6rem)/1.1 var(--display);margin:.2rem 0 0}
+.reveal{opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s}
+.reveal.on{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{transition:none}.sc-mk{transition:none}}
+.docres .zh{font:700 1.3rem/1.3 var(--display);margin:0 0 .4rem}
+.docres h3{margin:0}
+.weeks{display:inline-block;justify-self:start;font:600 1rem var(--body);background:var(--orange-soft);color:var(--orange-ink);border-radius:999px;padding:.45em 1em;margin:0}
+.risks,.acts,.cta{display:grid;gap:.6rem;padding:1.1rem 1.2rem;border-radius:18px;background:var(--surface);border:1.5px solid var(--line)}
+.risks h3,.acts h3,.cta h3{font:700 1.1rem var(--display)}
+.risks ul,.acts ol,.cta ul{margin:0;padding-left:1.2rem;display:grid;gap:.5rem}
+.risks p,.cta p{margin:0}
+.cta{border-color:var(--ink)}
+.cta .fine,.fine{font-size:.85rem;margin:0}
+.tariff{font:800 clamp(1.9rem,6vw,2.6rem)/1.1 var(--display);color:var(--orange)}
+.strap{font-weight:600;margin:0;border-left:3px solid var(--orange);padding-left:.8rem}
+.specs{display:grid;gap:.8rem}
+.spec{display:grid;gap:.4rem;padding:1rem 1.1rem;border-radius:18px;background:var(--surface);border:1.5px solid var(--line)}
+.spec p{margin:0;font-size:.95rem}
+.spec h3{font:700 1.1rem var(--display)}
+.spec.big{border:2px solid var(--ink);box-shadow:5px 5px 0 var(--orange)}
+.spec.big h3{font-size:1.6rem}
+.share{display:grid;gap:.7rem;justify-items:start}
+.share-box{display:grid;gap:.6rem;width:100%}
+.share-box textarea{width:100%;font:500 .95rem/1.5 var(--body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:.8rem 1rem;resize:vertical}
+.share-done{margin:0;font-weight:600;color:var(--leaf)}
+.plans{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
 </style>
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23fde9d6%22/%3E%3Cg transform=%22translate(-1 0) scale(1.04) translate(-1 -2)%22%3E%3Cellipse cx=%2252%22 cy=%2258%22 rx=%2234%22 ry=%2226%22 fill=%22%239b6a45%22/%3E%3Crect x=%2230%22 y=%2234%22 width=%2244%22 height=%2240%22 rx=%2218%22 fill=%22%23a9774f%22/%3E%3Cellipse cx=%2238%22 cy=%2233%22 rx=%226%22 ry=%225%22 fill=%22%237a5236%22/%3E%3Cellipse cx=%2266%22 cy=%2233%22 rx=%226%22 ry=%225%22 fill=%22%237a5236%22/%3E%3Crect x=%2240%22 y=%2256%22 width=%2226%22 height=%2218%22 rx=%229%22 fill=%22%237a5236%22/%3E%3Ccircle cx=%2244%22 cy=%2247%22 r=%223%22 fill=%22%232b2119%22/%3E%3Ccircle cx=%2262%22 cy=%2247%22 r=%223%22 fill=%22%232b2119%22/%3E%3Cellipse cx=%2249%22 cy=%2261%22 rx=%222%22 ry=%221.5%22 fill=%22%232b2119%22/%3E%3Cellipse cx=%2257%22 cy=%2261%22 rx=%222%22 ry=%221.5%22 fill=%22%232b2119%22/%3E%3Crect x=%2270%22 y=%2220%22 width=%226%22 height=%2246%22 rx=%222%22 transform=%22rotate(20 73 43)%22 fill=%22%23f6c443%22/%3E%3C/g%3E%3C/svg%3E">
@@ -916,15 +953,12 @@ document.documentElement.className+=' js';
   <!-- 7. Тарифы -->
   <section>
     <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">Тарифы</p><h2>Курсы и занятия</h2><p class="muted">Цены в демо условные <span class="demo-tag">заменить</span></p></div>
-      <div class="toggle" role="group" aria-label="Период оплаты">
-        <button id="pay-month" aria-pressed="true" data-period="month">Помесячно</button>
-        <button id="pay-year" aria-pressed="false" data-period="year">Весь год</button>
-      </div>
+      <div class="sec-head"><p class="eyebrow">Тарифы</p><h2>Курсы и занятия</h2><p class="muted">Стоимость тарифов уточняется <span class="demo-tag">заменить</span></p></div>
       <div class="plans">
-        <article class="plan"><p class="eyebrow">9 класс</p><h3>Курс ОГЭ</h3><p class="p" data-m="4 900" data-y="39 000"></p><ul><li>2 урока в неделю в группе</li><li>Домашние задания с проверкой</li><li>Пробник каждый месяц</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
-        <article class="plan hot"><p class="eyebrow">10–11 класс</p><h3>Курс ЕГЭ</h3><p class="p" data-m="6 900" data-y="55 000"></p><ul><li>3 урока в неделю в группе</li><li>Разбор второй части по критериям</li><li>Чат с преподавателем</li><li>Пробник каждый месяц</li></ul><a class="btn orange" href="#diagnostics">Начать с диагностики</a></article>
-        <article class="plan"><p class="eyebrow">Индивидуально</p><h3>Занятия 1 на 1</h3><p class="p" data-m="2 500" data-y="" data-unit="за занятие"></p><ul><li>Программа под цель ученика</li><li>Выбор преподавателя: Ислам или Абу-Бакр</li><li>Удобное время</li></ul><a class="btn ghost" href="#diagnostics">Подобрать время</a></article>
+        <article class="plan" data-tariff="basic"><p class="eyebrow">Самостоятельный формат</p><h3>CapyBasic</h3><p class="p" data-tbd></p><ul><li>Вебинары дважды в неделю</li><li>Конспекты</li><li>Домашние задания в формате экзамена</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
+        <article class="plan" data-tariff="comfort"><p class="eyebrow">С контролем</p><h3>Comfort-bara</h3><p class="p" data-tbd></p><ul><li>Письменные домашние и пробники проверяют индивидуально</li><li>Каждую неделю — отчёт об успеваемости</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
+        <article class="plan" data-tariff="pro"><p class="eyebrow">С индивидуальными занятиями</p><h3>Capybarin-Pro</h3><p class="p" data-tbd></p><ul><li>Раз в неделю индивидуальное занятие</li><li>Преподаватель находит и закрывает пробелы</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
+        <article class="plan" data-tariff="max"><p class="eyebrow">Лично с Исламом</p><h3>Capybarin-Pro MAX</h3><p class="p" data-tbd></p><ul><li>Индивидуальные занятия ведёт лично Ислам</li><li>Раз в неделю индивидуальное занятие</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
       </div>
 
     </div>
@@ -1050,23 +1084,6 @@ document.documentElement.className+=' js';
 
 // ---------- tests ----------
 const TESTS={
-  parent:{title:'Диагностика успеха',kind:'score',qs:[
-    {q:'В каком классе ребёнок?',o:[['9 класс, ОГЭ',2],['10 класс',3],['11 класс, ЕГЭ в этом году',1]]},
-    {q:'Сколько часов в неделю он сейчас занимается биологией?',o:[['Почти не занимается',0],['1–2 часа',1],['3–5 часов',2],['Больше 5 часов',3]]},
-    {q:'Какой результат был на последнем пробнике?',o:[['Не писал пробник',0],['Ниже 40 баллов',1],['40–60 баллов',2],['Выше 60 баллов',3]]},
-    {q:'Понятна ли ему цель — вуз и профессия?',o:[['Пока нет',0],['Примерно',1],['Да, медицинский или биологический',3]]},
-    {q:'Кто сейчас контролирует подготовку?',o:[['Никто, сам',0],['Школьный учитель',1],['Репетитор или курс',2]]}
-  ],res:s=>s>=10?{z:'Зелёная зона',c:'var(--leaf)',t:'Хорошая база. Диагностика покажет, где добрать последние баллы до высокого результата.'}
-              :s>=6?{z:'Жёлтая зона',c:'var(--orange)',t:'Есть риск недобрать баллы. Нужен план по темам и регулярные пробники.'}
-              :{z:'Красная зона',c:'#d0573f',t:'Подготовку важно начать системно уже сейчас. На диагностике составим план и посчитаем реальный срок.'},max:15},
-  prof:{title:'Кем тебе стать?',kind:'type',qs:[
-    {q:'Что тебе интереснее в биологии?',o:[['Как устроен и болеет человек','doc'],['Почему всё работает именно так','sci'],['Лекарства и химия живого','pharm']]},
-    {q:'Выбери идеальный рабочий день',o:[['Приём пациентов и операции','doc'],['Лаборатория и эксперименты','sci'],['Разработка нового препарата','pharm']]},
-    {q:'Какой предмет кроме биологии даётся легче?',o:[['Русский — люблю общаться','doc'],['Математика и физика','sci'],['Химия','pharm']]},
-    {q:'Что для тебя важнее?',o:[['Помогать конкретным людям','doc'],['Открыть что-то новое','sci'],['Сделать что-то для миллионов','pharm']]}
-  ],types:{doc:{z:'Врач',t:'Тебе в медицинский. Биология и химия — профильные, нужен высокий балл ЕГЭ.'},
-           sci:{z:'Учёный-биолог',t:'Тебе подойдут биофак, генетика, биотех. Биология — ключевой экзамен.'},
-           pharm:{z:'Фармацевт / биотехнолог',t:'Фармацевтический или химико-биологический профиль: биология + химия.'}}},
   oge:{title:'Пробник ОГЭ',kind:'input',back:'subject',qs:[
     {n:1,q:'Растение на подоконнике постепенно поворачивает листья к окну. Какое общее свойство живых организмов иллюстрирует этот пример?',o:[],f:'Одно слово',text:1,a:'раздражимость',alts:['раздражимость','фототропизм'],e:'Способность реагировать на внешние воздействия — раздражимость. Поворот растения к свету называют фототропизмом.'},
     {n:2,q:'Установите соответствие между организмами и царствами живой природы.',cols:[['А) мухомор красный','Б) холерный вибрион','В) клевер луговой','Г) дождевой червь'],['1) Растения','2) Животные','3) Грибы','4) Бактерии']],f:'Запишите цифры в порядке букв АБВГ',a:'3412',e:'Мухомор — гриб, холерный вибрион — бактерия, клевер — растение, дождевой червь — животное.'},
@@ -1158,12 +1175,12 @@ function renderPrice(){const els=document.querySelectorAll('[data-pb]');if(!els.
     :st==='off'?`<span class="pl">Стоимость</span><b class="reg">${money(DISC.old)}</b><small>Время скидки вышло: она действовала ${hoursWord(DISC.hours)} после теста.</small>`
     :`<span class="pl">Стоимость</span><b class="reg">${money(DISC.old)}</b>`;
   els.forEach(e=>{e.innerHTML=html})}
-function offerHTML(){
-  if(discState()==='on')return `<div class="offer"><p class="eyebrow">Ваша выгода за тест</p><div class="op"><s>${money(DISC.old)}</s><b>${money(DISC.now)}</b><i>−${money(DISC.old-DISC.now)}</i></div><p class="tm">Скидка на диагностику действует ещё ${cdHTML()}</p><a class="btn orange" href="#book">Записаться со скидкой</a></div>`;
-  return `<div class="offer off"><p class="tm">Скидка за тест закончилась. Диагностика — ${money(DISC.old)}.</p><a class="btn orange" href="#book">Записаться на диагностику</a></div>`}
+function offerHTML(lb){const a=lb?` data-lb="${lb.replace(/"/g,'&quot;')}"`:'';
+  if(discState()==='on')return `<div class="offer"${a}><p class="eyebrow">Ваша выгода за тест</p><div class="op"><s>${money(DISC.old)}</s><b>${money(DISC.now)}</b><i>−${money(DISC.old-DISC.now)}</i></div><p class="tm">Скидка на диагностику действует ещё ${cdHTML()}</p><a class="btn orange" href="#book">${lb||'Записаться со скидкой'}</a></div>`;
+  return `<div class="offer off"${a}><p class="tm">${discState()==='off'?'Скидка за тест закончилась. ':''}Диагностика — ${money(DISC.old)}.</p><a class="btn orange" href="#book">${lb||'Записаться на диагностику'}</a></div>`}
 setInterval(()=>{const left=discUntil()-Date.now(),t=fmtLeft(left);
   document.querySelectorAll('[data-cd]').forEach(e=>{e.textContent=t});
-  if(discUntil()&&left<=0&&!tickDone){tickDone=true;renderPrice();document.querySelectorAll('.offer').forEach(e=>{e.outerHTML=offerHTML()})}
+  if(discUntil()&&left<=0&&!tickDone){tickDone=true;renderPrice();document.querySelectorAll('.offer').forEach(e=>{e.outerHTML=offerHTML(e.dataset.lb)})}
   if(left>0)tickDone=false},1000);
 let tickDone=false;
 renderPrice();
@@ -1193,7 +1210,7 @@ const DLG=document.getElementById('test-modal'),DLG_BODY=document.getElementById
 function openModal(title,closeLabel,side){DLG.classList.toggle('side',!!side);document.getElementById('tm-title').textContent=title;document.getElementById('tm-close').textContent=closeLabel||'Выйти из теста ✕';if(DLG.hidden){DLG.hidden=false;document.documentElement.classList.add('modal-open');try{document.getElementById('tm-close').focus({preventScroll:true})}catch(e){}}DLG_BODY.scrollTop=0;return DLG_BODY}
 function closeModal(){if(!DLG.hidden){DLG.hidden=true;DLG.dispatchEvent(new Event('close'))}}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!DLG.hidden)closeModal()});
-DLG.addEventListener('close',()=>{document.documentElement.classList.remove('modal-open');DLG_BODY.innerHTML='';DLG_BODY.classList.remove('adm-body');if(location.hash==='#admin'||location.hash==='#privacy'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}});
+DLG.addEventListener('close',()=>{document.documentElement.classList.remove('modal-open');if(location.pathname.indexOf('/r/')===0){try{history.replaceState(null,'','/'+location.search+location.hash)}catch(e){}}DLG_BODY.innerHTML='';DLG_BODY.classList.remove('adm-body');if(location.hash==='#admin'||location.hash==='#privacy'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}});
 // ---------- панель заявок внутри сайта (видна только после ввода пароля) ----------
 function openAdmin(){const B=openModal('Панель заявок','Закрыть ✕',true);B.classList.add('adm-body');B.innerHTML='<iframe class="adm-frame" src="/admin?embed=1" title="Панель заявок"></iframe>';}
 document.getElementById('adm-link').addEventListener('click',e=>{e.preventDefault();openAdmin()});
@@ -1249,7 +1266,7 @@ if(location.hash==='#admin')setTimeout(openAdmin,0);
 addEventListener('hashchange',()=>{if(location.hash==='#admin')openAdmin()});
 document.getElementById('tm-close').onclick=closeModal;
 DLG.addEventListener('click',e=>{if(e.target===DLG)closeModal();const a=e.target.closest('a[href^="#"]');if(a)closeModal()});
-const go=k=>{closeModal();k==='close'?0:k==='home'?home():MENUS[k]?menu(k):window.TRAINERS&&TRAINERS[k]?openTrainer(k):run(k)};
+const go=k=>{closeModal();k==='close'?0:k==='home'?home():['t1','t2','t3'].includes(k)?runDoc(k):MENUS[k]?menu(k):window.TRAINERS&&TRAINERS[k]?openTrainer(k):run(k)};
 function menu(key){
   const M=MENUS[key];
   P.innerHTML=`<div style="display:grid;gap:1.2rem"><p class="eyebrow">${M.title}</p><div class="who">${M.items.map(([k,tag,h,d])=>`<button class="choice" data-t="${k}"><span class="k">${tag}</span><h3>${h}</h3><span class="muted">${d}</span></button>`).join('')}</div><button class="back" id="bk" style="justify-self:start">← Назад</button></div>`;
@@ -1333,6 +1350,7 @@ function run(key){
         ${offerHTML()}
         <div class="row"><button class="btn ghost" id="again2">Решить заново</button><button class="back" id="other">Выбрать другой тест</button></div></div>`;
       sm.hidden=false;
+      loadDoc('common').then(C=>examExtras(sm,C,key,T,T.qs.filter((Q,k)=>!check(Q,boxes(k).map(x=>x.value.trim()).join(''))).map(Q=>Q.n))).catch(()=>{});
       P.querySelector('#fin-row').innerHTML=`<button class="btn ghost" id="again3">Решить заново</button><button class="back" id="bk2">← К выбору теста</button>`;
       P.querySelector('#again2').onclick=P.querySelector('#again3').onclick=()=>run(key);
       P.querySelector('#other').onclick=P.querySelector('#bk2').onclick=()=>go(backTo);
@@ -1358,15 +1376,174 @@ function run(key){
   };
   T.kind==='input'?drawExam():draw();
 }
+// ---------- тесты из файлов данных: tests/t1.json, t2.json, t3.json, common.json ----------
+// Вопросы, баллы, пороги зон и тексты лежат в этих файлах, а не в коде — их можно править отдельно.
+const BASE=location.pathname.indexOf('/r/')===0?'/':'';
+const DOCS={};
+async function loadDoc(id){if(DOCS[id])return DOCS[id];const r=await fetch(BASE+'tests/'+id+'.json');if(!r.ok)throw new Error('load');return DOCS[id]=await r.json()}
+const ZN={green:{n:'Зелёная зона',c:'var(--leaf)'},yellow:{n:'Жёлтая зона',c:'var(--orange)'},red:{n:'Красная зона',c:'#d0573f'}};
+const plural=(n,a,b,c)=>{const m=n%10,t=n%100;return m===1&&t!==11?a:[2,3,4].includes(m)&&![12,13,14].includes(t)?b:c};
+// недель до экзамена: дата берётся из EXAM_DATE (та же, что в счётчике шапки); для 10 и 8 классов — плюс год
+function weeksLeft(years){const d=new Date(EXAM_DATE+'T10:00:00+03:00');d.setFullYear(d.getFullYear()+(years||0));return Math.floor((d-Date.now())/6048e5)}
+const weeksPhrase=n=>n<1?'меньше недели':n+' '+plural(n,'неделя','недели','недель');
+const fillN=(s,n)=>String(s).replace(/\{N\}/g,weeksPhrase(n));
+const weekLine=(C,n)=>C.weekLine.replace('{O}',n%10===1&&n%100!==11?'осталась':'осталось').replace('{N}',weeksPhrase(n));
+const escH=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const zoneOf=(zones,sum)=>zones.find(z=>sum<=z.max)||zones[zones.length-1];
+// ---------- метки (utm) и записи для будущей CRM ----------
+const UTM=(()=>{let u={};try{u=JSON.parse(localStorage.getItem('bc_utm')||'{}')||{}}catch(e){}
+  const q=new URLSearchParams(location.search);let ch=false;
+  for(const k of ['source','medium','campaign','content','term']){const v=q.get('utm_'+k);if(v){u[k]=v.slice(0,80);ch=true}}
+  if(ch)try{localStorage.setItem('bc_utm',JSON.stringify(u))}catch(e){}return u})();
+let CUR_RID=null;try{CUR_RID=localStorage.getItem('bc_rid')||null}catch(e){}
+const jpost=(url,body)=>fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+async function saveRecord(p){try{const r=await jpost('/api/records',Object.assign({utm:UTM},p));if(r.ok){const j=await r.json();CUR_RID=j.id;try{localStorage.setItem('bc_rid',j.id)}catch(e){}return j.id}}catch(e){}return null}
+function recEvent(id,type){if(!id)return;try{jpost('/api/records/'+id+'/event',{type}).catch(()=>{})}catch(e){}}
+document.addEventListener('click',e=>{if(e.target.closest('#test-modal a[href="#book"]'))recEvent(CUR_RID,'cta')},true); // на фазе захвата: окно теста закрывается раньше
+document.addEventListener('click',e=>{
+  const mk=e.target.closest('[data-mock]');if(mk){e.preventDefault();closeModal();location.hash='#tests';menu('subject')}
+  const pl=e.target.closest('[data-plan]');if(pl){e.preventDefault();closeModal();location.hash='#courses';setTimeout(()=>{const t=document.querySelector(`.plan[data-tariff="${pl.dataset.plan}"]`);document.querySelectorAll('.plan').forEach(x=>x.classList.toggle('hot',x===t));if(t)t.scrollIntoView({block:'center',behavior:'smooth'})},80)}
+});
+// ---------- шкала: метка едет слева за 1,5 с, текст появляется после остановки ----------
+function scaleHTML(pos,zone){return `<div class="scale"><div class="sc-bar"><i class="sc-mk" data-pos="${pos}"><em>Вы здесь</em></i></div><div class="sc-lb"><span>Низкий риск</span><span>Высокий риск</span></div><p class="sc-zone reveal" style="color:${ZN[zone].c}">${ZN[zone].n}</p></div>`}
+function animateResult(root){const mk=root.querySelector('.sc-mk'),rv=[...root.querySelectorAll('.reveal')];
+  const done=()=>rv.forEach(e=>e.classList.add('on'));
+  if(!mk){done();return}
+  const to=4+Math.min(100,Math.max(0,+mk.dataset.pos||0))*.92;if(to>78)mk.classList.add('end');
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches){mk.style.transition='none';mk.style.left=to+'%';done();return}
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{mk.style.left=to+'%'}));
+  setTimeout(done,1600)}
+// ---------- блок-призыв на диагностику ----------
+function ctaHTML(C,zone,student){const z=C.cta.zones[zone]||C.cta.zones.yellow;
+  return `<section class="cta reveal"><h3>${z.h}</h3><p>${C.cta.bridge}</p><p class="eyebrow">${C.cta.bulletsTitle}</p><ul>${C.cta.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>${offerHTML(student?C.cta.student.btn:null)}<p class="muted fine">${C.cta.fine}</p>${student?`<p class="muted fine">${C.cta.student.sub}</p>`:''}</section>`}
+// ---------- «Показать родителям» ----------
+const shareHTML=C=>`<div class="share reveal"><button class="btn orange" type="button" data-share>${C.share.button}</button><div class="share-box" hidden></div></div>`;
+function bindShare(root,C,ctx){const wrap=root.querySelector('.share');if(!wrap)return;const box=wrap.querySelector('.share-box'),btn=wrap.querySelector('[data-share]');
+  btn.onclick=async()=>{const rid=await ctx.ridP;
+    const link=rid?location.origin+'/r/'+rid:location.origin+location.pathname+'#diagnostics';
+    const text=ctx.msg(C).replace('{link}',link);
+    const canShare=!!navigator.share&&matchMedia('(pointer:coarse)').matches;
+    box.hidden=false;btn.hidden=true;
+    box.innerHTML=`<textarea rows="4" aria-label="Сообщение родителям">${escH(text)}</textarea><p class="muted fine">${C.share.hint}</p><div class="row">${canShare?`<button class="btn orange" type="button" data-send>${C.share.send}</button>`:''}<button class="btn ${canShare?'ghost':'orange'}" type="button" data-copy>${C.share.copyButton}</button></div><p class="share-done" hidden></p>`;
+    const ta=box.querySelector('textarea'),done=box.querySelector('.share-done'),ok=t=>{done.textContent=t;done.hidden=false;recEvent(rid,'shared')};
+    const copy=async()=>{try{await navigator.clipboard.writeText(ta.value);ok(C.share.copied)}catch(e){ta.select();try{document.execCommand('copy');ok(C.share.copied)}catch(x){}}};
+    box.querySelector('[data-copy]').onclick=copy;
+    const sd=box.querySelector('[data-send]');if(sd)sd.onclick=async()=>{try{await navigator.share({text:ta.value});ok(C.share.sent)}catch(e){if(!e||e.name!=='AbortError')copy()}}}}
+// ---------- запуск теста из файла данных ----------
+async function runDoc(id){
+  const B0=openModal({t1:'Тест для родителей',t2:'Подбор формата',t3:'Тест на специальность'}[id]||'Тест');
+  B0.innerHTML='<p class="muted">Загружаем тест…</p>';
+  let T,C;try{[T,C]=await Promise.all([loadDoc(id),loadDoc('common')])}catch(e){B0.innerHTML='<div class="result"><p>Тест не загрузился. Проверьте интернет и попробуйте ещё раз.</p><div class="row"><button class="btn ghost" id="rt">Повторить</button></div></div>';B0.querySelector('#rt').onclick=()=>runDoc(id);return}
+  const B=B0,student=T.who==='student';
+  const steps=T.kind==='career'?[...T.questions.map(q=>({q})),{intro:T.partTwo.intro},...T.partTwo.questions.map(q=>({q}))]:T.questions.map(q=>({q}));
+  const total=steps.filter(s=>s.q).length;
+  let i=0;const picks=[];
+  const start=()=>{B.innerHTML=`<div class="quiz"><p class="eyebrow">${student?'Для ученика':'Для родителей'}</p><h3 class="q-text" style="font-size:1.5rem">${T.title}</h3><p class="muted">${T.sub}</p><div class="row"><button class="btn orange" id="st">${T.start}</button></div></div>`;B.querySelector('#st').onclick=()=>{i=0;draw()}};
+  const draw=()=>{
+    if(i>=steps.length)return finish();
+    const S=steps[i];
+    if(S.intro){B.innerHTML=`<div class="quiz"><h3 class="q-text" style="font-size:1.5rem">${S.intro.h}</h3><p>${S.intro.text}</p><div class="row"><button class="btn orange" id="nx">Дальше</button><button class="back" id="bk">← Назад</button></div></div>`;
+      B.querySelector('#nx').onclick=()=>{i++;draw()};B.querySelector('#bk').onclick=()=>{i--;draw()};return}
+    const n=steps.slice(0,i+1).filter(s=>s.q).length;
+    B.innerHTML=`<div class="quiz"><div class="q-meta"><span>${T.title.length>46?'Тест':T.title}</span><span>${n} / ${total}</span></div><div class="progress"><div style="width:${(n-1)/total*100}%"></div></div><p class="q-text">${S.q.q}</p><div class="opts"></div><button class="back" id="bk" style="justify-self:start">${i?'← Предыдущий вопрос':'← К началу'}</button></div>`;
+    const box=B.querySelector('.opts');
+    (S.q.options).forEach((o,j)=>{const b=document.createElement('button');b.className='opt';b.textContent=o.t;if(picks[i]===j)b.classList.add('right');b.onclick=()=>{picks[i]=j;i++;draw()};box.appendChild(b)});
+    B.querySelector('#bk').onclick=()=>{if(i){i--;draw()}else start()};
+  };
+  const optAt=k=>steps[k].q?steps[k].q.options[picks[k]]:null;
+  const answers=()=>steps.map((s,k)=>s.q?{q:s.q.q,a:optAt(k).t}:null).filter(Boolean);
+  const finish=()=>{
+    startDiscount();
+    let years=0,exam='';
+    if(T.kind==='risk'){const o0=optAt(0);years=o0.years||0;exam=o0.exam||''}
+    const N=weeksLeft(years),wk=`<p class="weeks reveal">${weekLine(C,N)}</p>`;
+    let html='',rec,local;
+    if(T.kind==='risk'){
+      let sum=0;const found=[];
+      steps.forEach((s,k)=>{const o=optAt(k);if(k>0){sum+=o.p||0;if(o.risk&&o.p>=2)found.push({id:o.risk,p:o.p,k})}});
+      const Z=zoneOf(T.zones,sum),pos=sum/T.max*100;
+      const seen=new Set(),risks=found.sort((a,b)=>b.p-a.p||a.k-b.k).filter(r=>!seen.has(r.id)&&seen.add(r.id)).slice(0,3);
+      html=`<p class="eyebrow">Результат · Тест для родителей</p>${scaleHTML(pos,Z.id)}
+        <div class="reveal"><h3 class="zh">${Z.title}</h3><p>${fillN(Z.text,N)}</p></div>${wk}
+        ${risks.length?`<section class="risks reveal"><h3>${T.risksTitle}</h3><ul>${risks.map(r=>`<li>${fillN(T.risks[r.id],N)}</li>`).join('')}</ul></section>`:''}
+        <section class="acts reveal"><h3>${C.actionsTitle}</h3><ol>${C.actions.map(a=>`<li>${a.replace('{mock}','<a href="#tests" data-mock>Решить пробник</a>')}</li>`).join('')}</ol></section>
+        ${ctaHTML(C,Z.id,false)}`;
+      rec={test:'t1',title:T.title,role:'Родитель',exam,zone:Z.id,pos,score:sum,max:T.max,result:Z.name,shown:risks.map(r=>T.risks[r.id].replace(/\{N\}/g,'N недель')),answers:answers()};
+      local={test:'Тест для родителей',score:sum,max:T.max,label:Z.name};
+    }else if(T.kind==='tariff'){
+      const cnt={K:0,P:0,I:0},flags={};
+      steps.forEach((s,k)=>{const o=optAt(k);Object.entries(o.s||{}).forEach(([c,v])=>{cnt[c]+=v});if(o.flag)flags[o.flag]=true});
+      const hit=r=>!r.any||Object.entries(r.any).some(([c,v])=>cnt[c]>=v);
+      const R=T.rules.find(r=>hit(r)&&(!r.flag||flags[r.flag]))||T.rules[T.rules.length-1],tf=T.tariffs[R.tariff];
+      html=`<p class="eyebrow">Результат · Подбор формата</p><p class="muted" style="margin:0">${T.resultLabel}</p><h3 class="tariff">${tf.name}</h3><p>${tf.text}</p><p class="strap">${T.strap}</p><div class="row"><a class="btn orange" href="#book" data-cta>${T.primary}</a><a class="btn ghost" href="#courses" data-plan="${R.tariff}">${T.secondary}</a></div>`;
+      rec={test:'t2',title:T.title,role:'Родитель',zone:'',result:tf.name,shown:[tf.name],answers:answers()};
+      local={test:'Подбор формата',score:null,max:null,label:tf.name};
+    }else{
+      const sc={};T.order.forEach(k=>sc[k]=0);
+      T.questions.forEach((q,k)=>(optAt(k).s||[]).forEach(s=>{sc[s]++}));
+      const top=[...T.order].sort((a,b)=>sc[b]-sc[a]||T.order.indexOf(a)-T.order.indexOf(b)).slice(0,3),sp=top.map(k=>T.specialties[k]);
+      const off=T.questions.length+1;let sum=0;
+      T.partTwo.questions.forEach((q,k)=>{sum+=optAt(off+k).p||0});
+      const Z=zoneOf(T.partTwo.zones,sum),pos=sum/T.partTwo.max*100,S0=sp[0];
+      const ztext=fillN(Z.text.replace('{gen}',S0.gen).replace('{dat}',S0.dat),N);
+      html=`<p class="eyebrow">Результат · Тест на специальность</p>
+        <div class="specs">${sp.map((s,k)=>`<article class="spec${k?'':' big'}"><span class="eyebrow">${k?'Тоже подходит':'Больше всего подходит'}</span><h3>${s.name}</h3><p>${s.text}</p></article>`).join('')}</div>
+        <p class="strap">${T.strap}</p>${scaleHTML(pos,Z.id)}
+        <div class="reveal"><p>${ztext}</p></div>${wk}
+        <div class="row reveal"><a class="btn orange" href="#tests" data-mock>${T.mockButton}</a></div>
+        ${shareHTML(C)}${ctaHTML(C,Z.id,true)}`;
+      rec={test:'t3',title:T.title,role:'Ученик',zone:Z.id,pos,score:sum,max:T.partTwo.max,result:sp.map(s=>s.name).join(', '),shown:sp.map(s=>s.name),answers:answers()};
+      local={test:'Тест на специальность',score:sum,max:T.partTwo.max,label:S0.name+' · '+Z.name};
+      var shareMsg=c=>c.share.t3.replace('{spec}',S0.name.toLowerCase()).replace('{zone}',c.share.zoneWord[Z.id]);
+    }
+    B.innerHTML=`<div class="result docres">${html}<div class="row reveal"><button class="back" id="dclose">Закрыть</button></div></div>`;
+    B.querySelector('#dclose').onclick=closeModal;
+    recordResult(local);
+    const ridP=saveRecord(rec);
+    if(shareMsg)bindShare(B,C,{ridP,msg:shareMsg});
+    B.scrollTop=0;animateResult(B);
+  };
+  start();
+}
+// пробник: шкала, счётчик недель и «Показать родителям» в итоге экзамена
+function examExtras(sm,C,key,T,wrong){const n=T.qs.length,share=wrong.length/n*100,zone=share<=25?'green':share<=50?'yellow':'red';
+  const N=weeksLeft(0);
+  sm.querySelector('.score').insertAdjacentHTML('afterend',scaleHTML(share,zone));
+  const off=sm.querySelector('.offer');
+  off.insertAdjacentHTML('beforebegin',`<p class="weeks reveal">${weekLine(C,N)}</p>${shareHTML(C)}`);
+  const ridP=saveRecord({test:'mock-'+key,title:T.title,role:'Ученик',exam:key==='oge'?'ОГЭ':'ЕГЭ',zone,pos:share,score:n-wrong.length,max:n,result:T.title,wrong});
+  bindShare(sm,C,{ridP,msg:c=>c.share.mock.replace('{zone}',c.share.zoneWord[zone]).replace('{n}',wrong.length+' '+plural(wrong.length,'задании','заданиях','заданиях'))});
+  animateResult(sm)}
+// ---------- страница для родителя: /r/<номер записи> ----------
+(async function(){const m=location.pathname.match(/^\/r\/([\w-]{4,16})$/);if(!m)return;
+  const id=m[1];
+  let C,rec;try{C=await loadDoc('common');const r=await fetch('/api/records/'+id);rec=r.ok?await r.json():null}catch(e){rec=null}
+  const B=openModal('Результат вашего ребёнка','На сайт ✕');
+  if(!C||!rec){B.innerHTML=`<div class="result"><p>${C?C.parent.gone:'Не удалось загрузить страницу. Откройте главную страницу сайта.'}</p></div>`;return}
+  CUR_RID=id;try{localStorage.setItem('bc_rid',id)}catch(e){}
+  startDiscount();
+  recEvent(id,'viewed');
+  const kind=rec.test==='t3'?'t3':'mock',N=weeksLeft(0),P=C.parent;
+  const mid=kind==='t3'
+    ?`<section class="risks"><h3>${P.specTitle}</h3><p><b>${escH(rec.shown[0]||'')}</b>${rec.shown.length>1?`<br><span class="muted">Также подходит: ${rec.shown.slice(1).map(escH).join(', ')}</span>`:''}</p><h3>${P.readyTitle}</h3><p>${ZN[rec.zone].n}</p></section>`
+    :`<section class="risks"><h3>${P.wrongTitle}</h3><p>${rec.wrong&&rec.wrong.length?`Задания: <b>${rec.wrong.join(', ')}</b>. `:'Ошибок нет. '}${rec.max?`Верно: ${rec.score} из ${rec.max}.`:''}</p></section>`;
+  if(!ZN[rec.zone]){B.innerHTML=`<div class="result"><p>${P.gone}</p></div>`;return}
+  B.innerHTML=`<div class="result docres"><p class="q-text" style="margin:0">${P.lead[kind]}</p>${scaleHTML(rec.pos||0,rec.zone)}
+    <div class="reveal"><p>${fillN(P.zones[rec.zone],N)}</p></div><p class="weeks reveal">${weekLine(C,N)}</p>
+    <div class="reveal">${mid}</div>${ctaHTML(C,rec.zone,false)}
+    <div class="row reveal"><button class="back" id="tp">${P.secondary}</button></div></div>`;
+  B.querySelector('#tp').onclick=()=>{closeModal();location.hash='#tests';setTimeout(()=>runDoc('t1'),60)};
+  animateResult(B)})();
 // ---------- карточки тестов (страница «Тесты» и первый экран) ----------
 const CARDS={
-  parent:{k:'Я родитель',h:'Диагностика успеха',m:'⏱ 2 минуты',d:'Узнаете, в какой зоне сейчас подготовка ребёнка и какие риски есть до экзамена'},
-  prof:{k:'Я ученик · профориентация',h:'Кем тебе стать?',m:'⏱ 2 минуты',d:'Узнаете, что вам ближе: врач, учёный или фармацевт'},
+  t1:{k:'Я родитель',h:'Успеет ли ваш ребёнок подготовиться?',m:'⏱ 3 минуты · 8 вопросов',d:'Увидите, в какой зоне риска сейчас подготовка к экзамену и что с этим делать'},
+  t2:{k:'Я родитель',h:'Какой формат подготовки подойдёт?',m:'⏱ 3 минуты · 8 вопросов',d:'Подберём формат по характеру ребёнка: какой даст результат, а за какой нет смысла платить'},
+  t3:{k:'Я ученик · профориентация',h:'Какая специальность тебе подходит?',m:'⏱ 3 минуты · 11 вопросов',d:'Узнаешь 3 специальности, которые подходят именно тебе, и насколько ты готов к поступлению'},
   subject:{k:'Я ученик · предмет',h:'Проверь знания',m:'⏱ от 20 минут',d:'Узнаете балл за первую часть и темы с ошибками. Пробники ОГЭ и ЕГЭ, тренажёры'}
 };
 const cardHTML=k=>{const c=CARDS[k];return `<button class="choice" data-t="${k}"><span class="k">${c.k}</span><h3>${c.h}</h3><span class="tmeta">${c.m}</span><span class="muted">${c.d}</span></button>`};
 function home(){
-  P.innerHTML=`<div class="cols2"><div><h3 class="colh">Для родителей</h3><div class="col-cards">${cardHTML('parent')}</div></div><div><h3 class="colh">Для учеников</h3><div class="col-cards">${cardHTML('prof')}${cardHTML('subject')}</div></div></div>`;
+  P.innerHTML=`<div class="cols2"><div><h3 class="colh">Для родителей</h3><div class="col-cards">${cardHTML('t1')}${cardHTML('t2')}</div></div><div><h3 class="colh">Для учеников</h3><div class="col-cards">${cardHTML('t3')}${cardHTML('subject')}</div></div></div>`;
   P.querySelectorAll('.choice').forEach(b=>b.onclick=()=>go(b.dataset.t));
 }
 home();
@@ -1386,7 +1563,7 @@ const FRAG={
 document.querySelectorAll('[data-inj]').forEach(e=>{e.innerHTML=FRAG[e.dataset.inj]()});
 renderPrice();
 // ---------- первый экран: «Я родитель» / «Я ученик» ----------
-const AUD={parent:['parent'],student:['prof','subject']};
+const AUD={parent:['t1','t2'],student:['t3','subject']};
 document.querySelectorAll('[data-aud]').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('[data-aud]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
   const pn=document.getElementById('aud-panel');pn.innerHTML=AUD[b.dataset.aud].map(cardHTML).join('');pn.hidden=false;
@@ -1459,7 +1636,7 @@ window.__siteReady=true;
     const d=digits(phone.value);
     if(d.length!==11){show(err,'Введите номер полностью: +7 и ещё 10 цифр.');phone.focus();return}
     const btn=form.querySelector('button[type="submit"]');btn.disabled=true;
-    const data={name:document.getElementById('f-name').value.trim(),who:document.getElementById('f-who').value,exam:document.getElementById('f-exam').value,grade:Number(document.getElementById('f-class').value)||null,price:discState()==='on'?DISC.now:DISC.old,phone:'+'+d,results:getResults(),website:(form.querySelector('[name="website"]')||{}).value||''};
+    const data={name:document.getElementById('f-name').value.trim(),who:document.getElementById('f-who').value,exam:document.getElementById('f-exam').value,grade:Number(document.getElementById('f-class').value)||null,recordId:CUR_RID,utm:UTM,price:discState()==='on'?DISC.now:DISC.old,phone:'+'+d,results:getResults(),website:(form.querySelector('[name="website"]')||{}).value||''};
     try{
       const r=await fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
       if(r.ok){show(sent,`Спасибо, ${data.name}! Заявка принята, мы перезвоним вам по номеру ${fmt(d)} в течение дня.`);form.reset();}
@@ -1475,6 +1652,7 @@ window.__siteReady=true;
 function price(period){
   document.querySelectorAll('[data-period]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.period===period));
   document.querySelectorAll('.plan .p').forEach(p=>{
+    if(p.dataset.tbd!==undefined){p.textContent='Стоимость уточняется';return}
     if(p.dataset.unit){p.innerHTML=`${p.dataset.m} ₽ <small>${p.dataset.unit}</small>`;return}
     p.innerHTML=period==='month'?`${p.dataset.m} ₽ <small>в месяц</small>`:`${p.dataset.y} ₽ <small>за учебный год</small>`;
   });
@@ -2115,6 +2293,5 @@ window.openTrainer=k=>{const T=window.TRAINERS[k],P=openModal(T.title);T.mount(P
 })();
 
 </script>
-
 </body>
 </html>

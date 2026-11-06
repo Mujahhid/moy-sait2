@@ -13,6 +13,7 @@ const PORT = Number(process.env.PORT) || 8080;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
 const DATA_DIR = process.env.DATA_DIR || process.env.RAILWAY_VOLUME_MOUNT_PATH || path.join(__dirname, 'data');
 const LEADS_FILE = path.join(DATA_DIR, 'leads.json');
+const RECORDS_FILE = path.join(DATA_DIR, 'records.json');
 const ROOT = __dirname;
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -20,26 +21,31 @@ fs.mkdirSync(DATA_DIR, { recursive: true });
 // ---------- хранилище заявок (JSON-файл, запись через временный файл) ----------
 let leads = [];
 try { leads = JSON.parse(fs.readFileSync(LEADS_FILE, 'utf8')); if (!Array.isArray(leads)) leads = []; } catch { leads = []; }
+// записи прохождений тестов (под будущую CRM): одна запись = одно прохождение
+let records = [];
+try { records = JSON.parse(fs.readFileSync(RECORDS_FILE, 'utf8')); if (!Array.isArray(records)) records = []; } catch { records = []; }
 let saving = Promise.resolve();
-function save() {
-  const snapshot = JSON.stringify(leads, null, 1);
+function writeAtomic(file, data) {
+  const snapshot = JSON.stringify(data, null, 1);
   saving = saving.then(() => new Promise((resolve) => {
-    const tmp = LEADS_FILE + '.tmp';
+    const tmp = file + '.tmp';
     fs.writeFile(tmp, snapshot, (e) => {
       if (e) { console.error('save failed', e); return resolve(); }
-      fs.rename(tmp, LEADS_FILE, (e2) => { if (e2) console.error('rename failed', e2); resolve(); });
+      fs.rename(tmp, file, (e2) => { if (e2) console.error('rename failed', e2); resolve(); });
     });
   }));
   return saving;
 }
+const save = () => writeAtomic(LEADS_FILE, leads);
+const saveRecords = () => writeAtomic(RECORDS_FILE, records);
 
 // ---------- защита от спама: не больше 5 заявок с одного адреса за 10 минут ----------
 const hits = new Map();
-function rateLimited(ip) {
+function rateLimited(ip, limit = 5) {
   const now = Date.now(), win = 10 * 60 * 1000;
   const list = (hits.get(ip) || []).filter((t) => now - t < win);
   list.push(now); hits.set(ip, list);
-  return list.length > 5;
+  return list.length > limit;
 }
 setInterval(() => { const now = Date.now(); for (const [k, v] of hits) if (!v.some((t) => now - t < 600000)) hits.delete(k); }, 600000).unref();
 
@@ -89,6 +95,45 @@ function cleanResults(list) {
   })).filter((r) => r.test);
 }
 
+// ---------- записи тестов ----------
+// статусы воронки по возрастанию; хранится самый дальний шаг, достигнутый записью
+const STAGES = ['test', 'shared', 'viewed', 'cta', 'lead', 'diagnosed', 'bought'];
+const TEST_IDS = ['t1', 't2', 't3', 'mock-oge', 'mock-ege'];
+const ZONES = ['green', 'yellow', 'red'];
+const newRecordId = () => crypto.randomBytes(6).toString('base64url').replace(/[-_]/g, 'x').slice(0, 7);
+function bumpStage(rec, stage) {
+  if (STAGES.indexOf(stage) > STAGES.indexOf(rec.status)) rec.status = stage;
+  rec.events = rec.events || {};
+  if (!rec.events[stage]) rec.events[stage] = new Date().toISOString();
+}
+function cleanRecord(d) {
+  const num = (v, max) => (Number.isFinite(v) && v >= 0 && v <= max ? Math.round(v * 100) / 100 : null);
+  const rec = {
+    id: newRecordId(),
+    createdAt: new Date().toISOString(),
+    test: TEST_IDS.includes(d.test) ? d.test : null,
+    title: clip(d.title, 120),
+    role: d.role === 'Родитель' ? 'Родитель' : 'Ученик',
+    exam: ['ЕГЭ', 'ОГЭ'].includes(d.exam) ? d.exam : '',
+    zone: ZONES.includes(d.zone) ? d.zone : '',
+    pos: num(d.pos, 100),
+    score: num(d.score, 1000),
+    max: num(d.max, 1000),
+    result: clip(d.result, 200),          // тариф / специальность(и) / «пробник»
+    shown: Array.isArray(d.shown) ? d.shown.slice(0, 12).map((x) => clip(x, 200)) : [],
+    wrong: Array.isArray(d.wrong) ? d.wrong.slice(0, 40).map(Number).filter((n) => Number.isInteger(n) && n > 0 && n < 100) : [],
+    answers: Array.isArray(d.answers) ? d.answers.slice(0, 30).map((a) => ({ q: clip(a && a.q, 160), a: clip(a && a.a, 160) })) : [],
+    utm: {},
+    status: 'test',
+    events: { test: new Date().toISOString() },
+    leadId: null,
+  };
+  if (d.utm && typeof d.utm === 'object') for (const k of ['source', 'medium', 'campaign', 'content', 'term']) if (d.utm[k]) rec.utm[k] = clip(d.utm[k], 80);
+  return rec;
+}
+// что видит родитель по ссылке /r/<id> — только нужное для страницы, без телефонов и прочего
+const publicRecord = (r) => ({ id: r.id, test: r.test, title: r.title, exam: r.exam, zone: r.zone, pos: r.pos, score: r.score, max: r.max, result: r.result, shown: r.shown, wrong: r.wrong, createdAt: r.createdAt });
+
 // ---------- статические файлы ----------
 const FILES = {
   '/': ['index.html', 'text/html; charset=utf-8'],
@@ -103,6 +148,8 @@ const ICONS = {
   '/icon-512.png': ['icon-512.png', 'image/png'],
 };
 Object.assign(FILES, ICONS);
+// данные тестов: вопросы, баллы, тексты лежат в отдельных файлах, их можно править без программиста
+for (const n of ['t1', 't2', 't3', 'common']) FILES['/tests/' + n + '.json'] = ['tests/' + n + '.json', 'application/json; charset=utf-8'];
 const ICON_FILES = new Set(Object.values(ICONS).map((x) => x[0]));
 const cache = {};
 function serveFile(res, name, type, head) {
@@ -121,6 +168,39 @@ const server = http.createServer(async (req, res) => {
   try {
     if (FILES[p] && (req.method === 'GET' || req.method === 'HEAD')) return serveFile(res, FILES[p][0], FILES[p][1], req.method === 'HEAD');
     if (p === '/healthz') return send(res, 200, { ok: true });
+
+    // страница для родителя: та же страница сайта, данные подтягиваются по номеру записи
+    if (/^\/r\/[\w-]{4,16}$/.test(p) && (req.method === 'GET' || req.method === 'HEAD')) {
+      return serveFile(res, 'index.html', 'text/html; charset=utf-8', req.method === 'HEAD');
+    }
+
+    // новая запись о прохождении теста (тест анонимный: имени и телефона здесь нет)
+    if (p === '/api/records' && req.method === 'POST') {
+      if (rateLimited('rec:' + clientIp(req), 40)) return send(res, 429, { error: 'too_many' });
+      let data; try { data = JSON.parse(await readBody(req)); } catch { return send(res, 400, { error: 'bad_json' }); }
+      const rec = cleanRecord(data || {});
+      if (!rec.test) return send(res, 400, { error: 'invalid' });
+      records.unshift(rec);
+      if (records.length > 20000) records.length = 20000;
+      await saveRecords();
+      return send(res, 201, { id: rec.id });
+    }
+    const rm = p.match(/^\/api\/records\/([\w-]{4,16})(\/event)?$/);
+    if (rm) {
+      const rec = records.find((r) => r.id === rm[1]);
+      if (!rec) return send(res, 404, { error: 'not_found' });
+      if (!rm[2] && req.method === 'GET') return send(res, 200, publicRecord(rec), undefined, { 'Cache-Control': 'no-store' });
+      if (rm[2] && req.method === 'POST') {
+        if (rateLimited('ev:' + clientIp(req), 120)) return send(res, 429, { error: 'too_many' });
+        let data; try { data = JSON.parse(await readBody(req)); } catch { return send(res, 400, { error: 'bad_json' }); }
+        if (['shared', 'viewed', 'cta'].includes(data.type)) {
+          bumpStage(rec, data.type);
+          if (data.type === 'viewed') rec.viewedBy = 'parent';
+          await saveRecords();
+        }
+        return send(res, 200, { ok: true });
+      }
+    }
 
     // приём заявки с сайта
     if (p === '/api/leads' && req.method === 'POST') {
@@ -142,7 +222,13 @@ const server = http.createServer(async (req, res) => {
         status: 'new',
         note: '',
         results: cleanResults(data.results),
+        recordId: null,
+        utm: {},
       };
+      if (data.utm && typeof data.utm === 'object') for (const k of ['source', 'medium', 'campaign', 'content', 'term']) if (data.utm[k]) lead.utm[k] = clip(data.utm[k], 80);
+      const rid = typeof data.recordId === 'string' ? data.recordId : '';
+      const rec = /^[\w-]{4,16}$/.test(rid) ? records.find((r) => r.id === rid) : null;
+      if (rec) { lead.recordId = rec.id; rec.leadId = lead.id; rec.contactName = name; bumpStage(rec, 'lead'); if (!Object.keys(lead.utm).length) lead.utm = rec.utm || {}; await saveRecords(); }
       leads.unshift(lead);
       await save();
       return send(res, 201, { ok: true });
@@ -153,6 +239,16 @@ const server = http.createServer(async (req, res) => {
       if (!ADMIN_PASSWORD) return send(res, 503, { error: 'no_password_configured' });
       if (!isAdmin(req)) return send(res, 401, { error: 'unauthorized' });
       if (p === '/api/admin/leads' && req.method === 'GET') return send(res, 200, { leads }, undefined, { 'Cache-Control': 'no-store' });
+      if (p === '/api/admin/records' && req.method === 'GET') return send(res, 200, { records }, undefined, { 'Cache-Control': 'no-store' });
+      const rr = p.match(/^\/api\/admin\/records\/([\w-]{4,16})$/);
+      if (rr && req.method === 'PATCH') {
+        const rec = records.find((r) => r.id === rr[1]);
+        if (!rec) return send(res, 404, { error: 'not_found' });
+        let data; try { data = JSON.parse(await readBody(req)); } catch { return send(res, 400, { error: 'bad_json' }); }
+        if (STAGES.includes(data.status) && ['diagnosed', 'bought'].includes(data.status)) bumpStage(rec, data.status);
+        await saveRecords();
+        return send(res, 200, { record: rec });
+      }
       const m = p.match(/^\/api\/admin\/leads\/([\w-]{36})$/);
       if (m) {
         const lead = leads.find((l) => l.id === m[1]);
@@ -176,6 +272,6 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`bio_capybara: порт ${PORT}, заявки в ${LEADS_FILE}, заявок: ${leads.length}`);
+  console.log(`bio_capybara: порт ${PORT}, заявки в ${LEADS_FILE}, заявок: ${leads.length}, записей тестов: ${records.length}`);
   if (!ADMIN_PASSWORD) console.warn('ADMIN_PASSWORD не задан — админ-панель закрыта');
 });
