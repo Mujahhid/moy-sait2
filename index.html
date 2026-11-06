@@ -124,6 +124,17 @@ section{padding-block:4rem}
 .price s{font:500 1.3rem var(--mono);opacity:.55}
 .price b{font:800 2.6rem var(--display);color:var(--orange)}
 .price small{opacity:.75;font-size:.85rem;flex-basis:100%}
+.price b.reg{color:inherit}
+.price .cd,.offer .cd{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:700}
+.price small .cd{color:var(--orange)}
+.offer{display:grid;gap:.6rem;padding:1.1rem 1.2rem;border-radius:18px;background:color-mix(in srgb,var(--orange) 14%,transparent);border:1.5px solid var(--orange);justify-items:start}
+.offer .eyebrow{margin:0}
+.offer .op{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap}
+.offer .op s{font:500 1.2rem var(--mono);opacity:.6}
+.offer .op b{font:800 2.3rem var(--display);color:var(--orange)}
+.offer .op i{font:700 .85rem var(--mono);font-style:normal;background:var(--orange);color:#1a1209;border-radius:999px;padding:.2rem .65rem}
+.offer .tm{margin:0;font-size:.92rem}
+.offer.off{background:transparent;border-color:var(--line)}
 form{display:grid;gap:.8rem;align-content:start}
 label{font-size:.85rem;font-weight:600;display:grid;gap:.3rem}
 input,select{font:500 1rem var(--body);padding:.75rem .9rem;border-radius:12px;border:1.5px solid color-mix(in srgb,var(--bg) 30%,transparent);background:color-mix(in srgb,var(--bg) 8%,var(--ink));color:var(--bg)}
@@ -607,7 +618,7 @@ document.documentElement.className+=' js';
             <li>Даём план подготовки до экзамена</li>
             <li>Подбираем идеальный формат под вас: курс, индивидуальные занятия или комплекс</li>
           </ol>
-          <div class="price"><span class="pl">Стоимость</span><s>2 500 ₽</s><b>2 000 ₽</b><small>Цена со скидкой после прохождения одного из тестов</small></div>
+          <div class="price" id="price-box"><span class="pl">Стоимость</span><b class="reg">2 500 ₽</b><small>Пройдите один из тестов — стоимость снизится до 2 000 ₽.</small></div>
         </div>
         <form id="lead">
           <label for="f-name">Имя<input id="f-name" required placeholder="Как к вам обращаться"></label>
@@ -833,7 +844,54 @@ const P=document.getElementById('panel-tests');
 // ---------- результаты тестов посетителя (хранятся в его браузере, уходят вместе с заявкой) ----------
 const RES_KEY='bc_results';
 function getResults(){try{const v=JSON.parse(localStorage.getItem(RES_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}}
-function recordResult(r){const list=getResults();list.unshift(Object.assign({at:new Date().toISOString()},r));try{localStorage.setItem(RES_KEY,JSON.stringify(list.slice(0,30)))}catch(e){}}
+function recordResult(r){const list=getResults();list.unshift(Object.assign({at:new Date().toISOString()},r));try{localStorage.setItem(RES_KEY,JSON.stringify(list.slice(0,30)))}catch(e){}
+  if(!/^Тренажёр/.test(r.test||''))startDiscount()}
+// ---------- скидка на диагностику после теста: цены и время действия меняются здесь ----------
+const DISC={hours:3,old:2500,now:2000,key:'bc_discount_until'};
+let discMem=0;
+const money=n=>String(n).replace(/\B(?=(\d{3})+$)/g,' ')+' ₽';
+const hoursWord=h=>h%10===1&&h%100!==11?h+' час':[2,3,4].includes(h%10)&&![12,13,14].includes(h%100)?h+' часа':h+' часов';
+function discUntil(){let v=0;try{v=Number(localStorage.getItem(DISC.key))||0}catch(e){}return Math.max(v,discMem)}
+// таймер стартует один раз — после первого пройденного теста; повторное прохождение его не продлевает
+function startDiscount(){if(!discUntil()){discMem=Date.now()+DISC.hours*3600000;try{localStorage.setItem(DISC.key,String(discMem))}catch(e){}}renderPrice()}
+function discState(){const u=discUntil();return !u?'none':u>Date.now()?'on':'off'}
+const fmtLeft=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(v=>String(v).padStart(2,'0')).join(':')};
+const cdHTML=()=>`<span class="cd" data-cd>${fmtLeft(discUntil()-Date.now())}</span>`;
+function renderPrice(){const el=document.getElementById('price-box');if(!el)return;const st=discState();
+  el.innerHTML=st==='on'?`<span class="pl">Стоимость</span><s>${money(DISC.old)}</s><b>${money(DISC.now)}</b><small>Скидка за пройденный тест действует ещё ${cdHTML()}</small>`
+    :st==='off'?`<span class="pl">Стоимость</span><b class="reg">${money(DISC.old)}</b><small>Время скидки вышло: она действовала ${hoursWord(DISC.hours)} после теста.</small>`
+    :`<span class="pl">Стоимость</span><b class="reg">${money(DISC.old)}</b><small>Пройдите один из тестов — стоимость снизится до ${money(DISC.now)} на ${hoursWord(DISC.hours)}.</small>`}
+function offerHTML(){
+  if(discState()==='on')return `<div class="offer"><p class="eyebrow">Ваша выгода за тест</p><div class="op"><s>${money(DISC.old)}</s><b>${money(DISC.now)}</b><i>−${money(DISC.old-DISC.now)}</i></div><p class="tm">Скидка на диагностику действует ещё ${cdHTML()}</p><a class="btn orange" href="#diagnostics">Записаться со скидкой</a></div>`;
+  return `<div class="offer off"><p class="tm">Скидка за тест закончилась. Диагностика — ${money(DISC.old)}.</p><a class="btn orange" href="#diagnostics">Записаться на диагностику</a></div>`}
+setInterval(()=>{const left=discUntil()-Date.now(),t=fmtLeft(left);
+  document.querySelectorAll('[data-cd]').forEach(e=>{e.textContent=t});
+  if(discUntil()&&left<=0&&!tickDone){tickDone=true;renderPrice();document.querySelectorAll('.offer').forEach(e=>{e.outerHTML=offerHTML()})}
+  if(left>0)tickDone=false},1000);
+let tickDone=false;
+renderPrice();
+// ---------- персональные комментарии к результату ----------
+// Ключ — тип теста ('topic' для всех тестов по темам, 'oge', 'ege'); можно задать и точный ключ, например 'topic-gen'.
+// Каждая строка: [от скольки верных ответов, {z — заголовок, c — цвет, t — текст}]. Показывается последняя подходящая.
+const BAD='#d0573f',MID='var(--orange)',GOOD='var(--leaf)';
+const FB={
+  topic:[ // в каждом тесте по теме 4 вопроса
+    [0,{z:'Нужно начинать с основ',c:BAD,t:'Тема пока даётся с трудом, и это нормально. Чаще всего баллы теряются на базовых понятиях первой части. На диагностике найдём, где именно, и выстроим тему с нуля.'}],
+    [2,{z:'Есть пробелы',c:MID,t:'Половина темы понятна, но ошибки в базе съедают баллы первой части. На диагностике определим, каких именно знаний не хватает, и закроем их за несколько занятий.'}],
+    [3,{z:'Почти без ошибок',c:GOOD,t:'Хорошая база, одна ошибка — это обычно один пропущенный нюанс. На диагностике найдём такие нюансы по всем темам, пока они не стоили баллов на экзамене.'}],
+    [4,{z:'Тема освоена',c:GOOD,t:'Все ответы верны. Но экзамен проверяет десятки тем, поэтому на диагностике проверим остальные и посмотрим задания второй части.'}]],
+  oge:[ // 17 заданий
+    [0,{z:'Нужна подготовка с нуля',c:BAD,t:'Много ошибок в базовых темах — именно они стоят баллов в первой части. На диагностике составим план и посчитаем реальный срок.'}],
+    [7,{z:'Есть пробелы',c:MID,t:'Часть тем понятна, но базовые ошибки не дают набрать высокий балл. На диагностике найдём точки роста и закроем их в первую очередь.'}],
+    [12,{z:'Хорошая база',c:GOOD,t:'Результат выше среднего. Осталось убрать ошибки в нескольких темах, и на диагностике покажем, в каких именно.'}],
+    [16,{z:'Отличный результат',c:GOOD,t:'Почти без ошибок. На диагностике проверим полный пробник и подготовим к самым сложным заданиям.'}]],
+  ege:[ // 18 заданий
+    [0,{z:'Нужна подготовка с нуля',c:BAD,t:'Много ошибок в базовых темах — именно они стоят баллов в первой части. На диагностике составим план и посчитаем реальный срок.'}],
+    [7,{z:'Есть пробелы',c:MID,t:'Часть тем понятна, но базовые ошибки не дают набрать высокий балл. На диагностике найдём точки роста и закроем их в первую очередь.'}],
+    [13,{z:'Хорошая база',c:GOOD,t:'Результат выше среднего. Осталось убрать ошибки в нескольких темах, и на диагностике покажем, в каких именно.'}],
+    [17,{z:'Отличный результат',c:GOOD,t:'Почти без ошибок. На диагностике проверим вторую часть и полный пробник.'}]]
+};
+function feedback(key,score){const B=FB[key]||FB[String(key).split('-')[0]];if(!B)return null;let r=B[0][1];for(const [m,x] of B)if(score>=m)r=x;return r}
 const DLG=document.getElementById('test-modal'),DLG_BODY=document.getElementById('tm-body');
 function openModal(title,closeLabel,side){DLG.classList.toggle('side',!!side);document.getElementById('tm-title').textContent=title;document.getElementById('tm-close').textContent=closeLabel||'Выйти из теста ✕';if(DLG.hidden){DLG.hidden=false;document.documentElement.classList.add('modal-open');try{document.getElementById('tm-close').focus({preventScroll:true})}catch(e){}}DLG_BODY.scrollTop=0;return DLG_BODY}
 function closeModal(){if(!DLG.hidden){DLG.hidden=true;DLG.dispatchEvent(new Event('close'))}}
@@ -927,15 +985,16 @@ function run(key){
         sol.innerHTML=`<p class="verdict ${ok?'ok':'no'}">${ok?'Верно':given?'Неверно':'Нет ответа'} · правильный ответ: ${Q.text?Q.alts.join(' или '):Q.a}</p><p class="explain">${Q.e}</p>`;sol.hidden=false;
         rows+=`<tr class="${ok?'ok':'no'}"><td>${Q.n}</td><td>${given?given.replace(/</g,'&lt;'):'—'}</td><td>${Q.text?Q.alts.join(' / '):Q.a}</td><td>${ok?'Верно':'Неверно'}</td></tr>`;
       });
-      const n=T.qs.length,r=score/n,c=r>=.8?'var(--leaf)':r>=.5?'var(--orange)':'#d0573f',z=r>=.8?'Сильная база':r>=.5?'Есть пробелы':'Нужна подготовка с нуля';
+      const n=T.qs.length,r=score/n,F=feedback(key,score)||{},c=F.c||(r>=.8?'var(--leaf)':r>=.5?'var(--orange)':'#d0573f'),z=F.z||(r>=.8?'Сильная база':r>=.5?'Есть пробелы':'Нужна подготовка с нуля');
       recordResult({test:T.title,score,max:n,label:z,wrong:T.qs.filter((Q,k)=>!check(Q,boxes(k).map(x=>x.value.trim()).join(''))).map(Q=>Q.n)});
       const sm=P.querySelector('#summary');
       sm.innerHTML=`<div class="result"><p class="eyebrow">Результат · ${T.title}</p>
         <p class="score">${score}<span style="font-size:.4em;color:var(--muted)"> / ${n}</span></p>
         <span class="zone" style="background:color-mix(in srgb,${c} 18%,transparent);color:${c};justify-self:start">${z}</span>
         <div class="res-wrap"><table class="res"><thead><tr><th>Задание</th><th>Ваш ответ</th><th>Правильный ответ</th><th>Результат</th></tr></thead><tbody>${rows}</tbody></table></div>
-        <p>Разбор каждого задания — ниже, под заданием. ${r>=.8?'На диагностике проверим вторую часть и полный пробник.':'На диагностике разберём ошибки и составим план подготовки.'}</p>
-        <div class="row"><a class="btn orange" href="#diagnostics">Диагностика за 2 000 ₽</a><button class="btn ghost" id="again2">Решить заново</button><button class="back" id="other">Выбрать другой тест</button></div></div>`;
+        <p>${F.t||(r>=.8?'На диагностике проверим вторую часть и полный пробник.':'На диагностике разберём ошибки и составим план подготовки.')} Разбор каждого задания — ниже, под заданием.</p>
+        ${offerHTML()}
+        <div class="row"><button class="btn ghost" id="again2">Решить заново</button><button class="back" id="other">Выбрать другой тест</button></div></div>`;
       sm.hidden=false;
       P.querySelector('#fin-row').innerHTML=`<button class="btn ghost" id="again3">Решить заново</button><button class="back" id="bk2">← К выбору теста</button>`;
       P.querySelector('#again2').onclick=P.querySelector('#again3').onclick=()=>run(key);
@@ -948,14 +1007,16 @@ function run(key){
     if(T.kind==='score'){const r=T.res(score);head=`${score}<span style="font-size:.4em;color:var(--muted)"> / ${T.max}</span>`;z=r.z;c=r.c;t=r.t}
     else if(T.kind==='type'){const k=Object.entries(tally).sort((a,b)=>b[1]-a[1])[0][0];const r=T.types[k];head=r.z;z='Твой профиль';c='var(--leaf)';t=r.t}
     else{const n=T.qs.length,r=score/n;head=`${score}<span style="font-size:.4em;color:var(--muted)"> / ${n}</span>`;
-      z=r>=.8?'Сильная база':r>=.5?'Есть пробелы':'Нужна подготовка с нуля';c=r>=.8?'var(--leaf)':r>=.5?'var(--orange)':'#d0573f';
-      t=r>=.8?'Хороший результат. На диагностике проверим полный пробник и задания второй части.':'Ошибки в базовых темах стоят баллов в первой части. Диагностика покажет все пробелы и даст план.'}
+      const F=feedback(key,score)||{};
+      z=F.z||(r>=.8?'Сильная база':r>=.5?'Есть пробелы':'Нужна подготовка с нуля');c=F.c||(r>=.8?'var(--leaf)':r>=.5?'var(--orange)':'#d0573f');
+      t=F.t||(r>=.8?'Хороший результат. На диагностике проверим полный пробник и задания второй части.':'Ошибки в базовых темах стоят баллов в первой части. Диагностика покажет все пробелы и даст план.')}
     recordResult(T.kind==='score'?{test:T.title,score,max:T.max,label:z}:T.kind==='type'?{test:T.title,score:null,max:null,label:head}:{test:T.title,score,max:T.qs.length,label:z});
     P.innerHTML=`<div class="result"><p class="eyebrow">Результат · ${T.title}</p>
       <p class="score">${head}</p>
       <span class="zone" style="background:color-mix(in srgb,${c} 18%,transparent);color:${c};justify-self:start">${z}</span>
       <p>${t}</p>
-      <div class="row"><a class="btn orange" href="#diagnostics">Диагностика за 2 000 ₽</a><button class="back" id="again">${T.back?'Выбрать другой тест':'Пройти другой тест'}</button></div></div>`;
+      ${offerHTML()}
+      <div class="row"><button class="back" id="again">${T.back?'Выбрать другой тест':'Пройти другой тест'}</button></div></div>`;
     P.querySelector('#again').onclick=()=>go(backTo);
   };
   T.kind==='input'?drawExam():draw();
@@ -988,7 +1049,7 @@ window.__siteReady=true;
     const d=digits(phone.value);
     if(d.length!==11){show(err,'Введите номер полностью: +7 и ещё 10 цифр.');phone.focus();return}
     const btn=form.querySelector('button[type="submit"]');btn.disabled=true;
-    const data={name:document.getElementById('f-name').value.trim(),who:document.getElementById('f-who').value,exam:document.getElementById('f-exam').value,grade:Number(document.getElementById('f-class').value)||null,phone:'+'+d,results:getResults(),website:(form.querySelector('[name="website"]')||{}).value||''};
+    const data={name:document.getElementById('f-name').value.trim(),who:document.getElementById('f-who').value,exam:document.getElementById('f-exam').value,grade:Number(document.getElementById('f-class').value)||null,price:discState()==='on'?DISC.now:DISC.old,phone:'+'+d,results:getResults(),website:(form.querySelector('[name="website"]')||{}).value||''};
     try{
       const r=await fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
       if(r.ok){show(sent,`Спасибо, ${data.name}! Заявка принята, мы перезвоним вам по номеру ${fmt(d)} в течение дня.`);form.reset();}
