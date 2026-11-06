@@ -194,8 +194,6 @@ footer{background:var(--ink);color:var(--bg);padding-block:2.6rem 2rem;margin-to
 .fcol a:hover,.fcol a:focus-visible{opacity:1;text-decoration:underline;text-underline-offset:3px}
 .fcol .freq{font-size:.78rem;opacity:.6}
 .fbrand .logo{color:var(--bg);margin-bottom:.2rem}
-.fnote{grid-column:1/-1;margin:.6rem 0 0;padding-top:1.1rem;border-top:1px solid color-mix(in srgb,var(--bg) 18%,transparent);font-size:.82rem;opacity:.65}
-.fnote a{color:inherit}
 @media (max-width:760px){.fcols{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 html{scroll-behavior:smooth;scroll-padding-top:80px}
@@ -525,9 +523,6 @@ section.alt{background:color-mix(in srgb,var(--ink) 4%,var(--bg))}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .f-err{margin:0;color:#ffb3a3;font-weight:600;font-size:.9rem}
 #lead button:disabled{opacity:.6;cursor:wait}
-.adm-link{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
-.tm-body.adm-body{padding:0;overflow:hidden;display:flex}
-.adm-frame{flex:1;width:100%;height:100%;border:0;background:var(--bg)}
 /* панель заявок — выезжает справа */
 .tmodal.side{justify-content:flex-end;padding:0}
 .tmodal.side .tm-box{width:620px;max-width:100%;height:100%;max-height:none;border-radius:0;border-width:0 0 0 2px;box-shadow:-8px 0 0 var(--orange);animation:slidein .28s ease-out;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -1092,7 +1087,6 @@ document.documentElement.className+=' js';
       <p data-op="email"></p>
       <a href="#diagnostics">Записаться на диагностику</a>
     </div>
-    <p class="fnote"><a href="#admin" class="adm-link" id="adm-link">Вход для администратора</a></p>
   </div>
 </footer>
 
@@ -1228,10 +1222,8 @@ const DLG=document.getElementById('test-modal'),DLG_BODY=document.getElementById
 function openModal(title,closeLabel,side){DLG.classList.toggle('side',!!side);document.getElementById('tm-title').textContent=title;document.getElementById('tm-close').textContent=closeLabel||'Выйти из теста ✕';if(DLG.hidden){DLG.hidden=false;document.documentElement.classList.add('modal-open');try{document.getElementById('tm-close').focus({preventScroll:true})}catch(e){}}DLG_BODY.scrollTop=0;return DLG_BODY}
 function closeModal(){if(!DLG.hidden){DLG.hidden=true;DLG.dispatchEvent(new Event('close'))}}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!DLG.hidden)closeModal()});
-DLG.addEventListener('close',()=>{document.documentElement.classList.remove('modal-open');if(location.pathname.indexOf('/r/')===0){try{history.replaceState(null,'','/'+location.search+location.hash)}catch(e){}}DLG_BODY.innerHTML='';DLG_BODY.classList.remove('adm-body');if(location.hash==='#admin'||location.hash==='#privacy'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}});
+DLG.addEventListener('close',()=>{document.documentElement.classList.remove('modal-open');if(location.pathname.indexOf('/r/')===0){try{history.replaceState(null,'','/'+location.search+location.hash)}catch(e){}}DLG_BODY.innerHTML='';if(location.hash==='#privacy'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}});
 // ---------- панель заявок внутри сайта (видна только после ввода пароля) ----------
-function openAdmin(){const B=openModal('Панель администратора','Закрыть ✕',true);B.classList.add('adm-body');B.innerHTML='<iframe class="adm-frame" src="/admin?embed=1" title="Панель администратора"></iframe>';}
-document.getElementById('adm-link').addEventListener('click',e=>{e.preventDefault();openAdmin()});
 // ---------- политика обработки персональных данных ----------
 // Реквизиты оператора: заполните своими данными (сейчас стоят заглушки).
 const OPERATOR={name:'[ФИО или наименование оператора — заполнить]',inn:'[ИНН]',ogrnip:'[ОГРНИП]',address:'[адрес]',email:'[e-mail]',phone:'[телефон]'};
@@ -1280,8 +1272,6 @@ function openPolicy(){const B=openModal('Политика обработки п�
 document.addEventListener('click',e=>{const a=e.target.closest('a[href="#privacy"]');if(a){e.preventDefault();openPolicy()}});
 if(location.hash==='#privacy')setTimeout(openPolicy,0);
 addEventListener('hashchange',()=>{if(location.hash==='#privacy')openPolicy()});
-if(location.hash==='#admin')setTimeout(openAdmin,0);
-addEventListener('hashchange',()=>{if(location.hash==='#admin')openAdmin()});
 document.getElementById('tm-close').onclick=closeModal;
 DLG.addEventListener('click',e=>{if(e.target===DLG)closeModal();const a=e.target.closest('a[href^="#"]');if(a)closeModal()});
 const go=k=>{closeModal();k==='close'?0:k==='home'?home():['t1','t2','t3'].includes(k)?runDoc(k):MENUS[k]?menu(k):window.TRAINERS&&TRAINERS[k]?openTrainer(k):run(k)};
