@@ -129,6 +129,7 @@ const server = http.createServer(async (req, res) => {
         name, phone,
         who: ['Ученик', 'Родитель'].includes(data.who) ? data.who : 'Ученик',
         exam: ['ЕГЭ', 'ОГЭ'].includes(data.exam) ? data.exam : 'ЕГЭ',
+        grade: [6, 7, 8, 9, 10, 11].includes(Number(data.grade)) ? Number(data.grade) : null,
         status: 'new',
         note: '',
         results: cleanResults(data.results),

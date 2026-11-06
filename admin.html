@@ -136,7 +136,7 @@ if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add('e
     if(!rows.length){$('#list').innerHTML='<div class="card empty">'+(leads.length?'Под фильтр ничего не подошло.':'Заявок пока нет. Как только кто-то запишется на диагностику с сайта, заявка появится здесь.')+'</div>';return}
     $('#list').innerHTML=rows.map(function(l){var st=STATUS[l.status]||STATUS.new;return '<article class="lead" data-id="'+l.id+'" style="--c:'+st[1]+'">'+
       '<div class="who"><span class="nm">'+esc(l.name)+'</span><a class="ph" href="tel:'+esc(l.phone)+'">'+fmtPhone(l.phone)+'</a></div>'+
-      '<div class="meta"><span class="tag">'+esc(l.exam)+'</span><span class="tag">'+esc(l.who)+'</span><br>'+fmtDate(l.createdAt)+'</div>'+
+      '<div class="meta"><span class="tag">'+esc(l.exam)+'</span><span class="tag">'+esc(l.who)+'</span>'+(l.grade?'<span class="tag">'+l.grade+' кл.</span>':'')+'<br>'+fmtDate(l.createdAt)+'</div>'+
       '<div class="acts"><select aria-label="Статус">'+Object.keys(STATUS).map(function(k){return '<option value="'+k+'"'+(k===l.status?' selected':'')+'>'+STATUS[k][0]+'</option>'}).join('')+'</select>'+
       '<button class="btn ghost" type="button" data-copy>Копировать номер</button><button class="btn danger" type="button" data-del>Удалить</button></div>'+
       resultsHTML(l)+'<div class="note"><textarea placeholder="Заметка: когда перезвонить, о чём договорились" aria-label="Заметка">'+esc(l.note||'')+'</textarea></div></article>'}).join('');
@@ -162,8 +162,8 @@ if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add('e
   $('#refresh').onclick=function(){load()};
   $('#logout').onclick=function(){logout()};
   $('#csv').onclick=function(){
-    var head=['Дата','Имя','Телефон','Кто','Экзамен','Статус','Заметка'];
-    var lines=[head].concat(leads.map(function(l){return [fmtDate(l.createdAt),l.name,fmtPhone(l.phone),l.who,l.exam,(STATUS[l.status]||STATUS.new)[0],l.note||'']}));
+    var head=['Дата','Имя','Телефон','Кто','Экзамен','Класс','Статус','Заметка'];
+    var lines=[head].concat(leads.map(function(l){return [fmtDate(l.createdAt),l.name,fmtPhone(l.phone),l.who,l.exam,l.grade||'',(STATUS[l.status]||STATUS.new)[0],l.note||'']}));
     var csv='﻿'+lines.map(function(r){return r.map(function(v){v=String(v);return /[;"\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(';')}).join('\r\n');
     var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='zayavki-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
   };

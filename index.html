@@ -120,6 +120,7 @@ section{padding-block:4rem}
 .diag .eyebrow{color:var(--orange)}
 .diag ol{margin:1.2rem 0 0;padding-left:1.2rem;display:grid;gap:.5rem;opacity:.9}
 .price{display:flex;align-items:baseline;gap:1rem;margin-top:1.5rem;flex-wrap:wrap}
+.price .pl{flex-basis:100%;font:600 .8rem var(--mono);letter-spacing:.12em;text-transform:uppercase;opacity:.7}
 .price s{font:500 1.3rem var(--mono);opacity:.55}
 .price b{font:800 2.6rem var(--display);color:var(--orange)}
 .price small{opacity:.75;font-size:.85rem;flex-basis:100%}
@@ -547,7 +548,7 @@ document.documentElement.className+=' js';
       <div class="sec-head">
         <p class="eyebrow">Бесплатно</p>
         <h2>Тесты и уроки</h2>
-        <p class="muted">Пять минут — и понятно, с чего начинать. Для родителей и для учеников свои тесты.</p>
+        <p class="muted">Всего 5 минут — и понятно, с чего начинать. Для родителей и для учеников свои тесты.</p>
       </div>
       <input type="radio" name="benefit-tab" id="bt-tests" class="sr-radio" checked>
       <input type="radio" name="benefit-tab" id="bt-lessons" class="sr-radio">
@@ -601,16 +602,19 @@ document.documentElement.className+=' js';
           <ol>
             <li>Разбираем пробник или ваши ответы из теста</li>
             <li>Находим темы, где теряются баллы</li>
+            <li>Определяем точки роста и «якори» для быстрого прогресса</li>
+            <li>Работаем с сомнениями и тревожностью ученика</li>
             <li>Даём план подготовки до экзамена</li>
-            <li>Подбираем формат: курс или индивидуально</li>
+            <li>Подбираем идеальный формат под вас: курс, индивидуальные занятия или комплекс</li>
           </ol>
-          <div class="price"><s>2 500 ₽</s><b>1 500 ₽</b><small>Цена со скидкой после прохождения теста на сайте</small></div>
+          <div class="price"><span class="pl">Стоимость</span><s>2 500 ₽</s><b>2 000 ₽</b><small>Цена со скидкой после прохождения одного из тестов</small></div>
         </div>
         <form id="lead">
           <label for="f-name">Имя<input id="f-name" required placeholder="Как к вам обращаться"></label>
+          <label for="f-who">Кто записывается<select id="f-who"><option>Ученик</option><option>Родитель</option></select></label>
           <div class="two">
-            <label for="f-who">Кто записывается<select id="f-who"><option>Ученик</option><option>Родитель</option></select></label>
             <label for="f-exam">Экзамен<select id="f-exam"><option>ЕГЭ</option><option>ОГЭ</option></select></label>
+            <label for="f-class">Класс<select id="f-class" required><option value="" selected disabled>Выберите</option><option value="6">6 класс</option><option value="7">7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select></label>
           </div>
           <label for="f-contact">Телефон<input id="f-contact" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="+7 900 000-00-00" maxlength="16"></label>
           <p class="f-err" id="f-err" hidden></p>
@@ -639,8 +643,8 @@ document.documentElement.className+=' js';
 
       <p class="sub">Преподаватели</p>
       <div class="teachers">
-        <article class="teacher"><div class="ph">И</div><div><h3>Ислам</h3><p class="muted" style="margin-top:.3rem">Врач и преподаватель. Объясняет биологию через реальную медицину и готовит тех, кто идёт в медицинский.</p><div class="tags"><span>Врач</span><span>Педагог</span><span>ЕГЭ</span></div></div></article>
-        <article class="teacher"><div class="ph">А</div><div><h3>Абу-Бакр</h3><p class="muted" style="margin-top:.3rem">Преподаватель биологии. Здесь будет короткая биография и компетенции.</p><div class="tags"><span>ОГЭ</span><span>ЕГЭ</span></div></div></article>
+        <article class="teacher"><div class="ph">И</div><div><h3>Ислам</h3><p class="muted" style="margin-top:.3rem">Врач и педагог. Выпускник РНИМУ им. Н. И. Пирогова. Объясняет биологию через реальную медицину и готовит тех, кто идёт в медицинский.</p><div class="tags"><span>Врач</span><span>Педагог</span><span>ЕГЭ</span></div></div></article>
+        <article class="teacher"><div class="ph">А</div><div><h3>Абу-Бакр</h3><p class="muted" style="margin-top:.3rem">Репетитор по биологии, студент 4 курса лечебного факультета. Готовит к экзамену через личный опыт: искреннее отношение, свежая подача и актуальные знания.</p><div class="tags"><span>Студент-медик</span><span>ОГЭ</span><span>ЕГЭ</span></div></div></article>
       </div>
 
       <p class="sub">Отзывы и результаты <span class="demo-tag">шаблон</span></p>
@@ -653,9 +657,10 @@ document.documentElement.className+=' js';
 
       <div class="value">
         <div><h3>Ценность</h3></div>
-        <div><p><b>Не просто сдать.</b> Мы готовим к профессии: врачу и учёному биология нужна после экзамена.</p></div>
-        <div><p><b>Понимание вместо зубрёжки.</b> Каждую тему объясняет практикующий врач на живых примерах.</p></div>
-        <div><p><b>Контроль.</b> Родитель видит прогресс по пробникам каждый месяц.</p></div>
+        <div><p><b>Не просто сдать.</b> Для врача и учёного биология — надёжный старт в профессии.</p></div>
+        <div><p><b>Понимание вместо зубрёжки.</b> Каждую тему объясняет врач-педагог на живых примерах.</p></div>
+        <div><p><b>Контроль.</b> Родитель видит прогресс и регулярно получает академический отчёт от преподавателя.</p></div>
+        <div><p><b>Свежая подача.</b> Без спекуляций на непристойных повестках.</p></div>
       </div>
 
       <p class="sub">Структура и методы</p>
@@ -930,7 +935,7 @@ function run(key){
         <span class="zone" style="background:color-mix(in srgb,${c} 18%,transparent);color:${c};justify-self:start">${z}</span>
         <div class="res-wrap"><table class="res"><thead><tr><th>Задание</th><th>Ваш ответ</th><th>Правильный ответ</th><th>Результат</th></tr></thead><tbody>${rows}</tbody></table></div>
         <p>Разбор каждого задания — ниже, под заданием. ${r>=.8?'На диагностике проверим вторую часть и полный пробник.':'На диагностике разберём ошибки и составим план подготовки.'}</p>
-        <div class="row"><a class="btn orange" href="#diagnostics">Диагностика за 1 500 ₽</a><button class="btn ghost" id="again2">Решить заново</button><button class="back" id="other">Выбрать другой тест</button></div></div>`;
+        <div class="row"><a class="btn orange" href="#diagnostics">Диагностика за 2 000 ₽</a><button class="btn ghost" id="again2">Решить заново</button><button class="back" id="other">Выбрать другой тест</button></div></div>`;
       sm.hidden=false;
       P.querySelector('#fin-row').innerHTML=`<button class="btn ghost" id="again3">Решить заново</button><button class="back" id="bk2">← К выбору теста</button>`;
       P.querySelector('#again2').onclick=P.querySelector('#again3').onclick=()=>run(key);
@@ -950,7 +955,7 @@ function run(key){
       <p class="score">${head}</p>
       <span class="zone" style="background:color-mix(in srgb,${c} 18%,transparent);color:${c};justify-self:start">${z}</span>
       <p>${t}</p>
-      <div class="row"><a class="btn orange" href="#diagnostics">Диагностика за 1 500 ₽</a><button class="back" id="again">${T.back?'Выбрать другой тест':'Пройти другой тест'}</button></div></div>`;
+      <div class="row"><a class="btn orange" href="#diagnostics">Диагностика за 2 000 ₽</a><button class="back" id="again">${T.back?'Выбрать другой тест':'Пройти другой тест'}</button></div></div>`;
     P.querySelector('#again').onclick=()=>go(backTo);
   };
   T.kind==='input'?drawExam():draw();
@@ -983,7 +988,7 @@ window.__siteReady=true;
     const d=digits(phone.value);
     if(d.length!==11){show(err,'Введите номер полностью: +7 и ещё 10 цифр.');phone.focus();return}
     const btn=form.querySelector('button[type="submit"]');btn.disabled=true;
-    const data={name:document.getElementById('f-name').value.trim(),who:document.getElementById('f-who').value,exam:document.getElementById('f-exam').value,phone:'+'+d,results:getResults(),website:(form.querySelector('[name="website"]')||{}).value||''};
+    const data={name:document.getElementById('f-name').value.trim(),who:document.getElementById('f-who').value,exam:document.getElementById('f-exam').value,grade:Number(document.getElementById('f-class').value)||null,phone:'+'+d,results:getResults(),website:(form.querySelector('[name="website"]')||{}).value||''};
     try{
       const r=await fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
       if(r.ok){show(sent,`Спасибо, ${data.name}! Заявка принята, мы перезвоним вам по номеру ${fmt(d)} в течение дня.`);form.reset();}
