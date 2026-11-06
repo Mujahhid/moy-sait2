@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM · bio_capybara</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2222%22%20fill%3D%22%23fde9d6%22/%3E%3Cg%20transform%3D%22translate%28-1%200%29%20scale%281.04%29%20translate%28-1%20-2%29%22%3E%3Cellipse%20cx%3D%2252%22%20cy%3D%2258%22%20rx%3D%2234%22%20ry%3D%2226%22%20fill%3D%22%239b6a45%22/%3E%3Crect%20x%3D%2230%22%20y%3D%2234%22%20width%3D%2244%22%20height%3D%2240%22%20rx%3D%2218%22%20fill%3D%22%23a9774f%22/%3E%3Cellipse%20cx%3D%2238%22%20cy%3D%2233%22%20rx%3D%226%22%20ry%3D%225%22%20fill%3D%22%237a5236%22/%3E%3Cellipse%20cx%3D%2266%22%20cy%3D%2233%22%20rx%3D%226%22%20ry%3D%225%22%20fill%3D%22%237a5236%22/%3E%3Crect%20x%3D%2240%22%20y%3D%2256%22%20width%3D%2226%22%20height%3D%2218%22%20rx%3D%229%22%20fill%3D%22%237a5236%22/%3E%3Ccircle%20cx%3D%2244%22%20cy%3D%2247%22%20r%3D%223%22%20fill%3D%22%232b2119%22/%3E%3Ccircle%20cx%3D%2262%22%20cy%3D%2247%22%20r%3D%223%22%20fill%3D%22%232b2119%22/%3E%3Cellipse%20cx%3D%2249%22%20cy%3D%2261%22%20rx%3D%222%22%20ry%3D%221.5%22%20fill%3D%22%232b2119%22/%3E%3Cellipse%20cx%3D%2257%22%20cy%3D%2261%22%20rx%3D%222%22%20ry%3D%221.5%22%20fill%3D%22%232b2119%22/%3E%3Crect%20x%3D%2270%22%20y%3D%2220%22%20width%3D%226%22%20height%3D%2246%22%20rx%3D%222%22%20transform%3D%22rotate%2820%2073%2043%29%22%20fill%3D%22%23f6c443%22/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --orange:#FF6A13; --orange-soft:#FF8A3D; --orange-deep:#E04E00;
+  --cream:#FFF6EC; --cream-2:#FFEEDC; --cream-3:#FBE9D6; --white:#FFFFFF;
+  --ink:#1E1710; --ink-soft:#5C4F42; --ink-faint:#8A7A6A;
+  --brown:#B07D4F; --brown-deep:#8A5C32; --dark:#2A1F16; --dark-2:#3A2A1A;
+  --green:#3E8E5A; --green-soft:#E3F3E8; --yellow:#D99A00; --yellow-soft:#FFF1CC;
+  --red:#D7443A; --red-soft:#FFE2E2;
+  --line:rgba(176,125,79,.22);
+  --shadow:0 18px 50px -18px rgba(224,78,0,.35);
+  --shadow-soft:0 14px 40px -22px rgba(30,23,16,.25);
+  --r:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Onest',sans-serif;color:var(--ink);background:var(--cream);line-height:1.5;-webkit-font-smoothing:antialiased;font-size:15px}
+h1,h2,h3,.dsp{font-family:'Unbounded',sans-serif;letter-spacing:-.02em;line-height:1.1}
+button{font:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+::selection{background:rgba(255,138,61,.35)}
+
+/* layout */
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.side{background:linear-gradient(170deg,var(--dark),var(--dark-2));color:#fff;padding:22px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
+.logo{display:flex;align-items:center;gap:10px;margin:0 6px 22px}
+.logo .capy{width:40px;height:40px;flex:none;border-radius:11px}
+select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238A5C32' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;background-repeat:no-repeat !important;background-position:right 16px center !important;background-size:12px 8px !important;padding-right:42px !important;cursor:pointer}
+.logo b{font-family:'Unbounded';font-size:15px;display:block}
+.logo small{color:#FFB870;font-size:12px;font-weight:600;letter-spacing:.08em}
+.nav{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;color:rgba(255,255,255,.75);background:none;border:0;text-align:left;width:100%;font-weight:600}
+.nav:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav.on{background:linear-gradient(90deg,var(--orange-soft),var(--orange));color:#fff;box-shadow:0 10px 26px -12px rgba(255,106,19,.8)}
+.nav .cnt{margin-left:auto;background:rgba(255,255,255,.18);border-radius:100px;padding:1px 8px;font-size:12px}
+.side .foot{margin-top:auto;font-size:12px;color:rgba(255,255,255,.5);padding:0 8px}
+.mode{display:inline-flex;align-items:center;gap:6px;background:rgba(255,184,112,.15);color:#FFB870;border:1px solid rgba(255,138,61,.4);border-radius:100px;padding:3px 10px;font-weight:700;font-size:11px;margin-bottom:8px}
+.mode.live{background:rgba(91,176,122,.15);color:#8FE0AA;border-color:rgba(91,176,122,.5)}
+
+main{padding:28px 32px 60px;min-width:0}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.kick{display:inline-flex;align-items:center;gap:8px;background:var(--cream-2);color:var(--orange-deep);font-weight:700;font-size:12px;padding:6px 13px;border-radius:100px;border:1.5px solid rgba(255,106,19,.25);margin-bottom:10px;letter-spacing:.04em}
+.top h1{font-size:30px}
+.seg{display:inline-flex;background:var(--white);border:1px solid var(--line);border-radius:100px;padding:4px}
+.seg button{border:0;background:none;padding:7px 14px;border-radius:100px;font-weight:600;color:var(--ink-soft);font-size:14px}
+.seg button.on{background:var(--ink);color:#fff}
+
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-soft)}
+.pad{padding:20px 22px}
+.sec-t{font-family:'Unbounded';font-size:16px;margin-bottom:4px}
+.sec-s{color:var(--ink-faint);font-size:13px;margin-bottom:16px}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.kpi{padding:18px 20px}
+.kpi .l{color:var(--ink-faint);font-size:13px;font-weight:600}
+.kpi .v{font-family:'Unbounded';font-size:30px;font-weight:700;margin:6px 0 2px}
+.kpi .s{font-size:12.5px;color:var(--ink-soft)}
+.kpi.acc{background:linear-gradient(155deg,var(--orange-soft),var(--orange-deep));color:#fff;border:0;box-shadow:var(--shadow)}
+.kpi.acc .l,.kpi.acc .s{color:rgba(255,255,255,.85)}
+
+.grid2{display:grid;grid-template-columns:1.35fr 1fr;gap:18px;margin-bottom:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.grid3.two{grid-template-columns:repeat(2,1fr)}
+
+/* funnel */
+.fun{display:flex;flex-direction:column;gap:8px}
+.frow{display:grid;grid-template-columns:190px 1fr 70px;align-items:center;gap:12px;font-size:13.5px}
+.frow .nm{font-weight:600;color:var(--ink-soft)}
+.bar{height:26px;background:var(--cream-3);border-radius:8px;position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--orange-soft),var(--orange));border-radius:8px}
+.bar.money i{background:linear-gradient(90deg,var(--green-soft),var(--green))}
+.bar b{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12.5px;color:var(--ink);font-weight:700}
+.frow .pc{text-align:right;font-weight:700;font-size:12.5px;color:var(--ink-faint)}
+.frow .pc.warn{color:var(--red)}
+
+/* zone chips */
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:100px;padding:3px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.z-red{background:var(--red-soft);color:var(--red)}
+.z-yellow{background:var(--yellow-soft);color:#9A6A00}
+.z-green{background:var(--green-soft);color:var(--green)}
+.z-none{background:var(--cream-3);color:var(--brown-deep)}
+.z-none::before{display:none}
+.tag{display:inline-block;background:var(--cream-2);color:var(--brown-deep);border-radius:8px;padding:2px 8px;font-size:12px;font-weight:600}
+
+/* list rows */
+.mini{display:flex;flex-direction:column}
+.mini .it{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px;gap:10px}
+.mini .it:last-child{border:0}
+.mini .it b{font-weight:700}
+.sbar{height:8px;border-radius:6px;background:var(--cream-3);flex:1;max-width:120px;overflow:hidden}
+.sbar i{display:block;height:100%;background:var(--orange)}
+
+/* alerts */
+.alert{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:var(--red-soft);color:#8E2A22;font-size:13.5px;margin-bottom:10px;cursor:pointer}
+.alert b{display:block}
+.alert.y{background:var(--yellow-soft);color:#7A5400}
+
+/* kanban */
+.board{display:grid;grid-template-columns:repeat(6,minmax(220px,1fr));gap:14px;overflow-x:auto;padding-bottom:10px}
+.col{background:var(--cream-3);border-radius:var(--r);padding:12px;min-height:300px}
+.col h3{font-size:13px;display:flex;justify-content:space-between;align-items:center;padding:4px 6px 10px}
+.col h3 span{background:var(--white);border-radius:100px;padding:1px 9px;font-family:'Onest';font-size:12px}
+.col.drop{outline:2px dashed var(--orange);outline-offset:-4px}
+.kc{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:12px 13px;margin-bottom:10px;cursor:pointer;box-shadow:0 6px 18px -14px rgba(30,23,16,.35);transition:transform .15s}
+.kc:hover{transform:translateY(-2px)}
+.kc .n{font-weight:700;font-size:14px}
+.kc .m{font-size:12.5px;color:var(--ink-faint);margin:3px 0 8px}
+.kc .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.kc .late{color:var(--red);font-weight:700;font-size:12px;margin-top:8px}
+.kc .soon{color:#9A6A00;font-weight:700;font-size:12px;margin-top:8px}
+
+/* table */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.filters input,.filters select{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-size:14px}
+.filters input{min-width:220px}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{text-align:left;font-size:12px;color:var(--ink-faint);font-weight:700;padding:12px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr:hover td{background:var(--cream)}
+.tbl tr{cursor:pointer}
+.tblwrap{overflow-x:auto}
+.stage{font-weight:600;color:var(--ink-soft);white-space:nowrap}
+.muted{color:var(--ink-faint)}
+
+/* drawer */
+.ov{position:fixed;inset:0;background:rgba(30,23,16,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:50}
+.ov.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(760px,100%);background:var(--cream);z-index:60;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;box-shadow:-30px 0 60px -30px rgba(0,0,0,.4)}
+.drawer.on{transform:none}
+.dh{background:linear-gradient(165deg,var(--dark),var(--dark-2));color:#fff;padding:24px 26px 20px;position:sticky;top:0;z-index:2}
+.dh .x{position:absolute;top:18px;right:18px;background:rgba(255,255,255,.1);border:0;color:#fff;width:36px;height:36px;border-radius:50%;font-size:18px}
+.dh h2{font-size:22px;margin:4px 0 6px;padding-right:40px}
+.dh .meta{color:rgba(255,255,255,.7);font-size:13px}
+.dh .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{border:0;border-radius:100px;padding:9px 16px;font-weight:700;font-size:13.5px;display:inline-flex;align-items:center;gap:7px;text-decoration:none}
+.btn.p{background:linear-gradient(90deg,var(--orange-soft),var(--orange));color:#fff;box-shadow:0 10px 26px -12px rgba(255,106,19,.8)}
+.btn.g{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn.l{background:var(--white);color:var(--ink);border:1px solid var(--line)}
+.db{padding:20px 26px 40px;display:flex;flex-direction:column;gap:16px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;font-size:14px}
+.kv dt{color:var(--ink-faint)}
+.kv dd{font-weight:600}
+.stagesel{width:100%;background:var(--white);border:1.5px solid rgba(255,106,19,.35);border-radius:12px;padding:10px 12px;font-weight:700}
+
+.steps{display:flex;flex-direction:column;gap:0}
+.st{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;font-size:13.5px;padding:6px 0;position:relative}
+.st .d{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);background:var(--white);margin-left:4px;z-index:1}
+.st.ok .d{background:var(--green);border-color:var(--green)}
+.st.no{color:var(--ink-faint)}
+.st::before{content:"";position:absolute;left:10px;top:-8px;bottom:50%;width:2px;background:var(--line)}
+.st:first-child::before{display:none}
+.st .t{font-size:12px;color:var(--ink-faint)}
+
+/* test result inside drawer */
+.tres{border:1px solid var(--line);border-radius:14px;background:var(--white);overflow:hidden}
+.tres summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tres summary::-webkit-details-marker{display:none}
+.tres summary .nm{font-weight:700}
+.tres summary .sc{margin-left:auto;font-family:'Unbounded';font-weight:700}
+.tres .bd{padding:4px 16px 16px}
+.scale{height:12px;border-radius:8px;background:linear-gradient(90deg,var(--green-soft),var(--green) 0%,#F2C94C 50%,var(--red) 100%);position:relative;margin:10px 0 18px}
+.scale i{position:absolute;top:-6px;width:4px;height:24px;border-radius:2px;background:var(--ink);box-shadow:0 0 0 3px #fff}
+.qa{width:100%;border-collapse:collapse;font-size:13px}
+.qa td{padding:8px 6px;border-bottom:1px dashed var(--line);vertical-align:top}
+.qa td:first-child{width:28px;color:var(--ink-faint);font-weight:700}
+.qa .q{color:var(--ink-soft)}
+.qa .a{font-weight:600}
+.qa .pt{white-space:nowrap;text-align:right;font-weight:700}
+.pt.bad{color:var(--red)} .pt.mid{color:#9A6A00} .pt.ok{color:var(--green)}
+.risks{margin:6px 0 12px;padding:12px 14px;background:var(--red-soft);border-radius:12px;font-size:13px;color:#8E2A22}
+.risks li{margin-left:18px}
+.topics{display:flex;flex-direction:column;gap:6px;margin:6px 0 12px}
+.topics .tp{display:grid;grid-template-columns:1fr 120px 60px;gap:10px;align-items:center;font-size:13px}
+
+.field{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--ink-faint);font-weight:600}
+.field input,.field select,.field textarea{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:14px;color:var(--ink);font-weight:500}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.notes .n{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-bottom:8px}
+.notes .n small{display:block;color:var(--ink-faint);font-size:11.5px;margin-bottom:3px}
+textarea{resize:vertical;min-height:70px}
+
+.empty{padding:40px;text-align:center;color:var(--ink-faint)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:100px;font-weight:600;font-size:14px;opacity:0;transition:.25s;z-index:80}
+.toast.on{opacity:1;transform:translateX(-50%)}
+
+.login[hidden]{display:none}
+.login{position:fixed;inset:0;background:radial-gradient(900px 600px at 50% -10%,#3a2a1a,#241a12 60%);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.login .box{background:var(--cream);border-radius:24px;padding:32px;width:min(380px,100%);box-shadow:var(--shadow)}
+.login h2{font-size:22px;margin:10px 0 6px}
+.login p{color:var(--ink-soft);font-size:14px;margin-bottom:16px}
+.login input{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:15px;margin-bottom:10px;background:#fff}
+.login .btn{width:100%;justify-content:center;padding:12px}
+.login .err{color:var(--red);font-size:13px;min-height:18px}
+
+.mtop{display:none}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.grid3,.grid3.two{grid-template-columns:1fr}}
+@media (max-width:800px){
+  .app{grid-template-columns:1fr}
+  .side{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:10px 12px;gap:6px;align-items:center}
+  .side .logo{margin:0 8px 0 0}.side .logo div{display:none}
+  .side .foot,.side .mode{display:none}
+  .nav{white-space:nowrap;padding:9px 12px;width:auto}
+  main{padding:20px 16px 50px}
+  .top h1{font-size:24px}
+  .frow{grid-template-columns:120px 1fr 52px;font-size:12.5px}
+  .kpi .v{font-size:24px}
+  .kv{grid-template-columns:120px 1fr}
+  .fgrid{grid-template-columns:1fr}
+  .dh,.db{padding-left:18px;padding-right:18px}
+  .filters input{min-width:0;flex:1}
+}
+</style>
+</head>
+<body>
+
+<div class="login" id="login" hidden>
+  <div class="box">
+    <div style="display:flex;align-items:center;gap:10px"><svg class="capy" style="width:44px;height:44px" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#fde9d6"/><g transform="translate(-1 0) scale(1.04) translate(-1 -2)"><ellipse cx="52" cy="58" rx="34" ry="26" fill="#9b6a45"/><rect x="30" y="34" width="44" height="40" rx="18" fill="#a9774f"/><ellipse cx="38" cy="33" rx="6" ry="5" fill="#7a5236"/><ellipse cx="66" cy="33" rx="6" ry="5" fill="#7a5236"/><rect x="40" y="56" width="26" height="18" rx="9" fill="#7a5236"/><circle cx="44" cy="47" r="3" fill="#2b2119"/><circle cx="62" cy="47" r="3" fill="#2b2119"/><ellipse cx="49" cy="61" rx="2" ry="1.5" fill="#2b2119"/><ellipse cx="57" cy="61" rx="2" ry="1.5" fill="#2b2119"/><rect x="70" y="20" width="6" height="46" rx="2" transform="rotate(20 73 43)" fill="#f6c443"/></g></svg><div class="kick" style="margin:0">bio_capybara · CRM</div></div>
+    <h2>Вход в CRM</h2>
+    <p>Заявки, ответы на тесты и воронка школы. Только для команды.</p>
+    <input type="password" id="pw" placeholder="Пароль" autocomplete="current-password">
+    <div class="err" id="pwErr"></div>
+    <button class="btn p" id="pwBtn">Войти</button>
+  </div>
+</div>
+
+<div class="app">
+  <aside class="side">
+    <div class="logo"><svg class="capy" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#fde9d6"/><g transform="translate(-1 0) scale(1.04) translate(-1 -2)"><ellipse cx="52" cy="58" rx="34" ry="26" fill="#9b6a45"/><rect x="30" y="34" width="44" height="40" rx="18" fill="#a9774f"/><ellipse cx="38" cy="33" rx="6" ry="5" fill="#7a5236"/><ellipse cx="66" cy="33" rx="6" ry="5" fill="#7a5236"/><rect x="40" y="56" width="26" height="18" rx="9" fill="#7a5236"/><circle cx="44" cy="47" r="3" fill="#2b2119"/><circle cx="62" cy="47" r="3" fill="#2b2119"/><ellipse cx="49" cy="61" rx="2" ry="1.5" fill="#2b2119"/><ellipse cx="57" cy="61" rx="2" ry="1.5" fill="#2b2119"/><rect x="70" y="20" width="6" height="46" rx="2" transform="rotate(20 73 43)" fill="#f6c443"/></g></svg><div><b>bio_capybara</b><small>CRM</small></div></div>
+    <button class="nav on" data-v="dash">📊 Воронка</button>
+    <button class="nav" data-v="board">🗂 Заявки <span class="cnt" id="cntBoard">0</span></button>
+    <button class="nav" data-v="list">📋 Все записи <span class="cnt" id="cntAll">0</span></button>
+    <div class="foot"><div class="mode" id="mode">ДЕМО-ДАННЫЕ</div><div id="modeTxt">Сайт ещё не подключён — показаны примеры.</div></div>
+  </aside>
+
+  <main>
+    <!-- DASHBOARD -->
+    <section id="v-dash">
+      <div class="top">
+        <div><div class="kick">ВОРОНКА · REELS → ТЕСТ → ДИАГНОСТИКА → КУРС</div><h1>Как идут дела</h1></div>
+        <div class="seg" id="period"><button data-d="7">7 дней</button><button data-d="30" class="on">30 дней</button><button data-d="0">Всё время</button></div>
+      </div>
+      <div class="kpis" id="kpis"></div>
+      <div class="grid2">
+        <div class="card pad"><div class="sec-t">Воронка по шагам</div><div class="sec-s">Сколько людей дошло до каждого шага и какая доля перешла с предыдущего шага («переслал» и «нажал записаться» — от всех, кто прошёл тест). Красным — шаг, где теряем больше всего.</div><div class="fun" id="funnel"></div></div>
+        <div class="card pad"><div class="sec-t">Требуют внимания</div><div class="sec-s">Перевод не проверен, человек ждёт звонка, зачёт диагностики сгорает.</div><div id="alerts"></div></div>
+      </div>
+      <div class="grid3 two">
+        <div class="card pad"><div class="sec-t">Какой тест приводит</div><div class="sec-s">Прохождения → оплаченные диагностики</div><div class="mini" id="byTest"></div></div>
+        <div class="card pad"><div class="sec-t">Зоны по тестам</div><div class="sec-s">Сколько людей попало в каждую зону</div><div class="mini" id="byZone"></div></div>
+      </div>
+    </section>
+
+    <!-- BOARD -->
+    <section id="v-board" hidden>
+      <div class="top">
+        <div><div class="kick">ЗАПИСАЛИСЬ НА ДИАГНОСТИКУ</div><h1>Заявки</h1></div>
+        <div class="muted" style="font-size:13px">Перетащите карточку в другую колонку или откройте её, чтобы сменить этап.</div>
+      </div>
+      <div class="board" id="board"></div>
+    </section>
+
+    <!-- LIST -->
+    <section id="v-list" hidden>
+      <div class="top"><div><div class="kick">ВСЕ, КТО ПРОШЁЛ ТЕСТ</div><h1>Все записи</h1></div></div>
+      <div class="filters">
+        <input id="q" placeholder="Поиск: имя, телефон, номер записи">
+        <select id="fTest"><option value="">Все тесты</option></select>
+        <select id="fZone"><option value="">Все зоны</option><option value="red">Красная</option><option value="yellow">Жёлтая</option><option value="green">Зелёная</option></select>
+        <select id="fStage"><option value="">Все этапы</option></select>
+        <select id="fRole"><option value="">Родители и ученики</option><option value="parent">Родители</option><option value="student">Ученики</option></select>
+      </div>
+      <div class="card tblwrap"><table class="tbl"><thead><tr><th>Дата</th><th>Кто</th><th>Тест и зона</th><th>Этап</th><th>Контакт</th></tr></thead><tbody id="rows"></tbody></table><div class="empty" id="noRows" hidden>Ничего не нашлось</div></div>
+    </section>
+  </main>
+</div>
+
+<div class="ov" id="ov"></div>
+<aside class="drawer" id="drawer"></aside>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   НАСТРОЙКИ ПОДКЛЮЧЕНИЯ (для Абубакра)
+   API_BASE — адрес API на сайте. Если API не отвечает,
+   CRM работает на демо-данных (ничего не сохраняет на сервер).
+   ============================================================ */
+const CONFIG = {
+  API_BASE: '/api/crm',          // GET /records, PATCH /records/:id, POST /records/:id/notes, POST /login
+  REQUIRE_LOGIN: true,           // показывать экран пароля, если API требует вход
+  CHECK_DEADLINE_HOURS: 1,       // проверить перевод в течение часа после «Я оплатил»
+  CALL_DEADLINE_HOURS: 2,        // «свяжемся в течение 2 часов» — считается от «Я оплатил»
+  CREDIT_HOURS: 72,              // зачёт стоимости диагностики в курс
+  TEAM: ['Ислам','Абу-Бакр','Арсен']
+};
+
+/* ---------- справочники ---------- */
+const STAGES = [ // порядок = воронка
+  {k:'test_done',     n:'Прошёл тест'},
+  {k:'shared',        n:'Переслал родителю'},
+  {k:'parent_opened', n:'Родитель открыл'},
+  {k:'clicked_signup',n:'Нажал «Записаться»'},
+  {k:'claimed',       n:'Сообщил об оплате'},
+  {k:'paid',          n:'Оплата подтверждена'},
+  {k:'scheduled',     n:'Диагностика назначена'},
+  {k:'diag_done',     n:'Диагностика проведена'},
+  {k:'bought',        n:'Купил курс'}
+];
+const BOARD = [ // колонки канбана — рабочие этапы после оплаты
+  {k:'check',    n:'Проверить оплату',          from:['claimed']},
+  {k:'new',      n:'Оплата есть — позвонить',   from:['paid']},
+  {k:'scheduled',n:'Диагностика назначена',     from:['scheduled']},
+  {k:'diag_done',n:'Проведена — ждём решения',  from:['diag_done']},
+  {k:'bought',   n:'Купил курс',                from:['bought']},
+  {k:'lost',     n:'Отказ',                     from:['lost']}
+];
+const STAGE_NAMES = Object.fromEntries(STAGES.map(s=>[s.k,s.n])); STAGE_NAMES.lost='Отказ';
+const ZN = {red:'Красная',yellow:'Жёлтая',green:'Зелёная'};
+const TARIFFS = {
+  'CapyBasic':      {m:5000, full:29500},
+  'Comfort-bara':   {m:6000, full:35500},
+  'Capybarin-Pro':  {m:9800, full:null},
+  'Capybarin-Pro MAX':{m:13000, full:null}
+};
+
+/* ---------- данные ---------- */
+let RECORDS = [], LIVE = false, PERIOD = 30;
+
+async function api(path, opt={}){
+  const r = await fetch(CONFIG.API_BASE+path, {credentials:'include', headers:{'Content-Type':'application/json'}, ...opt});
+  if (r.status===401) { const e=new Error('auth'); e.auth=true; throw e; }
+  if (!r.ok) throw new Error('http '+r.status);
+  return r.status===204 ? null : r.json();
+}
+async function load(){
+  try{
+    const data = await api('/records');
+    RECORDS = (Array.isArray(data)?data:data.records||[]).map(norm);
+    LIVE = true;
+  }catch(e){
+    if (e.auth && CONFIG.REQUIRE_LOGIN){ showLogin(); return false; }
+    let d=null; try{ d=JSON.parse(localStorage.getItem('crm_demo_v2')||'null'); }catch(_){}
+    if(!d){ d=demo(); try{ localStorage.setItem('crm_demo_v2',JSON.stringify(d)); }catch(_){} }
+    RECORDS = d.map(norm); LIVE = false;
+  }
+  setMode(); return true;
+}
+async function save(rec, patch){
+  Object.assign(rec, patch); rec.updated_at = new Date().toISOString();
+  if (LIVE){
+    try{ await api('/records/'+encodeURIComponent(rec.id), {method:'PATCH', body:JSON.stringify(patch)}); }
+    catch(e){ toast('Не сохранилось на сервере: '+e.message); return; }
+  }
+  if(!LIVE) persistDemo();
+  toast(LIVE?'Сохранено':'Сохранено (демо, не уходит на сервер)');
+}
+function persistDemo(){ try{ localStorage.setItem('crm_demo_v2',JSON.stringify(RECORDS)); }catch(_){} }
+function setMode(){
+  const m=document.getElementById('mode'), t=document.getElementById('modeTxt');
+  if (LIVE){ m.textContent='ПОДКЛЮЧЕНО К САЙТУ'; m.classList.add('live'); t.textContent='Данные приходят с сайта.'; }
+}
+function showLogin(){
+  const L=document.getElementById('login'); L.hidden=false;
+  const go=async()=>{
+    try{ await api('/login',{method:'POST',body:JSON.stringify({password:document.getElementById('pw').value})}); L.hidden=true; if(await load()) renderAll(); }
+    catch(e){ document.getElementById('pwErr').textContent='Неверный пароль'; }
+  };
+  document.getElementById('pwBtn').onclick=go;
+  document.getElementById('pw').onkeydown=e=>{ if(e.key==='Enter') go(); };
+}
+
+/* нормализация: запись = одна семья/лид */
+function norm(r){
+  r.tests = (r.tests||[]).map(t=>({...t, zone:t.zone||zoneFromLabel(t.label)}));
+  r.events = r.events||[];
+  r.notes = r.notes||[];
+  r.contact = r.contact||{};
+  r.source = r.source||{};
+  r.diagnostic = r.diagnostic||{};
+  r.sale = r.sale||{};
+  r.payment = r.payment||{};
+  if (!r.stage) r.stage = stageFromEvents(r);
+  return r;
+}
+function zoneFromLabel(l=''){ l=l.toLowerCase(); if(l.includes('красн')||l.includes('с нуля'))return'red'; if(l.includes('жёлт')||l.includes('желт'))return'yellow'; if(l.includes('зелён')||l.includes('зелен'))return'green'; return null; }
+function stageFromEvents(r){ let s='test_done'; for(const st of STAGES) if (r.events.some(e=>e.type===st.k)) s=st.k; return s; }
+function reached(r, k){ // дошёл ли до шага воронки
+  if (k==='test_done') return r.tests.length>0;
+  if (r.events.some(e=>e.type===k)) return true;
+  const idx=STAGES.findIndex(s=>s.k===k), cur=STAGES.findIndex(s=>s.k===r.stage);
+  if (['shared','parent_opened'].includes(k)) return false; // эти шаги необязательны, считаем только по событиям
+  return cur>=idx && cur>=0;
+}
+const evAt = (r,k)=> (r.events.find(e=>e.type===k)||{}).at;
+const claimAt = r => evAt(r,'claimed')||evAt(r,'paid')||r.created_at;
+const lastTest = r => r.tests.slice().sort((a,b)=>new Date(b.at)-new Date(a.at))[0]||{};
+const who = r => r.contact.parent_name || r.contact.student_name || (r.role==='student'?'Ученик':'Родитель')+' · '+r.id;
+const inPeriod = r => !PERIOD || (Date.now()-new Date(r.created_at))/864e5 <= PERIOD;
+const boardCol = r => (BOARD.find(c=>c.from.includes(r.stage))||{}).k;
+
+/* ---------- утилиты ---------- */
+const $ = s=>document.querySelector(s);
+const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtD = d => d? new Date(d).toLocaleDateString('ru-RU',{day:'numeric',month:'short'}) : '—';
+const fmtDT = d => d? new Date(d).toLocaleString('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
+const rub = n => n==null?'—':Math.round(n).toLocaleString('ru-RU')+' ₽';
+const hoursSince = d => (Date.now()-new Date(d))/36e5;
+const zoneChip = (z,label) => z ? `<span class="chip z-${z}">${esc(label||ZN[z])}</span>` : (label?`<span class="chip z-none">${esc(label)}</span>`:'');
+function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('on'); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove('on'),2200); }
+const phoneLink = (p,m) => { if(!p) return ''; const d=p.replace(/\D/g,''); return m==='Telegram'?`https://t.me/+${d}`:`https://wa.me/${d}`; };
+
+/* ---------- DASHBOARD ---------- */
+function renderDash(){
+  const R = RECORDS.filter(inPeriod);
+  const n = k => R.filter(r=>reached(r,k)).length;
+  const paid = R.filter(r=>reached(r,'paid'));
+  const bought = R.filter(r=>reached(r,'bought'));
+  const diagRev = paid.reduce((s,r)=>s+(r.diagnostic.price||0),0);
+  const saleRev = bought.reduce((s,r)=>s+(r.sale.amount||0),0);
+  const done = n('diag_done');
+  $('#kpis').innerHTML = `
+    <div class="card kpi"><div class="l">Прошли тест</div><div class="v">${n('test_done')}</div><div class="s">записей за период</div></div>
+    <div class="card kpi"><div class="l">Оплатили диагностику</div><div class="v">${paid.length}</div><div class="s">${pct(paid.length,n('test_done'))} от прошедших тест · ${rub(diagRev)}</div></div>
+    <div class="card kpi"><div class="l">Купили курс</div><div class="v">${bought.length}</div><div class="s">${pct(bought.length,done)} от проведённых диагностик</div></div>
+    <div class="card kpi acc"><div class="l">Выручка за период</div><div class="v">${rub(diagRev+saleRev)}</div><div class="s">курсы ${rub(saleRev)} + диагностики ${rub(diagRev)}</div></div>`;
+  // funnel
+  const vals = STAGES.map(s=>({...s,v:n(s.k)}));
+  const max = Math.max(1,vals[0].v);
+  let worst=-1, worstPc=2;
+  vals.forEach((s,i)=>{ if(i>0 && !['shared','parent_opened'].includes(s.k)){ const base=s.k==='clicked_signup'?vals[0].v:vals[i-1].v; if(!base) return; const p=s.v/base; if(p<worstPc){worstPc=p;worst=i;} } });
+  $('#funnel').innerHTML = vals.map((s,i)=>{
+    const OPT=['shared','parent_opened'];
+    const prev = !i? null : (OPT.includes(s.k)||s.k==='clicked_signup') ? vals[0].v : vals[i-1].v; // необязательные шаги считаем от прошедших тест
+    const p = prev? s.v/prev : null;
+    return `<div class="frow"><div class="nm">${s.n}</div><div class="bar ${s.k==='bought'?'money':''}"><i style="width:${Math.max(2,s.v/max*100)}%"></i><b>${s.v}</b></div><div class="pc ${i===worst?'warn':''}">${p==null?'':Math.round(p*100)+'%'}</div></div>`;
+  }).join('');
+  // alerts
+  const al=[];
+  RECORDS.filter(r=>r.stage==='claimed').forEach(r=>{
+    const h=hoursSince(claimAt(r));
+    if (h>CONFIG.CHECK_DEADLINE_HOURS) al.push({r,cls:'',t:`${esc(who(r))} — оплата не проверена ${fmtWait(h)}`,s:`Перевод ${rub(r.payment.amount)} от «${esc(r.payment.payer||'—')}». Проверить и подтвердить.`});
+  });
+  RECORDS.filter(r=>r.stage==='paid').forEach(r=>{
+    const h=hoursSince(claimAt(r));
+    if (h>CONFIG.CALL_DEADLINE_HOURS) al.push({r,cls:'',t:`${esc(who(r))} — ждёт звонка ${fmtWait(h)}`,s:'Оплатил диагностику. Связаться и назначить время.'});
+  });
+  RECORDS.filter(r=>r.stage==='diag_done').forEach(r=>{
+    const left = CONFIG.CREDIT_HOURS - hoursSince(r.diagnostic.done_at||evAt(r,'diag_done')||r.created_at);
+    if (left>0 && left<36) al.push({r,cls:'y',t:`${esc(who(r))} — зачёт сгорает через ${Math.ceil(left)} ч`,s:`Рекомендован ${esc(r.diagnostic.recommended_tariff||'тариф')}. Напомнить о сроке.`});
+  });
+  $('#alerts').innerHTML = al.length? al.slice(0,6).map((a,i)=>`<div class="alert ${a.cls}" data-id="${a.r.id}"><span>${a.cls?'⏳':'📞'}</span><div><b>${a.t}</b>${a.s}</div></div>`).join('') : '<div class="empty">Всё под контролем 👌</div>';
+  // by test
+  const tests={}; R.forEach(r=>r.tests.forEach(t=>{ tests[t.test]=tests[t.test]||{a:0,p:0}; tests[t.test].a++; }));
+  R.filter(r=>reached(r,'paid')).forEach(r=>{ const t=lastTest(r).test; if(tests[t]) tests[t].p++; });
+  $('#byTest').innerHTML = Object.entries(tests).sort((a,b)=>b[1].a-a[1].a).map(([k,v])=>`<div class="it"><span>${esc(k)}</span><span class="muted">${v.a} → <b style="color:var(--ink)">${v.p}</b> <small>(${pct(v.p,v.a)})</small></span></div>`).join('')||'<div class="empty">Нет данных</div>';
+  // zones
+  const z={}; R.forEach(r=>r.tests.forEach(t=>{ if(!t.zone) return; z[t.test]=z[t.test]||{red:0,yellow:0,green:0}; z[t.test][t.zone]++; }));
+  $('#byZone').innerHTML = Object.entries(z).map(([k,v])=>{ const tot=v.red+v.yellow+v.green||1; return `<div class="it" style="flex-direction:column;align-items:stretch;gap:6px"><span>${esc(k)}</span><span style="display:flex;height:10px;border-radius:6px;overflow:hidden"><i style="width:${v.green/tot*100}%;background:var(--green)"></i><i style="width:${v.yellow/tot*100}%;background:#F2C94C"></i><i style="width:${v.red/tot*100}%;background:var(--red)"></i></span><small class="muted">зел. ${v.green} · жёлт. ${v.yellow} · красн. ${v.red}</small></div>`; }).join('')||'<div class="empty">Нет данных</div>';
+}
+const pct=(a,b)=> b? Math.round(a/b*100)+'%' : '—';
+const fmtWait=h=> h<1? Math.max(1,Math.round(h*60))+' мин' : h<24? Math.floor(h)+' ч' : Math.floor(h/24)+' дн';
+
+/* ---------- BOARD ---------- */
+function renderBoard(){
+  $('#board').innerHTML = BOARD.map(c=>{
+    const items = RECORDS.filter(r=>boardCol(r)===c.k).sort((a,b)=>new Date(claimAt(b))-new Date(claimAt(a)));
+    return `<div class="col" data-col="${c.k}"><h3>${c.n}<span>${items.length}</span></h3>${items.map(card).join('')||'<div class="muted" style="font-size:12.5px;padding:6px">Пусто</div>'}</div>`;
+  }).join('');
+  $('#cntBoard').textContent = RECORDS.filter(r=>['check','new'].includes(boardCol(r))).length;
+  // drag & drop
+  document.querySelectorAll('.kc').forEach(el=>{ el.draggable=true; el.ondragstart=e=>e.dataTransfer.setData('id',el.dataset.id); });
+  document.querySelectorAll('.col').forEach(col=>{
+    col.ondragover=e=>{e.preventDefault();col.classList.add('drop');};
+    col.ondragleave=()=>col.classList.remove('drop');
+    col.ondrop=async e=>{ e.preventDefault(); col.classList.remove('drop'); const r=RECORDS.find(x=>x.id===e.dataTransfer.getData('id')); if(!r) return;
+      const to={check:'claimed',new:'paid',scheduled:'scheduled',diag_done:'diag_done',bought:'bought',lost:'lost'}[col.dataset.col];
+      await setStage(r,to); renderAll(); };
+  });
+}
+function card(r){
+  const t=lastTest(r); let flag='';
+  if (r.stage==='claimed'){ const h=hoursSince(claimAt(r)); flag = `<div class="${h>CONFIG.CHECK_DEADLINE_HOURS?'late':'soon'}">💳 ${rub(r.payment.amount)} от «${esc(r.payment.payer||'—')}» · ${fmtWait(h)} назад</div>`; }
+  if (r.stage==='paid'){ const h=hoursSince(claimAt(r)); flag = h>CONFIG.CALL_DEADLINE_HOURS?`<div class="late">📞 ждёт звонка ${fmtWait(h)}</div>`:`<div class="soon">📞 позвонить до ${fmtDT(new Date(new Date(claimAt(r)).getTime()+CONFIG.CALL_DEADLINE_HOURS*36e5))}</div>`; }
+  if (r.stage==='scheduled') flag = `<div class="soon">🗓 ${fmtDT(r.diagnostic.scheduled_at)} · ${esc(r.diagnostic.teacher||'')}</div>`;
+  if (r.stage==='diag_done'){ const left=CONFIG.CREDIT_HOURS-hoursSince(r.diagnostic.done_at||evAt(r,'diag_done')); flag = left>0?`<div class="${left<36?'late':'soon'}">⏳ зачёт ещё ${Math.ceil(left)} ч</div>`:`<div class="muted" style="font-size:12px;margin-top:8px">зачёт истёк</div>`; }
+  if (r.stage==='bought') flag = `<div class="soon" style="color:var(--green)">✓ ${esc(r.sale.tariff||'')} · ${rub(r.sale.amount)}</div>`;
+  if (r.stage==='lost' && r.lost_reason) flag = `<div class="muted" style="font-size:12px;margin-top:8px">${esc(r.lost_reason)}</div>`;
+  return `<div class="kc" data-id="${r.id}"><div class="n">${esc(who(r))}</div><div class="m">${esc(r.contact.student_name&&r.contact.parent_name?'ребёнок: '+r.contact.student_name+' · ':'')}${esc(r.exam||'')} ${r.grade?esc(r.grade)+' кл.':''}</div><div class="row">${zoneChip(t.zone,t.zone?ZN[t.zone]:t.label)}<span class="tag">${esc(short(t.test))}</span></div>${flag}</div>`;
+}
+const short = s => (s||'').replace('Тест для родителей','Тест родителя').replace('Тест на специальность','Специальность');
+
+/* ---------- LIST ---------- */
+function renderList(){
+  const q=$('#q').value.trim().toLowerCase(), ft=$('#fTest').value, fz=$('#fZone').value, fs=$('#fStage').value, fr=$('#fRole').value;
+  const R = RECORDS.filter(r=>{
+    if (q && ![r.id,r.contact.parent_name,r.contact.student_name,r.contact.phone].join(' ').toLowerCase().includes(q)) return false;
+    if (ft && !r.tests.some(t=>t.test===ft)) return false;
+    if (fz && lastTest(r).zone!==fz) return false;
+    if (fs && r.stage!==fs) return false;
+    if (fr && r.role!==fr) return false;
+    return true;
+  }).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  $('#rows').innerHTML = R.map(r=>{ const t=lastTest(r); return `<tr data-id="${r.id}">
+    <td class="muted">${fmtD(r.created_at)}</td>
+    <td><b>${esc(who(r))}</b><div class="muted" style="font-size:12px">${r.role==='student'?'ученик':'родитель'} · ${esc(r.exam||'')} · №${esc(r.id)}</div></td>
+    <td>${esc(short(t.test))}${t.score!=null?` <span class="muted">${t.score}/${t.max}</span>`:''}<div style="margin-top:4px">${zoneChip(t.zone,t.zone?ZN[t.zone]:t.label)}${r.tests.length>1?` <span class="muted" style="font-size:12px">+${r.tests.length-1} тест</span>`:''}</div></td>
+    <td class="stage">${STAGE_NAMES[r.stage]||r.stage}</td>
+    <td class="muted">${esc(r.contact.phone||'—')}</td></tr>`; }).join('');
+  $('#noRows').hidden = R.length>0;
+  $('#cntAll').textContent = RECORDS.length;
+}
+function fillFilters(){
+  const tests=[...new Set(RECORDS.flatMap(r=>r.tests.map(t=>t.test)))];
+  $('#fTest').innerHTML='<option value="">Все тесты</option>'+tests.map(t=>`<option>${esc(t)}</option>`).join('');
+  $('#fStage').innerHTML='<option value="">Все этапы</option>'+[...STAGES,{k:'lost',n:'Отказ'}].map(s=>`<option value="${s.k}">${s.n}</option>`).join('');
+}
+
+/* ---------- DRAWER ---------- */
+async function setStage(r,k){
+  const patch={stage:k};
+  if (!r.events.some(e=>e.type===k) && k!=='lost'){ r.events.push({at:new Date().toISOString(),type:k}); patch.events=r.events; }
+  if (k==='diag_done' && !r.diagnostic.done_at){ r.diagnostic.done_at=new Date().toISOString(); patch.diagnostic=r.diagnostic; }
+  await save(r,patch);
+}
+function openRec(id){
+  const r=RECORDS.find(x=>x.id===id); if(!r) return;
+  const d=$('#drawer');
+  const c=r.contact, dg=r.diagnostic, sl=r.sale;
+  const wa=phoneLink(c.phone,c.messenger);
+  d.innerHTML = `
+  <div class="dh"><button class="x" data-close>✕</button>
+    <div class="kick" style="background:rgba(255,255,255,.08);color:#FFB870;border-color:rgba(255,138,61,.4)">№ ${esc(r.id)} · ${r.role==='student'?'пришёл ученик':'пришёл родитель'}</div>
+    <h2>${esc(who(r))}</h2>
+    <div class="meta">${esc(r.exam||'')} ${r.grade?esc(r.grade)+' класс':''} ${r.goal?'· цель: '+esc(r.goal):''} · создано ${fmtDT(r.created_at)}</div>
+    <div class="acts">${c.phone?`<a class="btn p" href="${wa}" target="_blank" rel="noopener">💬 Написать в ${esc(c.messenger||'WhatsApp')}</a><a class="btn g" href="tel:${esc(c.phone)}">📞 ${esc(c.phone)}</a>`:'<span class="meta">Контактов пока нет — человек ещё не записался на диагностику</span>'}</div>
+  </div>
+  <div class="db">
+    ${r.payment.amount||r.stage==='claimed'?`<div class="card pad" style="${r.stage==='claimed'?'border:2px solid var(--orange);':''}">
+      <div class="sec-t">Оплата диагностики</div><div class="sec-s">${r.stage==='claimed'?'Человек написал, что перевёл деньги. Найдите перевод в банке и подтвердите.':'Перевод по реквизитам, проверен вручную.'}</div>
+      <dl class="kv"><dt>Сумма</dt><dd>${rub(r.payment.amount)}</dd><dt>Перевод от</dt><dd>${esc(r.payment.payer||'—')}</dd><dt>Сообщил</dt><dd>${fmtDT(evAt(r,'claimed'))}</dd>${r.payment.confirmed_by?`<dt>Подтвердил</dt><dd>${esc(r.payment.confirmed_by)} · ${fmtDT(evAt(r,'paid'))}</dd>`:''}</dl>
+      ${r.stage==='claimed'?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><select id="pBy" class="stagesel" style="width:auto;font-weight:600">${CONFIG.TEAM.map(t=>`<option>${t}</option>`).join('')}</select><button class="btn p" id="pOk">✓ Оплата пришла</button><button class="btn l" id="pNo">Оплаты нет</button></div>`:''}
+    </div>`:''}
+    <div class="card pad">
+      <div class="sec-t">Этап</div><div class="sec-s">Меняйте этап после каждого шага — от этого считается воронка.</div>
+      <select class="stagesel" id="dStage">${[...STAGES,{k:'lost',n:'Отказ'}].map(s=>`<option value="${s.k}" ${s.k===r.stage?'selected':''}>${s.n}</option>`).join('')}</select>
+      <div id="lostBox" ${r.stage==='lost'?'':'hidden'} style="margin-top:10px"><label class="field">Причина отказа<input id="dLost" value="${esc(r.lost_reason||'')}" placeholder="Дорого / выбрали другого / подумают…"></label></div>
+      <div class="steps" style="margin-top:14px">${STAGES.map(s=>{const at=evAt(r,s.k); const ok=reached(r,s.k); return `<div class="st ${ok?'ok':'no'}"><span class="d"></span><span>${s.n}</span><span class="t">${at?fmtDT(at):''}</span></div>`;}).join('')}</div>
+    </div>
+
+    <div class="card pad">
+      <div class="sec-t">Ответы на тесты</div><div class="sec-s">Всё, что человек ответил. Прочитайте перед звонком и перед диагностикой.</div>
+      <div style="display:flex;flex-direction:column;gap:10px">${r.tests.slice().sort((a,b)=>new Date(b.at)-new Date(a.at)).map((t,i)=>testBlock(t,i===0)).join('')||'<div class="muted">Тестов нет</div>'}</div>
+    </div>
+
+    <div class="card pad">
+      <div class="sec-t">Контакты</div><div class="sec-s">Приходят из формы «Я оплатил». Можно поправить.</div>
+      <div class="fgrid">
+        <label class="field">Родитель<input data-c="parent_name" value="${esc(c.parent_name||'')}"></label>
+        <label class="field">Ребёнок<input data-c="student_name" value="${esc(c.student_name||'')}"></label>
+        <label class="field">Телефон<input data-c="phone" value="${esc(c.phone||'')}"></label>
+        <label class="field">Мессенджер<select data-c="messenger">${['WhatsApp','Telegram','Звонок'].map(m=>`<option ${c.messenger===m?'selected':''}>${m}</option>`).join('')}</select></label>
+      </div>
+    </div>
+
+    <div class="card pad">
+      <div class="sec-t">Диагностика</div><div class="sec-s">Кто проводит, когда, что выяснили и какой тариф предложили.</div>
+      <div class="fgrid">
+        <label class="field">Стоимость<select data-g="price">${[2500,2000,1500].map(p=>`<option value="${p}" ${dg.price==p?'selected':''}>${rub(p)}</option>`).join('')}<option value="" ${!dg.price?'selected':''}>не оплачено</option></select></label>
+        <label class="field">Преподаватель<select data-g="teacher">${['Ислам','Абу-Бакр'].map(p=>`<option ${dg.teacher===p?'selected':''}>${p}</option>`).join('')}</select></label>
+        <label class="field">Дата и время<input type="datetime-local" data-g="scheduled_at" value="${dg.scheduled_at?toLocalInput(dg.scheduled_at):''}"></label>
+        <label class="field">Рекомендованный тариф<select data-g="recommended_tariff"><option value="">—</option>${Object.keys(TARIFFS).map(p=>`<option ${dg.recommended_tariff===p?'selected':''}>${p}</option>`).join('')}</select></label>
+      </div>
+      <label class="field" style="margin-top:12px">Итоги диагностики: пробелы, прогноз балла, что важно семье<textarea data-g="notes" placeholder="Генетика и оформление второй части; прогноз 58 → цель 80+; маме важен еженедельный отчёт…">${esc(dg.notes||'')}</textarea></label>
+    </div>
+
+    <div class="card pad">
+      <div class="sec-t">Продажа</div><div class="sec-s">Заполните, когда семья оплатила курс.</div>
+      <div class="fgrid">
+        <label class="field">Тариф<select data-s="tariff"><option value="">—</option>${Object.keys(TARIFFS).map(p=>`<option ${sl.tariff===p?'selected':''}>${p}</option>`).join('')}</select></label>
+        <label class="field">Оплата<select data-s="plan"><option value="month" ${sl.plan==='month'?'selected':''}>Помесячно</option><option value="full" ${sl.plan==='full'?'selected':''}>Весь курс</option></select></label>
+        <label class="field">Сумма первого платежа, ₽<input type="number" data-s="amount" value="${sl.amount||''}"></label>
+        <label class="field">Зачли диагностику<select data-s="credited"><option value="yes" ${sl.credited==='yes'?'selected':''}>Да</option><option value="no" ${sl.credited!=='yes'?'selected':''}>Нет</option></select></label>
+      </div>
+    </div>
+
+    <div class="card pad notes">
+      <div class="sec-t">Заметки команды</div><div class="sec-s">Что обсуждали, о чём договорились, когда перезвонить.</div>
+      <div id="nList">${r.notes.slice().reverse().map(n=>`<div class="n"><small>${esc(n.author||'')} · ${fmtDT(n.at)}</small>${esc(n.text)}</div>`).join('')||'<div class="muted" style="font-size:13px;margin-bottom:8px">Пока пусто</div>'}</div>
+      <div class="fgrid" style="grid-template-columns:1fr 150px;align-items:end">
+        <label class="field">Новая заметка<textarea id="nText" placeholder="Мама просит перезвонить после 18:00"></textarea></label>
+        <div style="display:flex;flex-direction:column;gap:8px"><select id="nAuthor" class="stagesel" style="font-weight:600">${CONFIG.TEAM.map(t=>`<option>${t}</option>`).join('')}</select><button class="btn p" id="nAdd" style="justify-content:center">Добавить</button></div>
+      </div>
+    </div>
+  </div>`;
+  d.classList.add('on'); $('#ov').classList.add('on'); d.scrollTop=0;
+  const rerender=()=>{ renderAll(); };
+  const pOk=$('#pOk'); if(pOk) pOk.onclick=async()=>{ r.payment.confirmed_by=$('#pBy').value; r.diagnostic.price=r.diagnostic.price||r.payment.amount; await save(r,{payment:r.payment,diagnostic:r.diagnostic}); await setStage(r,'paid'); openRec(r.id); rerender(); };
+  const pNo=$('#pNo'); if(pNo) pNo.onclick=async()=>{ const n={at:new Date().toISOString(),author:$('#pBy').value,text:'Перевод не найден — уточнить у семьи.'}; r.notes.push(n); if(LIVE){ try{ await api('/records/'+encodeURIComponent(r.id)+'/notes',{method:'POST',body:JSON.stringify(n)}); }catch(e){} } else persistDemo(); toast('Добавлена заметка: перевод не найден'); openRec(r.id); };
+  $('#dStage').onchange=async e=>{ $('#lostBox').hidden = e.target.value!=='lost'; await setStage(r,e.target.value); openRec(r.id); rerender(); };
+  const lost=$('#dLost'); if(lost) lost.onchange=async e=>{ await save(r,{lost_reason:e.target.value}); rerender(); };
+  d.querySelectorAll('[data-c]').forEach(el=>el.onchange=async()=>{ r.contact[el.dataset.c]=el.value; await save(r,{contact:r.contact}); rerender(); });
+  d.querySelectorAll('[data-g]').forEach(el=>el.onchange=async()=>{ let v=el.value; if(el.dataset.g==='price') v=v?+v:null; if(el.dataset.g==='scheduled_at') v=v?new Date(v).toISOString():null; r.diagnostic[el.dataset.g]=v; await save(r,{diagnostic:r.diagnostic}); rerender(); });
+  d.querySelectorAll('[data-s]').forEach(el=>el.onchange=async()=>{ let v=el.value; if(el.dataset.s==='amount') v=v?+v:null; r.sale[el.dataset.s]=v; await save(r,{sale:r.sale}); rerender(); });
+  $('#nAdd').onclick=async()=>{ const t=$('#nText').value.trim(); if(!t) return; const n={at:new Date().toISOString(),author:$('#nAuthor').value,text:t}; r.notes.push(n);
+    if (LIVE){ try{ await api('/records/'+encodeURIComponent(r.id)+'/notes',{method:'POST',body:JSON.stringify(n)}); toast('Заметка сохранена'); }catch(e){ toast('Не сохранилось: '+e.message); } } else { persistDemo(); toast('Заметка добавлена (демо)'); }
+    openRec(r.id); };
+}
+const toLocalInput = iso => { const d=new Date(iso); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,16); };
+function testBlock(t,open){
+  const pos = t.score!=null && t.max ? (t.kind==='probnik' ? 100-t.score/t.max*100 : t.score/t.max*100) : null;
+  const ans = (t.answers||[]).map(a=>{ const cls = a.max!=null ? (a.pts>=a.max?'ok':a.pts>0?'mid':'bad') : (a.pts>=2?'bad':a.pts===1?'mid':'ok');
+      const ptsTxt = a.max!=null ? `${a.pts}/${a.max}` : (a.pts!=null?`риск ${a.pts}`:'');
+      return `<tr><td>${esc(a.n)}</td><td><div class="q">${esc(a.q)}</div><div class="a">${esc(a.a||'—')}${a.right?` <span class="muted" style="font-weight:500">· верно: ${esc(a.right)}</span>`:''}</div></td><td class="pt ${cls}">${ptsTxt}</td></tr>`; }).join('');
+  return `<details class="tres" ${open?'open':''}><summary><span class="nm">${esc(t.test)}</span>${zoneChip(t.zone,t.zone?ZN[t.zone]:t.label)}<span class="muted" style="font-size:12.5px">${fmtDT(t.at)}</span><span class="sc">${t.score!=null?t.score+' / '+t.max:''}</span></summary>
+  <div class="bd">
+    ${pos!=null?`<div class="scale"><i style="left:calc(${Math.min(100,Math.max(0,pos))}% - 2px)"></i></div>`:''}
+    ${t.label?`<div style="font-weight:700;margin-bottom:8px">${esc(t.label)}</div>`:''}
+    ${t.extra?`<div style="font-size:13.5px;margin-bottom:10px">${esc(t.extra)}</div>`:''}
+    ${(t.risks||[]).length?`<div class="risks"><b>Риски, которые увидел человек:</b><ul>${t.risks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
+    ${(t.topics||[]).length?`<div style="font-weight:700;font-size:13px;margin-top:4px">Где потерял баллы</div><div class="topics">${t.topics.map(x=>`<div class="tp"><span>${esc(x.name)}</span><span class="sbar" style="max-width:none"><i style="width:${x.max?x.lost/x.max*100:0}%;background:var(--red)"></i></span><span class="muted">−${x.lost} из ${x.max}</span></div>`).join('')}</div>`:''}
+    ${t.wrong&&!ans?`<div class="muted" style="font-size:13px">Ошибки в заданиях: ${t.wrong.join(', ')}</div>`:''}
+    ${ans?`<table class="qa">${ans}</table>`:''}
+  </div></details>`;
+}
+function closeRec(){ $('#drawer').classList.remove('on'); $('#ov').classList.remove('on'); }
+
+/* ---------- навигация ---------- */
+let VIEW='dash';
+function show(v){ VIEW=v; document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('on',b.dataset.v===v)); ['dash','board','list'].forEach(x=>$('#v-'+x).hidden = x!==v); renderAll(); window.scrollTo(0,0); try{localStorage.setItem('crm_view',v)}catch(e){} }
+function renderAll(){ renderBoard(); renderList(); if(VIEW==='dash') renderDash(); }
+
+document.addEventListener('click',e=>{
+  const nav=e.target.closest('.nav'); if(nav){ show(nav.dataset.v); return; }
+  const per=e.target.closest('#period button'); if(per){ PERIOD=+per.dataset.d; document.querySelectorAll('#period button').forEach(b=>b.classList.toggle('on',b===per)); renderDash(); return; }
+  if (e.target.closest('[data-close]')||e.target.id==='ov'){ closeRec(); return; }
+  const it=e.target.closest('.kc,tr[data-id],.alert[data-id]'); if(it){ openRec(it.dataset.id); }
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeRec(); });
+['#q','#fTest','#fZone','#fStage','#fRole'].forEach(s=>$(s).addEventListener('input',renderList));
+
+/* ============================================================
+   ДЕМО-ДАННЫЕ — показывают, как всё выглядит, пока сайт не подключён
+   ============================================================ */
+function demo(){
+  const now=Date.now(), H=36e5, D=864e5;
+  const iso = ms => new Date(ms).toISOString();
+  const P1Q=[
+    ['Какой экзамен сдаёт ребёнок?'],['Зачем ребёнку биология?'],['Какая оценка по биологии в школе?'],['Решал ли пробники в формате экзамена?'],
+    ['Сколько часов в неделю занимается вне школы?'],['Как сейчас идёт подготовка?'],['Кто проверяет, что он занимается?'],['Как ребёнок сам оценивает шансы?']];
+  const P1A={red:['ЕГЭ, 11 класс','Поступить в мед на бюджет','3 и ниже','Ни разу','Почти не занимается','Пока никак','Никто','Переживает, «не успею»'],
+             yellow:['ЕГЭ, 11 класс','Поступить в мед на бюджет','4','Решал пару раз','1–2','Сам по видео и учебникам','Я спрашиваю, но не проверяю','Говорит «всё нормально», но я сомневаюсь'],
+             green:['ОГЭ, 9 класс','Сдать на хорошую оценку','5','Да, регулярно, результат хороший','3–5','Курс или репетитор, виден рост','Я спрашиваю, но не проверяю','Уверен, и есть основания']};
+  const P1P={red:[null,3,3,3,3,3,3,3],yellow:[null,3,1,2,2,2,2,2],green:[null,1,0,0,1,0,2,0]};
+  const RISKS={red:['Без пробников ребёнок впервые увидит формат заданий на самом экзамене','До экзамена 31 неделя — в таком темпе программу не пройти','Вы узнаёте о подготовке со слов ребёнка'],
+               yellow:['На бюджет в мед конкуренция одна из самых высоких','Подготовка без плана и проверки: время идёт, балл не растёт','Ваше сомнение — важный сигнал'],green:['Вы узнаёте о подготовке со слов ребёнка']};
+  const EGE=['Метод изучения наследования по родословным','Хромосомы и ДНК после митоза','Нуклеотиды иРНК для белка из 120 аминокислот','Вероятность рецессивного признака Aa × aa','Фазы фотосинтеза','Признаки митохондрии','Последовательность процессов мейоза','Признаки бактерий','Признаки классов позвоночных','Систематические группы','Железы внутренней секреции','Большой круг кровообращения','Ароморфозы','Формы естественного отбора','Морфологический критерий вида','Число аутосом','Где образуются вещества в клетке','Ограничение численности продуцентов'];
+  const EGE_R=['генеалогический','33','360','50','121212','356','14235','124','11221','364152','135','213456','135','2112','124','44','4321','134'];
+  const TOP={1:'Генетика',4:'Генетика',16:'Генетика',2:'Клетка и обмен веществ',3:'Клетка и обмен веществ',5:'Клетка и обмен веществ',6:'Клетка и обмен веществ',7:'Клетка и обмен веществ',17:'Клетка и обмен веществ',8:'Многообразие организмов',9:'Многообразие организмов',10:'Многообразие организмов',11:'Человек',12:'Человек',13:'Эволюция',14:'Эволюция',15:'Эволюция',18:'Экология'};
+  const names=[['Патимат Магомедова','Амина'],['Зарема Алиева','Хадижат'],['Марина Соколова','Даша'],['Аминат Гасанова','Ахмед'],['Ольга Петрова','Кирилл'],['Сабина Исмаилова','Мадина'],['Ирина Кузнецова','Полина'],['Хава Ибрагимова','Ислам'],['Елена Волкова','Артём'],['Луиза Абдуллаева','Рамазан'],['Наталья Морозова','Вика'],['Джамиля Омарова','Салман'],['Светлана Белова','Лиза'],['Мадина Курбанова','Умар'],['Анна Смирнова','Максим'],['Фатима Магомедова','Заира']];
+  const sources=['reels_uspeet','reels_vrach','reels_ryba','reels_probnik','reels_format','bio','reels_uspeet','reels_probnik'];
+  const out=[]; let k=0;
+  const mkProbnik=(at,score)=>{ const wrongSet=new Set(); while(wrongSet.size<18-score) wrongSet.add(1+Math.floor(Math.random()*18));
+    const answers=EGE.map((q,i)=>{const n=i+1, ok=!wrongSet.has(n); return {n,q,a:ok?EGE_R[i]:(n===1?'наследственный':String(EGE_R[i]).split('').reverse().join('')),right:ok?null:EGE_R[i],pts:ok?1:0,max:1};});
+    const tm={}; answers.forEach(a=>{const t=TOP[a.n]; tm[t]=tm[t]||{name:t,lost:0,max:0}; tm[t].max++; if(!a.pts) tm[t].lost++;});
+    const p=score/18; const zone=p>=.75?'green':p>=.5?'yellow':'red';
+    return {at,test:'Пробник ЕГЭ',kind:'probnik',score,max:18,zone,label:ZN[zone]+' зона',wrong:[...wrongSet].sort((a,b)=>a-b),answers,topics:Object.values(tm).filter(x=>x.lost).sort((a,b)=>b.lost-a.lost)}; };
+  const mkParent=(at,z)=>{ const pts=P1P[z]; const s=pts.reduce((a,b)=>a+(b||0),0); return {at,test:'Тест для родителей',kind:'risk',score:s,max:21,zone:z,label:ZN[z]+' зона',risks:RISKS[z],answers:P1Q.map((q,i)=>({n:i+1,q:q[0],a:P1A[z][i],pts:pts[i]}))}; };
+  const mkSpec=(at,z)=>({at,test:'Тест на специальность',kind:'specialty',score:{red:7,yellow:4,green:1}[z],max:9,zone:z,label:['Хирург','Педиатр','Генетик','Стоматолог'][Math.floor(Math.random()*4)]+' · '+ZN[z]+' зона',extra:'Топ-3: хирург, анестезиолог-реаниматолог, генетик'});
+  const plan=[ // [стадия, сколько часов назад создано]
+    ['bought',260],['bought',200],['bought',150],['diag_done',50],['diag_done',20],['scheduled',30],['scheduled',12],['paid',5],['claimed',0.4],['claimed',1.6],['paid',26],['lost',300],['lost',120],
+    ['clicked_signup',40],['parent_opened',60],['parent_opened',8],['shared',70],['shared',15],['test_done',3],['test_done',9],['test_done',33],['test_done',80],['test_done',110],['test_done',140],['test_done',190],['test_done',230],['test_done',400],['test_done',520],['test_done',700],['shared',96],['clicked_signup',170],['bought',600],['diag_done',90]];
+  plan.forEach(([stage,hAgo],i)=>{
+    const t0=now-hAgo*H, role=i%3===1?'student':'parent', z=['red','yellow','red','green','yellow'][i%5];
+    const nm=names[i%names.length]; const id='r'+(1000+i).toString(36)+Math.random().toString(36).slice(2,5);
+    const tests=[]; if(role==='parent') tests.push(mkParent(iso(t0),z)); else { tests.push(i%2? mkProbnik(iso(t0), {red:6,yellow:11,green:15}[z]) : mkSpec(iso(t0),z)); if(i%4===1) tests.push(mkProbnik(iso(t0+20*60e3),{red:7,yellow:12,green:15}[z])); }
+    const idx=STAGES.findIndex(s=>s.k===stage); const events=[];
+    const seq=STAGES.map(s=>s.k).filter((s,j)=> j<= (stage==='lost'?7:idx));
+    let tt=t0; seq.forEach(s=>{ if(role==='parent' && ['shared','parent_opened'].includes(s)) return; tt+= (s==='scheduled'?3*H: s==='diag_done'?24*H: s==='bought'?20*H: 0.4*H); if(tt>now) tt=now-60e3; events.push({at:iso(tt),type:s}); });
+    const paid=STAGES.findIndex(s=>s.k==='claimed')<= (stage==='lost'?7:idx);
+    const r={id,created_at:iso(t0),role,exam:i%4===3?'ОГЭ':'ЕГЭ',grade:i%4===3?'9':'11',goal:['Бюджет в мед','Бюджет в мед','Другой вуз с биологией','Просто сдать хорошо'][i%4],
+      source:{utm_source:'instagram',utm_campaign:sources[i%sources.length],account:['islam','capybara','abubakr'][i%3]},
+      contact: paid?{parent_name:nm[0],student_name:nm[1],phone:'+7 9'+(10+i)+' '+(100+i*7)+'-'+(10+i)+'-'+(20+i),messenger:i%3?'WhatsApp':'Telegram'}:{},
+      tests, events, stage,
+      diagnostic: paid?{price:[2500,2000,1500][i%3],teacher:i%3===2?'Абу-Бакр':'Ислам',scheduled_at:['scheduled','diag_done','bought','lost'].includes(stage)?iso(Math.min(now+26*H, t0+30*H)):null,done_at:['diag_done','bought'].includes(stage)?(events.find(e=>e.type==='diag_done')||{}).at:null,recommended_tariff:['diag_done','bought','lost'].includes(stage)?['Comfort-bara','Capybarin-Pro','CapyBasic'][i%3]:'',notes:['diag_done','bought'].includes(stage)?'Пробелы: генетика, оформление второй части. Прогноз сейчас ~55, цель 80+. Маме важен еженедельный отчёт.':''}:{},
+      payment: paid?{amount:[2500,2000,1500][i%3],payer:nm[0].split(' ')[0]+' '+nm[0].split(' ')[1][0]+'.',confirmed_by:stage==='claimed'?'':'Ислам'}:{},
+      sale: stage==='bought'?{tariff:['Comfort-bara','Capybarin-Pro','CapyBasic'][i%3],plan:i%2?'full':'month',amount:i%2?35500:9800,credited:'yes'}:{},
+      lost_reason: stage==='lost'?['Дорого, подумают до января','Выбрали репетитора в городе'][i%2]:'',
+      notes: paid?[{at:iso(t0+H),author:'Арсен',text:'Мама очень переживает за бюджет, просила звонить после 18:00.'}]:[]};
+    out.push(r);
+  });
+  return out;
+}
+
+/* ---------- старт ---------- */
+(async()=>{
+  if (await load()){ fillFilters(); let v='dash'; try{ v=localStorage.getItem('crm_view')||'dash'; }catch(e){} show(['dash','board','list'].includes(v)?v:'dash'); }
+})();
+</script>
+</body>
+</html>

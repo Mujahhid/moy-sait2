@@ -13,7 +13,7 @@ const PORT = Number(process.env.PORT) || 8080;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
 const DATA_DIR = process.env.DATA_DIR || process.env.RAILWAY_VOLUME_MOUNT_PATH || path.join(__dirname, 'data');
 const LEADS_FILE = path.join(DATA_DIR, 'leads.json');
-const RECORDS_FILE = path.join(DATA_DIR, 'records.json');
+const RECORDS_FILE = path.join(DATA_DIR, 'crm.json'); // записи CRM: одна запись = одна семья
 const ROOT = __dirname;
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -21,7 +21,7 @@ fs.mkdirSync(DATA_DIR, { recursive: true });
 // ---------- хранилище заявок (JSON-файл, запись через временный файл) ----------
 let leads = [];
 try { leads = JSON.parse(fs.readFileSync(LEADS_FILE, 'utf8')); if (!Array.isArray(leads)) leads = []; } catch { leads = []; }
-// записи прохождений тестов (под будущую CRM): одна запись = одно прохождение
+// записи CRM (подробности формата — в инструкции к CRM)
 let records = [];
 try { records = JSON.parse(fs.readFileSync(RECORDS_FILE, 'utf8')); if (!Array.isArray(records)) records = []; } catch { records = []; }
 let saving = Promise.resolve();
@@ -95,47 +95,116 @@ function cleanResults(list) {
   })).filter((r) => r.test);
 }
 
-// ---------- записи тестов ----------
-// статусы воронки по возрастанию; хранится самый дальний шаг, достигнутый записью
-const STAGES = ['test', 'shared', 'viewed', 'cta', 'lead', 'diagnosed', 'bought'];
-const TEST_IDS = ['t1', 't2', 't3', 'mock-oge', 'mock-ege'];
+// ---------- CRM: записи семей ----------
+// stage двигается с сайта только вперёд; shared и parent_opened этап не меняют, только пишутся в events
+const SITE_ORDER = ['test_done', 'clicked_signup', 'claimed', 'paid', 'scheduled', 'diag_done', 'bought'];
+const ALL_STAGES = [...SITE_ORDER, 'lost'];
+const TRACK_EVENTS = ['test_done', 'shared', 'parent_opened', 'clicked_signup', 'claimed', 'trainer'];
+const ID_RE = /^[\w-]{4,16}$/;
+const KINDS = ['probnik', 'risk', 'specialty', 'format', 'trainer'];
 const ZONES = ['green', 'yellow', 'red'];
-const newRecordId = () => crypto.randomBytes(6).toString('base64url').replace(/[-_]/g, 'x').slice(0, 7);
-function bumpStage(rec, stage) {
-  if (STAGES.indexOf(stage) > STAGES.indexOf(rec.status)) rec.status = stage;
-  rec.events = rec.events || {};
-  if (!rec.events[stage]) rec.events[stage] = new Date().toISOString();
-}
-function cleanRecord(d) {
-  const num = (v, max) => (Number.isFinite(v) && v >= 0 && v <= max ? Math.round(v * 100) / 100 : null);
-  const rec = {
-    id: newRecordId(),
-    createdAt: new Date().toISOString(),
-    test: TEST_IDS.includes(d.test) ? d.test : null,
-    title: clip(d.title, 120),
-    role: d.role === 'Родитель' ? 'Родитель' : 'Ученик',
-    exam: ['ЕГЭ', 'ОГЭ'].includes(d.exam) ? d.exam : '',
-    zone: ZONES.includes(d.zone) ? d.zone : '',
-    pos: num(d.pos, 100),
-    score: num(d.score, 1000),
-    max: num(d.max, 1000),
-    goal: ['med', 'vuz', 'pass'].includes(d.goal) ? d.goal : '',
-    seconds: num(d.seconds, 86400),
-    topics: Array.isArray(d.topics) ? d.topics.slice(0, 12).map((t) => ({ name: clip(t && t.name, 60), err: num(t && t.err, 100), of: num(t && t.of, 100), lost: num(t && t.lost, 1000) })).filter((t) => t.name) : [],
-    result: clip(d.result, 200),          // тариф / специальность(и) / «пробник»
-    shown: Array.isArray(d.shown) ? d.shown.slice(0, 12).map((x) => clip(x, 200)) : [],
-    wrong: Array.isArray(d.wrong) ? d.wrong.slice(0, 40).map(Number).filter((n) => Number.isInteger(n) && n > 0 && n < 100) : [],
-    answers: Array.isArray(d.answers) ? d.answers.slice(0, 30).map((a) => ({ q: clip(a && a.q, 160), a: clip(a && a.a, 160) })) : [],
-    utm: {},
-    status: 'test',
-    events: { test: new Date().toISOString() },
-    leadId: null,
+const PRICES = { 'Ислам': [2000, 2500], 'Абу-Бакр': [1500] };
+const nowIso = () => new Date().toISOString();
+const numOrNull = (v, max = 100000) => (Number.isFinite(v) && v >= 0 && v <= max ? Math.round(v * 100) / 100 : null);
+function cleanTest(t) {
+  if (!t || typeof t !== 'object' || !clip(t.test, 80)) return null;
+  const out = {
+    at: (typeof t.at === 'string' && !isNaN(Date.parse(t.at))) ? new Date(t.at).toISOString() : nowIso(),
+    test: clip(t.test, 80),
+    kind: KINDS.includes(t.kind) ? t.kind : 'trainer',
+    score: numOrNull(t.score, 1000), max: numOrNull(t.max, 1000),
+    zone: ZONES.includes(t.zone) ? t.zone : null,
+    label: clip(t.label, 100),
+    answers: Array.isArray(t.answers) ? t.answers.slice(0, 60).map((a) => {
+      const o = { n: numOrNull(a && a.n, 999) ?? clip(a && a.n, 10), q: clip(a && a.q, 220), a: clip(a && a.a, 200) };
+      if (a && a.right != null && a.right !== '') o.right = clip(a.right, 200);
+      if (a && numOrNull(a.pts, 100) != null) o.pts = numOrNull(a.pts, 100);
+      if (a && numOrNull(a.max, 100) != null) o.max = numOrNull(a.max, 100);
+      return o;
+    }) : [],
+    wrong: Array.isArray(t.wrong) ? t.wrong.slice(0, 60).map(Number).filter((n) => Number.isInteger(n) && n > 0 && n < 100) : [],
+    risks: Array.isArray(t.risks) ? t.risks.slice(0, 10).map((x) => clip(x, 300)) : [],
+    topics: Array.isArray(t.topics) ? t.topics.slice(0, 12).map((x) => ({ name: clip(x && x.name, 60), lost: numOrNull(x && x.lost, 1000) || 0, max: numOrNull(x && x.max, 1000) || 0 })).filter((x) => x.name) : [],
+    extra: clip(t.extra, 300),
   };
-  if (d.utm && typeof d.utm === 'object') for (const k of ['source', 'medium', 'campaign', 'content', 'term']) if (d.utm[k]) rec.utm[k] = clip(d.utm[k], 80);
-  return rec;
+  // нужное только странице родителя (CRM эти поля не использует)
+  if (numOrNull(t.pos, 100) != null) out.pos = numOrNull(t.pos, 100);
+  if (Array.isArray(t.shown)) out.shown = t.shown.slice(0, 6).map((x) => clip(x, 80));
+  if (Array.isArray(t.errTopics)) out.errTopics = t.errTopics.slice(0, 12).map((x) => ({ name: clip(x && x.name, 60), err: numOrNull(x && x.err, 100) || 0, of: numOrNull(x && x.of, 100) || 0 })).filter((x) => x.name);
+  return out;
 }
-// что видит родитель по ссылке /r/<id> — только нужное для страницы, без телефонов и прочего
-const publicRecord = (r) => ({ goal: r.goal, topics: r.topics, id: r.id, test: r.test, title: r.title, exam: r.exam, zone: r.zone, pos: r.pos, score: r.score, max: r.max, result: r.result, shown: r.shown, wrong: r.wrong, createdAt: r.createdAt });
+function pushEvent(rec, type, extra) {
+  rec.events = rec.events || [];
+  if (type !== 'test_done' && rec.events.some((e) => e.type === type)) return false; // каждое событие воронки пишем один раз
+  rec.events.push({ at: nowIso(), type, ...(extra || {}) });
+  return true;
+}
+function newRecord(id) {
+  return { id, created_at: nowIso(), role: 'student', exam: '', grade: '', goal: '', source: {}, contact: {}, tests: [], payment: {}, events: [], stage: 'test_done',
+    diagnostic: { price: null, teacher: 'Ислам', scheduled_at: null, done_at: null, notes: '', recommended_tariff: '' },
+    sale: { tariff: '', plan: 'month', amount: null, credited: 'no' }, notes: [], lost_reason: '' };
+}
+function applyTrack(d) {
+  const id = clip(d.id, 16);
+  if (!ID_RE.test(id) || !TRACK_EVENTS.includes(d.event)) return { code: 400, body: { error: 'invalid' } };
+  let rec = records.find((r) => r.id === id);
+  if (d.event === 'claimed') {
+    const c = d.contact || {};
+    if (c.consent !== true) return { code: 400, body: { error: 'consent_required' } };
+    if (!/^\+7\d{10}$/.test(clip(c.phone, 20).replace(/[^\d+]/g, ''))) return { code: 400, body: { error: 'invalid_phone' } };
+  }
+  if (!rec) { rec = newRecord(id); records.unshift(rec); if (records.length > 20000) records.length = 20000; }
+  if (d.role === 'student' || d.role === 'parent') { if (!rec.tests.length) rec.role = d.role; }
+  if (['ЕГЭ', 'ОГЭ'].includes(d.exam)) rec.exam = d.exam;
+  if (d.grade) rec.grade = clip(d.grade, 4);
+  if (d.goal) rec.goal = clip(d.goal, 60);
+  if (d.source && typeof d.source === 'object' && !Object.keys(rec.source).length) {
+    for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) if (d.source[k]) rec.source[k] = clip(d.source[k], 80);
+  }
+  let advance = null;
+  if (d.event === 'test_done') {
+    const t = cleanTest(d.test);
+    if (!t) return { code: 400, body: { error: 'invalid_test' } };
+    rec.tests.push(t); if (rec.tests.length > 50) rec.tests.shift();
+    pushEvent(rec, 'test_done'); advance = 'test_done';
+  } else if (d.event === 'claimed') {
+    const c = d.contact, teacher = PRICES[d.teacher] ? d.teacher : 'Ислам';
+    const amount = Number(d.payment && d.payment.amount);
+    if (!PRICES[teacher].includes(amount)) return { code: 400, body: { error: 'invalid_amount' } };
+    rec.contact = { parent_name: clip(c.parent_name, 80), student_name: clip(c.student_name, 80), phone: clip(c.phone, 20).replace(/[^\d+]/g, ''), messenger: ['WhatsApp', 'Telegram', 'Звонок'].includes(c.messenger) ? c.messenger : 'WhatsApp', consent: true };
+    rec.payment = Object.assign({}, rec.payment, { amount, payer: clip(d.payment.payer, 80) });
+    rec.diagnostic.price = amount; rec.diagnostic.teacher = teacher;
+    pushEvent(rec, 'claimed'); advance = 'claimed';
+  } else if (d.event === 'trainer') {
+    rec.trainer_opened_at = rec.trainer_opened_at || nowIso();
+  } else {
+    pushEvent(rec, d.event); if (d.event === 'clicked_signup') advance = 'clicked_signup';
+  }
+  if (advance && rec.stage !== 'lost' && SITE_ORDER.indexOf(advance) > SITE_ORDER.indexOf(rec.stage)) rec.stage = advance;
+  rec.updated_at = nowIso();
+  return { code: 200, body: { ok: true } };
+}
+// что видит родитель по ссылке /r/<id>: последний тест семьи, без контактов и платежей
+function publicRecord(r) {
+  const t = r.tests[r.tests.length - 1];
+  if (!t) return null;
+  return { id: r.id, exam: r.exam, goal: r.goal, test: t.test, kind: t.kind, zone: t.zone, pos: t.pos ?? null, score: t.score, max: t.max, shown: t.shown || [], wrong: t.wrong, topics: t.errTopics || [], at: t.at };
+}
+// ---------- вход в CRM: пароль из окружения, в ответ — подписанная httpOnly-кука ----------
+const CRM_PASSWORD = process.env.CRM_PASSWORD || ADMIN_PASSWORD;
+const crmKey = () => crypto.createHash('sha256').update('crm-cookie:' + CRM_PASSWORD).digest();
+function crmToken() { const exp = Date.now() + 30 * 864e5; return exp + '.' + crypto.createHmac('sha256', crmKey()).update(String(exp)).digest('hex'); }
+function crmAuthed(req) {
+  if (!CRM_PASSWORD) return false;
+  const m = (req.headers.cookie || '').match(/(?:^|;\s*)crm=([^;]+)/);
+  if (!m) return false;
+  const [exp, sig] = decodeURIComponent(m[1]).split('.');
+  if (!exp || !sig || Number(exp) < Date.now()) return false;
+  const good = crypto.createHmac('sha256', crmKey()).update(exp).digest('hex');
+  const a = Buffer.from(sig), b = Buffer.from(good);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+const PAY = () => ({ phone: clip(process.env.SBP_PHONE, 30), bank: clip(process.env.SBP_BANK, 60), name: clip(process.env.SBP_NAME, 80) });
 
 // ---------- статические файлы ----------
 const FILES = {
@@ -143,6 +212,8 @@ const FILES = {
   '/index.html': ['index.html', 'text/html; charset=utf-8'],
   '/admin': ['admin.html', 'text/html; charset=utf-8'],
   '/admin/': ['admin.html', 'text/html; charset=utf-8'],
+  '/crm': ['crm.html', 'text/html; charset=utf-8'],
+  '/crm/': ['crm.html', 'text/html; charset=utf-8'],
 };
 const ICONS = {
   '/favicon.svg': ['favicon.svg', 'image/svg+xml'],
@@ -158,7 +229,7 @@ const cache = {};
 function serveFile(res, name, type, head) {
   try {
     if (!cache[name] || process.env.NODE_ENV === 'development') cache[name] = fs.readFileSync(path.join(ROOT, name));
-    const extra = name === 'admin.html' ? { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' } : ICON_FILES.has(name) ? { 'Cache-Control': 'public, max-age=86400' } : { 'Cache-Control': 'no-cache' };
+    const extra = (name === 'admin.html' || name === 'crm.html') ? { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' } : ICON_FILES.has(name) ? { 'Cache-Control': 'public, max-age=86400' } : { 'Cache-Control': 'no-cache' };
     res.writeHead(200, { 'Content-Type': type, ...SEC, ...extra });
     res.end(head ? undefined : cache[name]);
   } catch { send(res, 404, 'Not found', 'text/plain; charset=utf-8'); }
@@ -177,33 +248,69 @@ const server = http.createServer(async (req, res) => {
       return serveFile(res, 'index.html', 'text/html; charset=utf-8', req.method === 'HEAD');
     }
 
-    // новая запись о прохождении теста (тест анонимный: имени и телефона здесь нет)
-    if (p === '/api/records' && req.method === 'POST') {
-      if (rateLimited('rec:' + clientIp(req), 40)) return send(res, 429, { error: 'too_many' });
-      let data; try { data = JSON.parse(await readBody(req)); } catch { return send(res, 400, { error: 'bad_json' }); }
-      const rec = cleanRecord(data || {});
-      if (!rec.test) return send(res, 400, { error: 'invalid' });
-      records.unshift(rec);
-      if (records.length > 20000) records.length = 20000;
-      await saveRecords();
-      return send(res, 201, { id: rec.id });
+    // события с сайта (публично): создаёт запись семьи или дополняет её
+    if (p === '/api/track' && req.method === 'POST') {
+      if (rateLimited('trk:' + clientIp(req), 80)) return send(res, 429, { error: 'too_many' });
+      let data; try { data = JSON.parse(await readBody(req, 50000)); } catch { return send(res, 400, { error: 'bad_json' }); }
+      const r = applyTrack(data || {});
+      if (r.code === 200) await saveRecords();
+      return send(res, r.code, r.body);
     }
-    const rm = p.match(/^\/api\/records\/([\w-]{4,16})(\/event)?$/);
-    if (rm) {
+    // страница для родителя читает результат по номеру записи
+    const rm = p.match(/^\/api\/records\/([\w-]{4,16})$/);
+    if (rm && req.method === 'GET') {
       const rec = records.find((r) => r.id === rm[1]);
-      if (!rec) return send(res, 404, { error: 'not_found' });
-      if (!rm[2] && req.method === 'GET') return send(res, 200, publicRecord(rec), undefined, { 'Cache-Control': 'no-store' });
-      if (rm[2] && req.method === 'POST') {
-        if (rateLimited('ev:' + clientIp(req), 120)) return send(res, 429, { error: 'too_many' });
-        let data; try { data = JSON.parse(await readBody(req)); } catch { return send(res, 400, { error: 'bad_json' }); }
-        if (data.type === 'trainer') { rec.events = rec.events || {}; if (!rec.events.trainer) { rec.events.trainer = new Date().toISOString(); await saveRecords(); } return send(res, 200, { ok: true }); }
-        if (['shared', 'viewed', 'cta'].includes(data.type)) {
-          bumpStage(rec, data.type);
-          if (data.type === 'viewed') rec.viewedBy = 'parent';
-          await saveRecords();
+      const pub = rec && publicRecord(rec);
+      if (!pub) return send(res, 404, { error: 'not_found' });
+      return send(res, 200, pub, undefined, { 'Cache-Control': 'no-store' });
+    }
+    // реквизиты для перевода по СБП берутся из переменных окружения, в коде их нет
+    if (p === '/api/pay-info' && req.method === 'GET') return send(res, 200, PAY(), undefined, { 'Cache-Control': 'no-store' });
+
+    // CRM (только после входа)
+    if (p === '/api/crm/login' && req.method === 'POST') {
+      if (!CRM_PASSWORD) return send(res, 503, { error: 'no_password_configured' });
+      if (rateLimited('login:' + clientIp(req), 10)) return send(res, 429, { error: 'too_many' });
+      let data; try { data = JSON.parse(await readBody(req, 2000)); } catch { return send(res, 400, { error: 'bad_json' }); }
+      const a = crypto.createHash('sha256').update(String(data.password || '')).digest();
+      const b = crypto.createHash('sha256').update(CRM_PASSWORD).digest();
+      if (!crypto.timingSafeEqual(a, b)) return send(res, 401, { error: 'unauthorized' });
+      const secure = String(req.headers['x-forwarded-proto'] || '').includes('https') ? '; Secure' : '';
+      return send(res, 200, { ok: true }, undefined, { 'Set-Cookie': `crm=${encodeURIComponent(crmToken())}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${30 * 86400}${secure}`, 'Cache-Control': 'no-store' });
+    }
+    if (p.startsWith('/api/crm/')) {
+      if (!crmAuthed(req)) return send(res, 401, { error: 'unauthorized' }, undefined, { 'Cache-Control': 'no-store' });
+      if (p === '/api/crm/records' && req.method === 'GET') return send(res, 200, { records }, undefined, { 'Cache-Control': 'no-store' });
+      const cm = p.match(/^\/api\/crm\/records\/([\w-]{4,16})(\/notes)?$/);
+      if (cm) {
+        const rec = records.find((r) => r.id === cm[1]);
+        if (!rec) return send(res, 404, { error: 'not_found' });
+        let data; try { data = JSON.parse(await readBody(req, 60000)); } catch { return send(res, 400, { error: 'bad_json' }); }
+        if (cm[2] && req.method === 'POST') {
+          const text = clip(data.text, 1000);
+          if (!text) return send(res, 400, { error: 'invalid' });
+          rec.notes = rec.notes || [];
+          rec.notes.push({ at: (typeof data.at === 'string' && !isNaN(Date.parse(data.at))) ? new Date(data.at).toISOString() : nowIso(), author: clip(data.author, 40), text });
+          rec.updated_at = nowIso(); await saveRecords();
+          return send(res, 201, { ok: true });
         }
-        return send(res, 200, { ok: true });
+        if (!cm[2] && req.method === 'PATCH') {
+          if (ALL_STAGES.includes(data.stage)) rec.stage = data.stage;
+          // события только дополняем: сайт мог добавить свои, пока CRM была открыта
+          if (Array.isArray(data.events)) {
+            const have = new Set((rec.events || []).map((e) => e.type + '|' + e.at));
+            for (const e of data.events.slice(0, 100)) {
+              const type = clip(e && e.type, 30), at = (e && typeof e.at === 'string' && !isNaN(Date.parse(e.at))) ? new Date(e.at).toISOString() : null;
+              if (type && at && !have.has(type + '|' + at)) { rec.events.push({ at, type }); have.add(type + '|' + at); }
+            }
+          }
+          for (const k of ['contact', 'payment', 'diagnostic', 'sale']) if (data[k] && typeof data[k] === 'object' && !Array.isArray(data[k])) rec[k] = JSON.parse(JSON.stringify(data[k]));
+          if (typeof data.lost_reason === 'string') rec.lost_reason = clip(data.lost_reason, 200);
+          rec.updated_at = nowIso(); await saveRecords();
+          return send(res, 200, { record: rec });
+        }
       }
+      return send(res, 404, { error: 'not_found' });
     }
 
     // приём заявки с сайта
@@ -230,9 +337,6 @@ const server = http.createServer(async (req, res) => {
         utm: {},
       };
       if (data.utm && typeof data.utm === 'object') for (const k of ['source', 'medium', 'campaign', 'content', 'term']) if (data.utm[k]) lead.utm[k] = clip(data.utm[k], 80);
-      const rid = typeof data.recordId === 'string' ? data.recordId : '';
-      const rec = /^[\w-]{4,16}$/.test(rid) ? records.find((r) => r.id === rid) : null;
-      if (rec) { lead.recordId = rec.id; rec.leadId = lead.id; rec.contactName = name; bumpStage(rec, 'lead'); if (!Object.keys(lead.utm).length) lead.utm = rec.utm || {}; await saveRecords(); }
       leads.unshift(lead);
       await save();
       return send(res, 201, { ok: true });
@@ -243,16 +347,6 @@ const server = http.createServer(async (req, res) => {
       if (!ADMIN_PASSWORD) return send(res, 503, { error: 'no_password_configured' });
       if (!isAdmin(req)) return send(res, 401, { error: 'unauthorized' });
       if (p === '/api/admin/leads' && req.method === 'GET') return send(res, 200, { leads }, undefined, { 'Cache-Control': 'no-store' });
-      if (p === '/api/admin/records' && req.method === 'GET') return send(res, 200, { records }, undefined, { 'Cache-Control': 'no-store' });
-      const rr = p.match(/^\/api\/admin\/records\/([\w-]{4,16})$/);
-      if (rr && req.method === 'PATCH') {
-        const rec = records.find((r) => r.id === rr[1]);
-        if (!rec) return send(res, 404, { error: 'not_found' });
-        let data; try { data = JSON.parse(await readBody(req)); } catch { return send(res, 400, { error: 'bad_json' }); }
-        if (STAGES.includes(data.status) && ['diagnosed', 'bought'].includes(data.status)) bumpStage(rec, data.status);
-        await saveRecords();
-        return send(res, 200, { record: rec });
-      }
       const m = p.match(/^\/api\/admin\/leads\/([\w-]{36})$/);
       if (m) {
         const lead = leads.find((l) => l.id === m[1]);
