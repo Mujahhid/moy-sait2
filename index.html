@@ -1461,7 +1461,7 @@ async function openPay(){
   track('clicked_signup');
   const B=openModal('Оплата диагностики','Закрыть ✕');B.innerHTML='<p class="muted">Загружаем…</p>';
   let info={};try{const r=await fetch('/api/pay-info');if(r.ok)info=await r.json()}catch(e){}
-  const ready=!!(info.phone&&info.bank);
+  const ready=!!info.phone;
   const link=location.origin+'/r/'+CUR_RID;
   const view=()=>{
     const on=discState()==='on';
@@ -1470,7 +1470,7 @@ async function openPay(){
       <fieldset class="pteach"><legend>Преподаватель</legend>
         <label><input type="radio" name="pt" value="Ислам" checked><span>Ислам</span><b>${on?`<s>${money(DISC.old)}</s> ${money(DISC.now)}`:money(DISC.old)}</b></label>
         <label><input type="radio" name="pt" value="Абу-Бакр"><span>Абу-Бакр</span><b>${money(1500)}</b></label></fieldset>
-      ${ready?`<div class="payreq"><p class="eyebrow">Перевод по СБП</p><p style="margin:0">Переведите <b data-amt></b> на номер <b>${escH(info.phone)}</b>, банк: <b>${escH(info.bank)}</b>${info.name?`, получатель: <b>${escH(info.name)}</b>`:''}</p></div>`
+      ${ready?`<div class="payreq"><p class="eyebrow">Перевод по СБП</p><p style="margin:0">Переведите <b data-amt></b> на номер <b>${escH(info.phone)}</b>${info.bank?`, банк: <b>${escH(info.bank)}</b>`:''}${info.name?`, получатель: <b>${escH(info.name)}</b>`:''}</p></div>`
         :`<div class="payreq"><p style="margin:0">Реквизиты для перевода скоро появятся здесь. Попробуйте чуть позже.</p></div>`}
       <p class="muted fine">Оплатить может родитель — отправьте ему эту страницу.</p>
       <div class="row"><button class="btn orange" type="button" id="paid"${ready?'':' disabled'}>Я оплатил(а)</button><button class="btn ghost" type="button" id="cplink">Скопировать ссылку для родителя</button></div></div>`;
