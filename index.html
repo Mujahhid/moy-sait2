@@ -595,7 +595,7 @@ document.documentElement.className+=' js';
       <div class="panel" id="panel-tests"><div class="who">
     <button class="choice" data-t="parent"><span class="k">Я родитель</span><h3>Диагностика успеха</h3><span class="muted">5 вопросов: в какой зоне сейчас подготовка ребёнка</span></button>
     <button class="choice" data-t="prof"><span class="k">Я ученик · профориентация</span><h3>Кем тебе стать?</h3><span class="muted">4 вопроса: врач, учёный или фармацевт</span></button>
-    <button class="choice" data-t="subject"><span class="k">Я ученик · предмет</span><h3>Проверь знания</h3><span class="muted">Пробник ОГЭ, пробник ЕГЭ, тест по теме и тренажёры</span></button>
+    <button class="choice" data-t="subject"><span class="k">Я ученик · предмет</span><h3>Проверь знания</h3><span class="muted">Пробник ОГЭ, пробник ЕГЭ и тренажёры</span></button>
   </div></div>
       <div class="panel" id="panel-lessons">
         <div class="lessons">
@@ -877,13 +877,7 @@ const TESTS={
 const MENUS={
   subject:{title:'Я ученик · предмет',back:'home',items:[
     ['oge','9 класс','Пробник ОГЭ','17 заданий в формате первой части ОГЭ'],
-    ['ege','10–11 класс','Пробник ЕГЭ','18 заданий в формате первой части ЕГЭ'],
-    ['topics','По темам','Тест по темам','Выберите тему и проверьте её отдельно']]},
-  topics:{title:'Тест по темам',back:'subject',items:[
-    ['topic-cell','4 вопроса','Клетка','Органоиды, деление, обмен веществ'],
-    ['topic-gen','4 вопроса','Генетика','Хромосомы, скрещивания, гаметы'],
-    ['topic-human','4 вопроса','Человек','Пищеварение, кровь, нервная система'],
-    ['topic-evo','4 вопроса','Эволюция и экология','Отбор, ароморфозы, экосистемы']]}
+    ['ege','10–11 класс','Пробник ЕГЭ','18 заданий в формате первой части ЕГЭ']]}
 };
 const P=document.getElementById('panel-tests');
 // ---------- результаты тестов посетителя (хранятся в его браузере, уходят вместе с заявкой) ----------
@@ -1005,7 +999,7 @@ function home(){
   P.innerHTML=`<div class="who">
     <button class="choice" data-t="parent"><span class="k">Я родитель</span><h3>Диагностика успеха</h3><span class="muted">5 вопросов: в какой зоне сейчас подготовка ребёнка</span></button>
     <button class="choice" data-t="prof"><span class="k">Я ученик · профориентация</span><h3>Кем тебе стать?</h3><span class="muted">4 вопроса: врач, учёный или фармацевт</span></button>
-    <button class="choice" data-t="subject"><span class="k">Я ученик · предмет</span><h3>Проверь знания</h3><span class="muted">Пробник ОГЭ, пробник ЕГЭ, тест по теме и тренажёры</span></button>
+    <button class="choice" data-t="subject"><span class="k">Я ученик · предмет</span><h3>Проверь знания</h3><span class="muted">Пробник ОГЭ, пробник ЕГЭ и тренажёры</span></button>
   </div>`;
   P.querySelectorAll('.choice').forEach(b=>b.onclick=()=>go(b.dataset.t));
 }
