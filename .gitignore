@@ -7,6 +7,10 @@
 !/admin.html
 !/server.js
 !/package.json
+!/favicon.svg
+!/icon-32.png
+!/icon-180.png
+!/icon-512.png
 
 # На всякий случай — никогда не публиковать:
 .env

@@ -96,11 +96,19 @@ const FILES = {
   '/admin': ['admin.html', 'text/html; charset=utf-8'],
   '/admin/': ['admin.html', 'text/html; charset=utf-8'],
 };
+const ICONS = {
+  '/favicon.svg': ['favicon.svg', 'image/svg+xml'],
+  '/icon-32.png': ['icon-32.png', 'image/png'],
+  '/icon-180.png': ['icon-180.png', 'image/png'],
+  '/icon-512.png': ['icon-512.png', 'image/png'],
+};
+Object.assign(FILES, ICONS);
+const ICON_FILES = new Set(Object.values(ICONS).map((x) => x[0]));
 const cache = {};
 function serveFile(res, name, type, head) {
   try {
     if (!cache[name] || process.env.NODE_ENV === 'development') cache[name] = fs.readFileSync(path.join(ROOT, name));
-    const extra = name === 'admin.html' ? { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' } : { 'Cache-Control': 'no-cache' };
+    const extra = name === 'admin.html' ? { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' } : ICON_FILES.has(name) ? { 'Cache-Control': 'public, max-age=86400' } : { 'Cache-Control': 'no-cache' };
     res.writeHead(200, { 'Content-Type': type, ...SEC, ...extra });
     res.end(head ? undefined : cache[name]);
   } catch { send(res, 404, 'Not found', 'text/plain; charset=utf-8'); }
