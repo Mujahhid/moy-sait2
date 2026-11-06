@@ -461,6 +461,67 @@ html.js .nojs-note{display:none}
 .policy .ed{color:var(--muted);font-size:.85rem}
 .policy ul{margin:0;padding-left:1.2rem;display:grid;gap:.35rem}
 .todo{background:color-mix(in srgb,var(--orange) 25%,transparent);border-radius:4px;padding:0 .25rem}
+html.js .page{display:none}
+html.js .page.on{display:block}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.logo .lt{display:grid;line-height:1.15}
+.brand-s{font:500 .68rem var(--mono);color:var(--muted);letter-spacing:.02em}
+.brand-s:empty{display:none}
+.nav ul a[aria-current="page"]{color:var(--ink);text-decoration:underline;text-decoration-color:var(--orange);text-decoration-thickness:2px;text-underline-offset:6px}
+.burger{display:none;background:none;border:1.5px solid var(--line);border-radius:12px;width:42px;height:42px;font-size:1.25rem;color:var(--ink);cursor:pointer;place-items:center}
+@media (max-width:820px){
+  .burger{display:grid}
+  .nav .btn{margin-left:auto}
+  .nav ul{position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0;margin:0;background:var(--bg);border-bottom:1px solid var(--line);padding:.4rem max(16px,env(safe-area-inset-left,0px)) .8rem}
+  .nav.open ul{display:flex}
+  .nav ul a{display:block;padding:.75rem 0;font-size:1.02rem}
+}
+.hero2{padding-block:3.5rem 2.5rem;display:grid;gap:1.1rem;justify-items:start}
+.hero2 h1{font-size:clamp(2rem,5.4vw,3.4rem);font-weight:800;letter-spacing:-.01em;max-width:24ch}
+.hero2 h1 em{font-style:normal;color:var(--orange)}
+.hero2 .lead{font-size:1.1rem;color:var(--muted);max-width:44ch;margin:0}
+.aud{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:.4rem}
+.aud .btn{font-size:1.1rem;padding:.95em 2em}
+.aud .btn[aria-pressed="true"]{box-shadow:0 0 0 3px color-mix(in srgb,var(--orange) 45%,transparent)}
+.hero-link{margin:0;color:var(--muted)}
+.hero-link a{color:var(--ink);font-weight:600}
+.aud-panel{width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin-top:.8rem}
+section.alt{background:color-mix(in srgb,var(--ink) 4%,var(--bg))}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start}
+.colh{font:700 1.15rem var(--display);margin:0 0 .8rem}
+.col-cards{display:grid;gap:1rem}
+.choice .tmeta{font:500 .78rem var(--mono);color:var(--muted)}
+@media (max-width:760px){.cols2{grid-template-columns:1fr}}
+.final{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.final>div{background:var(--surface);border:1.5px solid var(--line);border-radius:24px;padding:1.6rem;display:grid;gap:.9rem;align-content:start;justify-items:start}
+.final h2,.final p{margin:0}
+@media (max-width:760px){.final{grid-template-columns:1fr}}
+.lesson .lrow{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.3rem}
+.lesson .lrow .btn{padding:.55em 1em;font-size:.9rem}
+.lesson .more{font-size:.88rem;font-weight:600;color:var(--ink)}
+.faq{display:grid;gap:.6rem;max-width:760px}
+.faq details{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:.9rem 1.1rem}
+.faq summary{font-weight:700;cursor:pointer}
+.faq details p{margin:.6rem 0 0;color:var(--muted)}
+.d1{display:grid;grid-template-columns:1.4fr 1fr;gap:2.5rem;align-items:center;padding-block:3rem 2rem}
+.d1 h1{font-size:clamp(1.9rem,4.6vw,3rem);font-weight:800;letter-spacing:-.01em}
+.d1 .lead{color:var(--muted);font-size:1.1rem;margin:1rem 0 1.4rem;max-width:46ch}
+@media (max-width:820px){.d1{grid-template-columns:1fr}}
+.d-screen{padding-block:3rem}
+.cards4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.steps3{margin-bottom:5.5rem}
+.after{background:var(--orange-soft);border-radius:24px;padding:clamp(1.3rem,3vw,2.2rem);font-size:1.1rem;line-height:1.6;display:grid;gap:.7rem;max-width:820px}
+.after p{margin:0}
+.teachers.one{grid-template-columns:minmax(0,560px);margin-bottom:1.6rem}
+.share-row{margin:1.6rem 0 0;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.share-row .btn{padding:.55em 1.1em;font-size:.9rem}
+.bullets{margin:0;padding-left:1.2rem;display:grid;gap:.5rem}
+.bullets.big{font-size:1.05rem}
+.contacts{display:grid;gap:.5rem}
+.contacts p{margin:0}
+.h2like{font:800 clamp(1.7rem,4vw,2.6rem)/1.15 var(--display);letter-spacing:-.01em}
+.revgroup{margin-bottom:2rem}
+.revgroup .reviews{margin-bottom:1rem}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .f-err{margin:0;color:#ffb3a3;font-weight:600;font-size:.9rem}
 #lead button:disabled{opacity:.6;cursor:wait}
@@ -541,76 +602,196 @@ document.documentElement.className+=' js';
 </script>
 <header>
   <div class="wrap nav">
-    <a class="logo" href="#top"><svg><use href="#capy"/></svg>bio_capybara</a>
+    <a class="logo" href="#home"><svg><use href="#capy"/></svg><span class="lt">bio_capybara<small class="brand-s" id="ege-cd"></small></span></a>
     <ul>
-      <li><a href="#benefit">Тесты и уроки</a></li>
-      <li><a href="#diagnostics">Диагностика</a></li>
-      <li><a href="#about">О нас</a></li>
-      <li><a href="#plans">Курсы</a></li>
+      <li><a href="#tests">Тесты</a></li>
+      <li><a href="#lessons">Уроки</a></li>
+      <li><a href="#about">О школе</a></li>
+      <li><a href="#courses">Курсы и цены</a></li>
     </ul>
-    <a class="btn orange" href="#diagnostics">Записаться</a>
+    <a class="btn ghost" href="#diagnostics">Диагностика</a>
+    <button class="burger" type="button" aria-label="Меню" aria-expanded="false">☰</button>
   </div>
 </header>
 
+<script>document.documentElement.classList.add('js')</script>
 <main id="top">
-  <div class="wrap">
-    <div class="hero">
-      <div>
-        <p class="eyebrow">Биология · ОГЭ и ЕГЭ · онлайн</p>
-        <h1 style="margin-top:.8rem">Готовим будущих <em>врачей</em> и учёных к экзамену по биологии</h1>
-        <p class="lead">Подготовка от врача и педагога. Начните с бесплатного теста — он покажет, где вы сейчас и сколько баллов можно добрать.</p>
-        <div class="ctas">
-          <a class="btn orange" href="#benefit">Пройти бесплатный тест</a>
-          <a class="btn ghost" href="#plans">Смотреть курсы</a>
-        </div>
-      </div>
-      <div class="badge-card">
-        <div class="ava"><svg><use href="#capy"/></svg></div>
-        <h3>Учебный центр bio_capybara</h3>
-        <ul>
-          <li><b>300+</b> учеников прошли подготовку</li>
-          <li><b>0</b> несдач экзамена</li>
-          <li><b>8 лет</b> преподаём онлайн</li>
-          <li><b>2</b> диплома: врач и педагог</li>
-        </ul>
-      </div>
+
+<!-- ============ ГЛАВНАЯ ============ -->
+<div class="page" data-page="home" id="pg-home">
+  <div class="wrap hero2">
+    <p class="eyebrow">Биология · ОГЭ и ЕГЭ · онлайн</p>
+    <h1>Узнайте за 3 минуты, сколько баллов по биологии <em>реально набрать</em> к июню</h1>
+    <p class="lead">Бесплатный тест без регистрации. Результат сразу на сайте.</p>
+    <div class="aud" role="group" aria-label="Кто вы">
+      <button class="btn orange" type="button" data-aud="parent" aria-pressed="false">Я родитель</button>
+      <button class="btn dark" type="button" data-aud="student" aria-pressed="false">Я ученик</button>
     </div>
-    <div class="flow" aria-label="Путь на сайте">
-      <span>бесплатный тест</span><i>→</i><span>диагностика</span><i>→</i><span>курс или занятия</span>
-    </div>
+    <p class="hero-link">Уже знаете, что хотите? <a href="#courses">Смотреть курсы и цены →</a></p>
+    <div class="aud-panel" id="aud-panel" hidden></div>
   </div>
 
-  <!-- ПОЛЬЗА -->
-  <section id="benefit">
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Кто преподаёт</p><h2>Ислам и Абу-Бакр</h2></div>
+      <div class="teachers" data-inj="teachers"></div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Цифры школы</p><h2>Результаты в цифрах</h2></div>
+      <div class="stats" data-inj="stats"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Как проходит подготовка</p><h2>Четыре шага каждой недели</h2></div>
+      <div class="method" data-inj="steps"></div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Наши принципы</p></div>
+      <div class="value" data-inj="principles"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Отзывы</p><h2>Что говорят ученики и родители <span class="demo-tag">шаблон</span></h2></div>
+      <div data-inj="reviews"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="final">
+        <div><h2>Не знаете, с чего начать?</h2><p class="muted">Бесплатный тест покажет, где вы сейчас.</p><a class="btn orange" href="#tests">Пройдите тест</a></div>
+        <div><h2>Хотите точный разбор?</h2><p class="muted">Преподаватель разберёт ответы и составит план.</p><a class="btn ghost" href="#diagnostics">Записаться на диагностику</a></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ ТЕСТЫ ============ -->
+<div class="page" data-page="tests" id="pg-tests">
+  <section>
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">Бесплатно</p>
-        <h2>Тесты и уроки</h2>
-        <p class="muted">Всего 5 минут — и понятно, с чего начинать. Для родителей и для учеников свои тесты.</p>
+        <h2>Тесты</h2>
+        <p class="muted">Всего 5 минут — и понятно, с чего начинать. Результат сразу на сайте, без регистрации.</p>
       </div>
-      <input type="radio" name="benefit-tab" id="bt-tests" class="sr-radio" checked>
-      <input type="radio" name="benefit-tab" id="bt-lessons" class="sr-radio">
-      <div class="tabs bt-tabs"><label class="tab" for="bt-tests">Тесты</label><label class="tab" for="bt-lessons">Уроки</label></div>
       <p class="nojs-note">На этом устройстве не запускаются скрипты страницы, поэтому тесты не откроются. Откройте сайт в браузере Safari или Chrome: нажмите «Поделиться» → «Открыть в браузере».</p>
-      <div class="panel" id="panel-tests"><div class="who">
-    <button class="choice" data-t="parent"><span class="k">Я родитель</span><h3>Диагностика успеха</h3><span class="muted">5 вопросов: в какой зоне сейчас подготовка ребёнка</span></button>
-    <button class="choice" data-t="prof"><span class="k">Я ученик · профориентация</span><h3>Кем тебе стать?</h3><span class="muted">4 вопроса: врач, учёный или фармацевт</span></button>
-    <button class="choice" data-t="subject"><span class="k">Я ученик · предмет</span><h3>Проверь знания</h3><span class="muted">Пробник ОГЭ, пробник ЕГЭ и тренажёры</span></button>
-  </div></div>
-      <div class="panel" id="panel-lessons">
-        <div class="lessons">
-          <article class="lesson"><div class="thumb">Клетка</div><span class="meta">ЕГЭ · линия 2–6 · 18 мин</span><h3>Органоиды клетки за один урок</h3><p class="muted">Строение и функции, которые чаще всего путают на экзамене.</p><a class="btn ghost" href="#diagnostics">Записаться на урок</a></article>
-          <article class="lesson"><div class="thumb">Генетика</div><span class="meta">ЕГЭ · линия 28 · 25 мин</span><h3>Задачи на сцепленное наследование</h3><p class="muted">Алгоритм оформления, за который эксперт ставит полный балл.</p><a class="btn ghost" href="#diagnostics">Записаться на урок</a></article>
-          <article class="lesson"><div class="thumb">Человек</div><span class="meta">ОГЭ · 15 мин</span><h3>Кровь и иммунитет</h3><p class="muted">Короткий разбор с примерами из врачебной практики.</p><a class="btn ghost" href="#diagnostics">Записаться на урок</a></article>
-        </div>
+      <div id="panel-tests"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ УРОКИ ============ -->
+<div class="page" data-page="lessons" id="pg-lessons">
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Бесплатно</p>
+        <h2>Уроки</h2>
+        <p class="muted">Короткие уроки по 10–15 минут и скрипт-конспект к каждому. После урока — мини-тест по теме.</p>
+      </div>
+      <div class="lessons">
+        <article class="lesson"><div class="thumb">Клетка</div><span class="meta">ЕГЭ · линии 2–6 · 15 мин</span><h3>Органоиды клетки за один урок</h3><p class="muted">Строение и функции, которые чаще всего путают на экзамене.</p>
+          <div class="lrow"><button class="btn ghost" type="button" data-script="cell">Скрипт-конспект</button><button class="btn orange" type="button" data-mini="topic-cell">Мини-тест</button></div><a class="more" href="#diagnostics">Разобрать тему на диагностике →</a></article>
+        <article class="lesson"><div class="thumb">Генетика</div><span class="meta">ЕГЭ · линия 28 · 15 мин</span><h3>Задачи на сцепленное наследование</h3><p class="muted">Алгоритм оформления, за который эксперт ставит полный балл.</p>
+          <div class="lrow"><button class="btn ghost" type="button" data-script="gen">Скрипт-конспект</button><button class="btn orange" type="button" data-mini="topic-gen">Мини-тест</button></div><a class="more" href="#diagnostics">Разобрать тему на диагностике →</a></article>
+        <article class="lesson"><div class="thumb">Человек</div><span class="meta">ОГЭ · 12 мин</span><h3>Кровь и иммунитет</h3><p class="muted">Короткий разбор с примерами из врачебной практики.</p>
+          <div class="lrow"><button class="btn ghost" type="button" data-script="blood">Скрипт-конспект</button><button class="btn orange" type="button" data-mini="topic-human">Мини-тест</button></div><a class="more" href="#diagnostics">Разобрать тему на диагностике →</a></article>
+        <article class="lesson"><div class="thumb">Эволюция</div><span class="meta">ОГЭ и ЕГЭ · 10 мин</span><h3>Движущие силы и пути эволюции</h3><p class="muted">Отбор, ароморфоз, идиоадаптация: как не перепутать на экзамене.</p>
+          <div class="lrow"><button class="btn ghost" type="button" data-script="evo">Скрипт-конспект</button><button class="btn orange" type="button" data-mini="topic-evo">Мини-тест</button></div><a class="more" href="#diagnostics">Разобрать тему на диагностике →</a></article>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ ДИАГНОСТИКА: 6 ЭКРАНОВ ============ -->
+<div class="page" data-page="diagnostics" id="pg-diagnostics">
+  <!-- Экран 1. Оффер -->
+  <section class="d-screen">
+    <div class="wrap d1">
+      <div>
+        <p class="eyebrow">Диагностика · 60 минут</p>
+        <h1>Узнайте за 60 минут, сколько баллов по биологии наберёт ребёнок — и как добрать до цели</h1>
+        <p class="lead">Преподаватель разберёт пробник, найдёт пробелы по темам и даст план подготовки. План останется у вас.</p>
+        <a class="btn orange" href="#book">Записаться на диагностику</a>
+        <div class="price" data-pb></div>
+      </div>
+      <div class="badge-card">
+        <div class="ava"><svg><use href="#capy"/></svg></div>
+        <h3>Ислам</h3>
+        <p class="muted">Врач и педагог. Разбирает пробник вместе с учеником.</p>
       </div>
     </div>
   </section>
 
-  <!-- ДИАГНОСТИКА -->
-  <section id="diagnostics">
+  <!-- Экран 2. Что входит -->
+  <section class="d-screen alt">
     <div class="wrap">
-      <div class="diag">
+      <div class="sec-head"><p class="eyebrow">Что входит</p><h2>Четыре части диагностики</h2></div>
+      <div class="method cards4">
+        <div class="step"><span class="n">Часть 1</span><h3>Пробник до занятия</h3><p class="muted">Ребёнок решает дома. Проверяем обе части, включая письменную.</p></div>
+        <div class="step"><span class="n">Часть 2</span><h3>45 минут с преподавателем в Zoom</h3><p class="muted">Разбор ошибок и причин, почему они появились.</p></div>
+        <div class="step"><span class="n">Часть 3</span><h3>Карта пробелов</h3><p class="muted">Все темы экзамена по светофору: что знает, что плавает, чего нет.</p></div>
+        <div class="step"><span class="n">Часть 4</span><h3>15 минут с родителем</h3><p class="muted">Итоги, прогноз балла и план подготовки.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Экран 3. Что будет после -->
+  <section class="d-screen">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Что будет после</p></div>
+      <div class="after">
+        <p>Вы точно знаете текущий уровень — не со слов школы или ребёнка.</p>
+        <p>Знаете, какие 3–5 тем дадут больше всего баллов.</p>
+        <p>У вас план до экзамена, и по нему можно заниматься даже без нас.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Экран 4. Кто проводит -->
+  <section class="d-screen alt">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Кто проводит</p><h2>Ислам</h2></div>
+      <div class="teachers one" data-inj="teacher-islam"></div>
+      <div data-inj="reviews-stories"></div>
+      <p class="muted"><b>Принципы школы:</b> наука, уважительное общение, на занятиях только предмет.</p>
+    </div>
+  </section>
+
+  <!-- Экран 5. Вопрос-ответ -->
+  <section class="d-screen">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Вопрос-ответ</p><h2>Что обычно спрашивают родители</h2></div>
+      <div class="faq">
+        <details><summary>Почему платно?</summary><p>Преподаватель тратит на каждого почти два часа с проверкой пробника. План остаётся у вас.</p></details>
+        <details><summary>Будут навязывать курс?</summary><p>Расскажем, какой формат подойдёт. Решать вам, план в любом случае ваш.</p></details>
+        <details><summary>Ребёнок слабый, ему не стыдно?</summary><p>Диагностика не экзамен, оценок нет. Чем раньше найдём пробелы, тем больше времени их закрыть.</p></details>
+        <details><summary>Вы из другого города?</summary><p>Всё онлайн, откуда угодно.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Экран 6. Запись -->
+  <section class="d-screen alt">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Запись</p><h2>Запишитесь и получите план подготовки</h2></div>
+      <div class="method steps3">
+        <div class="step"><span class="n">Шаг 1</span><h3>Оставьте заявку</h3><p class="muted">Имя, телефон, класс и экзамен.</p></div>
+        <div class="step"><span class="n">Шаг 2</span><h3>Мы свяжемся</h3><p class="muted">Договоримся о времени диагностики.</p></div>
+        <div class="step"><span class="n">Шаг 3</span><h3>Пробник до занятия</h3><p class="muted">Ребёнок решает его дома.</p></div>
+      </div>
+      <div class="diag" id="book-screen">
           <div class="perch" aria-hidden="true">
             <div class="bubble">Сначала тест, потом скидка на диагностику!</div>
             <svg viewBox="0 0 160 132" xmlns="http://www.w3.org/2000/svg">
@@ -645,7 +826,7 @@ document.documentElement.className+=' js';
             <li>Даём план подготовки до экзамена</li>
             <li>Подбираем идеальный формат под вас: курс, индивидуальные занятия или комплекс</li>
           </ol>
-          <div class="price" id="price-box"><span class="pl">Стоимость</span><b class="reg">2 500 ₽</b></div>
+          <div class="price" data-pb><span class="pl">Стоимость</span><b class="reg">2 500 ₽</b></div>
         </div>
         <form id="lead">
           <label for="f-name">Имя<input id="f-name" required placeholder="Как к вам обращаться"></label>
@@ -663,63 +844,79 @@ document.documentElement.className+=' js';
           <div class="sent" id="sent" hidden></div>
         </form>
       </div>
+      <p class="share-row">Вы ученик? <button class="btn ghost" type="button" id="share-parents">Переслать родителям</button></p>
     </div>
   </section>
+</div>
 
-  <!-- ПРОГРЕВ -->
-  <section id="about">
+<!-- ============ КУРСЫ И ЦЕНЫ ============ -->
+<div class="page" data-page="courses" id="pg-courses">
+  <!-- 1. Оффер -->
+  <section>
     <div class="wrap">
       <div class="sec-head">
-        <p class="eyebrow">Почему мы</p>
-        <h2>Цифры, люди и метод</h2>
-      </div>
-      <div class="stats">
-        <div class="stat"><b>300+</b><span>учеников</span></div>
-        <div class="stat"><b>0</b><span>несдач</span></div>
-        <div class="stat"><b>8 лет</b><span>онлайн-преподавания</span></div>
-        <div class="stat"><b>2</b><span>диплома: врач и педагог</span></div>
-      </div>
-
-      <p class="sub">Преподаватели</p>
-      <div class="teachers">
-        <article class="teacher"><div class="ph">И</div><div><h3>Ислам</h3><p class="muted" style="margin-top:.3rem">Врач и педагог. Выпускник РНИМУ им. Н. И. Пирогова. Объясняет биологию через реальную медицину и готовит тех, кто идёт в медицинский.</p><div class="tags"><span>Врач</span><span>Педагог</span><span>ЕГЭ</span></div></div></article>
-        <article class="teacher"><div class="ph">А</div><div><h3>Абу-Бакр</h3><p class="muted" style="margin-top:.3rem">Репетитор по биологии, студент 4 курса лечебного факультета Казанского ГМУ. Готовит к экзамену через личный опыт: искреннее отношение, свежая подача и актуальные знания.</p><div class="tags"><span>Студент-медик</span><span>ОГЭ</span><span>ЕГЭ</span></div></div></article>
-      </div>
-
-      <p class="sub">Отзывы и результаты <span class="demo-tag">шаблон</span></p>
-      <div class="reviews">
-        <article class="review"><span class="sc">— баллов</span><p>Сюда — отзыв ученика о подготовке и результате экзамена.</p><span class="muted" style="font-size:.85rem">Имя, ЕГЭ 2026, вуз</span></article>
-        <article class="review"><span class="sc">— баллов</span><p>Скриншот или цитата родителя о результате и о том, как шла подготовка.</p><span class="muted" style="font-size:.85rem">Имя, родитель ученика</span></article>
-        <article class="review"><span class="sc">— баллов</span><p>Видео-отзыв из рилс «Результаты учеников» — превью со ссылкой.</p><span class="muted" style="font-size:.85rem">Имя, ОГЭ 2026</span></article>
-        <article class="review"><span class="sc">— баллов</span><p>Поступление: «был на 40 баллах — поступил в медицинский».</p><span class="muted" style="font-size:.85rem">Имя, медвуз</span></article>
-      </div>
-
-      <div class="value">
-        <div><h3>Ценность</h3></div>
-        <div><p><b>Не просто сдать.</b> Для врача и учёного биология — надёжный старт в профессии.</p></div>
-        <div><p><b>Понимание вместо зубрёжки.</b> Каждую тему объясняет врач-педагог на живых примерах.</p></div>
-        <div><p><b>Контроль.</b> Родитель видит прогресс и регулярно получает академический отчёт от преподавателя.</p></div>
-        <div><p><b>Свежая подача.</b> Без спекуляций на непристойных повестках.</p></div>
-      </div>
-
-      <p class="sub">Структура и методы</p>
-      <div class="method">
-        <div class="step"><span class="n">Шаг 1</span><h3>Диагностика</h3><p class="muted">Определяем стартовый уровень и цель в баллах.</p></div>
-        <div class="step"><span class="n">Шаг 2</span><h3>Теория по блокам</h3><p class="muted">Клетка, организм, системы органов, эволюция и экология.</p></div>
-        <div class="step"><span class="n">Шаг 3</span><h3>Практика по линиям</h3><p class="muted">Все задания экзамена, вторая часть — по критериям ФИПИ.</p></div>
-        <div class="step"><span class="n">Шаг 4</span><h3>Пробники</h3><p class="muted">Регулярные пробные экзамены и разбор ошибок.</p></div>
+        <p class="eyebrow">Курсы и цены</p>
+        <h1 class="h2like">Годовая подготовка к ОГЭ и ЕГЭ по биологии с врачом и педагогом</h1>
+        <p class="muted">Понимание вместо зубрёжки, домашние задания в формате экзамена и регулярный отчёт для родителя.</p>
       </div>
     </div>
   </section>
-
-  <!-- ПРОДАЖА -->
-  <section id="plans">
+  <!-- 2. Кому подходит -->
+  <section class="alt">
     <div class="wrap">
-      <div class="sec-head">
-        <p class="eyebrow">Форматы</p>
-        <h2>Курсы и занятия</h2>
-        <p class="muted">Цены в демо условные <span class="demo-tag">заменить</span></p>
+      <div class="sec-head"><p class="eyebrow">Кому подходит</p></div>
+      <div class="method cards4">
+        <div class="step"><h3>9 класс</h3><p class="muted">Готовимся к ОГЭ и закрываем базу.</p></div>
+        <div class="step"><h3>10–11 класс</h3><p class="muted">Идём на высокий балл по ЕГЭ, включая вторую часть.</p></div>
+        <div class="step"><h3>Тем, кто идёт в медицину</h3><p class="muted">Биология как надёжный старт в профессии.</p></div>
       </div>
+    </div>
+  </section>
+  <!-- 3. Как идёт подготовка -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Как идёт подготовка</p></div>
+      <div class="method" data-inj="steps"></div>
+    </div>
+  </section>
+  <!-- 4. Почему удобно -->
+  <section class="alt">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Почему удобно</p></div>
+      <div class="method cards4">
+        <div class="step"><h3>Всё онлайн</h3><p class="muted">Занимайтесь откуда угодно.</p></div>
+        <div class="step"><h3>Удобное время</h3><p class="muted">Для индивидуальных занятий подберём время вместе.</p></div>
+        <div class="step"><h3>Чат с преподавателем</h3><p class="muted">Вопросы между занятиями не копятся.</p></div>
+      </div>
+    </div>
+  </section>
+  <!-- 5. Почему безопасно -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Почему безопасно</p><h2>Отзывы, цифры и условия</h2></div>
+      <div class="stats" data-inj="stats"></div>
+      <div data-inj="reviews-stories"></div>
+      <p class="muted"><b>Условия:</b> сначала диагностика — вы видите уровень и план до выбора курса. Если курс вам не подойдёт, мы скажем об этом честно.</p>
+    </div>
+  </section>
+  <!-- 6. Что входит -->
+  <section class="alt">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Что входит</p></div>
+      <ul class="bullets big">
+        <li>Занятия с врачом и педагогом по всем темам экзамена</li>
+        <li>Скрипт-конспект после каждого занятия</li>
+        <li>Домашние задания в формате экзамена с проверкой</li>
+        <li>Разбор второй части по критериям</li>
+        <li>Пробник каждый месяц</li>
+        <li>Регулярный академический отчёт родителю</li>
+      </ul>
+    </div>
+  </section>
+  <!-- 7. Тарифы -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Тарифы</p><h2>Курсы и занятия</h2><p class="muted">Цены в демо условные <span class="demo-tag">заменить</span></p></div>
       <div class="toggle" role="group" aria-label="Период оплаты">
         <button id="pay-month" aria-pressed="true" data-period="month">Помесячно</button>
         <button id="pay-year" aria-pressed="false" data-period="year">Весь год</button>
@@ -729,8 +926,67 @@ document.documentElement.className+=' js';
         <article class="plan hot"><p class="eyebrow">10–11 класс</p><h3>Курс ЕГЭ</h3><p class="p" data-m="6 900" data-y="55 000"></p><ul><li>3 урока в неделю в группе</li><li>Разбор второй части по критериям</li><li>Чат с преподавателем</li><li>Пробник каждый месяц</li></ul><a class="btn orange" href="#diagnostics">Начать с диагностики</a></article>
         <article class="plan"><p class="eyebrow">Индивидуально</p><h3>Занятия 1 на 1</h3><p class="p" data-m="2 500" data-y="" data-unit="за занятие"></p><ul><li>Программа под цель ученика</li><li>Выбор преподавателя: Ислам или Абу-Бакр</li><li>Удобное время</li></ul><a class="btn ghost" href="#diagnostics">Подобрать время</a></article>
       </div>
+
     </div>
   </section>
+  <!-- 8. Вопросы и призыв -->
+  <section class="alt">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Вопросы</p><h2>Частые вопросы</h2></div>
+      <div class="faq">
+        <details><summary>С чего лучше начать?</summary><p>С диагностики: вы узнаете уровень и получите план. Формат подберём после неё.</p></details>
+        <details><summary>Как понять, какой формат подойдёт?</summary><p>Подберём на диагностике: курс, индивидуальные занятия или комплекс.</p></details>
+        <details><summary>Занятия проходят онлайн?</summary><p>Да, всё онлайн, откуда угодно.</p></details>
+      </div>
+      <div class="final" style="margin-top:2rem">
+        <div><h2>Не знаете, какой формат нужен?</h2><a class="btn orange" href="#diagnostics">Сначала диагностика</a></div>
+        <div><h2>Хотите проверить себя?</h2><a class="btn ghost" href="#tests">Пройти бесплатный тест</a></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ О ШКОЛЕ ============ -->
+<div class="page" data-page="about" id="pg-about">
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">О школе</p><h2>Преподаватели</h2></div>
+      <div class="teachers" data-inj="teachers"></div>
+    </div>
+  </section>
+  <section class="alt">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Наши принципы</p></div>
+      <div class="value" data-inj="principles"></div>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Структура курса</p><h2>Как проходит подготовка</h2></div>
+      <div class="method" data-inj="steps"></div>
+    </div>
+  </section>
+  <section class="alt">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Отзывы</p><h2>Ученики и родители <span class="demo-tag">шаблон</span></h2></div>
+      <div data-inj="reviews"></div>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Цифры</p></div>
+      <div class="stats" data-inj="stats"></div>
+    </div>
+  </section>
+  <section class="alt">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Контакты</p></div>
+      <div class="contacts"><p data-op="phone"></p><p data-op="email"></p><p class="muted" data-op="req"></p></div>
+      <div class="ctas" style="display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.4rem"><a class="btn orange" href="#diagnostics">Записаться на диагностику</a><a class="btn ghost" href="#courses">Смотреть курсы</a></div>
+    </div>
+  </section>
+</div>
+
 </main>
 
 
@@ -769,20 +1025,21 @@ document.documentElement.className+=' js';
     <div class="fcol fbrand">
       <a class="logo" href="#top"><svg><use href="#capy"/></svg>bio_capybara</a>
       <p>Подготовка к ОГЭ и ЕГЭ по биологии: тесты, тренажёры и диагностика с преподавателем-врачом.</p>
-      <p class="freq" id="f-req"></p>
+      <p class="freq" data-op="req"></p>
     </div>
     <div class="fcol">
       <h4>Ученикам и родителям</h4>
-      <a href="#benefit">Тесты и уроки</a>
+      <a href="#tests">Тесты</a>
+      <a href="#lessons">Уроки</a>
       <a href="#diagnostics">Диагностика</a>
-      <a href="#about">Преподаватели</a>
-      <a href="#plans">Курсы и занятия</a>
+      <a href="#about">О школе</a>
+      <a href="#courses">Курсы и цены</a>
       <a href="#privacy" class="pol" id="pol-link">Обработка персональных данных</a>
     </div>
     <div class="fcol">
       <h4>Связь</h4>
-      <p id="f-phone"></p>
-      <p id="f-mail"></p>
+      <p data-op="phone"></p>
+      <p data-op="email"></p>
       <a href="#diagnostics">Записаться на диагностику</a>
     </div>
     <p class="fnote"><a href="#admin" class="adm-link" id="adm-link">Вход для администратора</a></p>
@@ -849,25 +1106,25 @@ const TESTS={
     {n:17,q:'Установите соответствие между веществом и структурой клетки, где оно образуется.',cols:[['А) АТФ в ходе кислородного дыхания','Б) белок','В) глюкоза при фотосинтезе','Г) рибосомная РНК'],['1) ядрышко','2) хлоропласт','3) рибосома','4) митохондрия']],f:'Запишите цифры в порядке букв АБВГ',a:'4321',e:'АТФ при дыхании — в митохондриях, белок — на рибосомах, глюкоза — в хлоропластах, рРНК — в ядрышке.'},
     {n:18,q:'Какие факторы могут ограничить численность продуцентов в озере? Выберите три верных ответа из шести.',o:['1) недостаток света','2) увеличение численности щук','3) недостаток минеральных солей','4) низкая температура воды','5) увеличение численности хищных рыб','6) рост числа видов в водоёме'],f:'Три цифры',a:'134',set:1,e:'Водорослям и водным растениям нужны свет, минеральные соли и тепло. Хищные рыбы на продуцентов прямо не влияют.'}
   ]},
-  'topic-cell':{title:'Тема: клетка',kind:'quiz',back:'topics',qs:[
+  'topic-cell':{title:'Тема: клетка',kind:'quiz',back:'close',qs:[
     {q:'Какой органоид клетки синтезирует основную часть АТФ?',o:['Рибосома','Митохондрия','Комплекс Гольджи','Лизосома'],a:1,e:'Митохондрии — «энергетические станции»: там идёт кислородный этап дыхания.'},
     {q:'Где в клетке идёт синтез белка?',o:['На рибосомах','В лизосомах','В вакуоли','В клеточном центре'],a:0,e:'Трансляция идёт на рибосомах.'},
     {q:'На какой фазе происходит кроссинговер?',o:['Профаза митоза','Профаза I мейоза','Анафаза II мейоза','Интерфаза'],a:1,e:'Конъюгация и кроссинговер гомологичных хромосом идут в профазе I мейоза.'},
     {q:'Какой органоид растительной клетки содержит собственную ДНК и проводит фотосинтез?',o:['Вакуоль','Хлоропласт','Лейкопласт','Ядрышко'],a:1,e:'В хлоропластах есть своя кольцевая ДНК и рибосомы, здесь идёт фотосинтез.'}
   ]},
-  'topic-gen':{title:'Тема: генетика',kind:'quiz',back:'topics',qs:[
+  'topic-gen':{title:'Тема: генетика',kind:'quiz',back:'close',qs:[
     {q:'Сколько хромосом в соматической клетке человека?',o:['23','44','46','48'],a:2,e:'Диплоидный набор человека 2n = 46. В половых клетках — 23.'},
     {q:'Доля рецессивных гомозигот при скрещивании Aa × Aa:',o:['0%','25%','50%','75%'],a:1,e:'Расщепление по генотипу 1 AA : 2 Aa : 1 aa, значит aa = 1/4.'},
     {q:'Сколько типов гамет образует особь AaBb (гены не сцеплены)?',o:['1','2','4','8'],a:2,e:'AB, Ab, aB, ab — 4 типа гамет по 25%.'},
     {q:'Какой генотип у дигетерозиготы?',o:['AABB','AaBb','aabb','AAbb'],a:1,e:'Дигетерозигота гетерозиготна по обоим генам: AaBb.'}
   ]},
-  'topic-human':{title:'Тема: человек',kind:'quiz',back:'topics',qs:[
+  'topic-human':{title:'Тема: человек',kind:'quiz',back:'close',qs:[
     {q:'Какой фермент начинает расщепление крахмала во рту?',o:['Пепсин','Липаза','Амилаза','Трипсин'],a:2,e:'Крахмал расщепляет амилаза слюны. Пепсин работает в желудке с белками.'},
     {q:'Какие клетки крови переносят кислород?',o:['Лейкоциты','Эритроциты','Тромбоциты','Лимфоциты'],a:1,e:'Кислород переносят эритроциты: в них есть гемоглобин.'},
     {q:'Какой отдел мозга отвечает за равновесие и координацию движений?',o:['Продолговатый мозг','Мозжечок','Промежуточный мозг','Кора больших полушарий'],a:1,e:'Координацию и равновесие обеспечивает мозжечок.'},
     {q:'Какой орган вырабатывает желчь?',o:['Желчный пузырь','Поджелудочная железа','Печень','Желудок'],a:2,e:'Желчь вырабатывает печень, а желчный пузырь её только накапливает.'}
   ]},
-  'topic-evo':{title:'Тема: эволюция и экология',kind:'quiz',back:'topics',qs:[
+  'topic-evo':{title:'Тема: эволюция и экология',kind:'quiz',back:'close',qs:[
     {q:'Кто сформулировал теорию естественного отбора?',o:['Ж.-Б. Ламарк','Ч. Дарвин','Г. Мендель','К. Линней'],a:1,e:'Теорию естественного отбора изложил Чарльз Дарвин в 1859 году.'},
     {q:'Что из перечисленного — ароморфоз?',o:['Колючки кактуса','Теплокровность','Покровительственная окраска','Потеря кишечника у ленточных червей'],a:1,e:'Теплокровность поднимает общий уровень организации, это ароморфоз.'},
     {q:'Кто в экосистеме является продуцентом?',o:['Грибы','Травоядные животные','Зелёные растения','Бактерии гниения'],a:2,e:'Продуценты создают органические вещества из неорганических.'},
@@ -896,13 +1153,14 @@ function startDiscount(){if(!discUntil()){discMem=Date.now()+DISC.hours*3600000;
 function discState(){const u=discUntil();return !u?'none':u>Date.now()?'on':'off'}
 const fmtLeft=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(v=>String(v).padStart(2,'0')).join(':')};
 const cdHTML=()=>`<span class="cd" data-cd>${fmtLeft(discUntil()-Date.now())}</span>`;
-function renderPrice(){const el=document.getElementById('price-box');if(!el)return;const st=discState();
-  el.innerHTML=st==='on'?`<span class="pl">Стоимость</span><s>${money(DISC.old)}</s><b>${money(DISC.now)}</b><small>Скидка за пройденный тест действует ещё ${cdHTML()}</small>`
+function renderPrice(){const els=document.querySelectorAll('[data-pb]');if(!els.length)return;const st=discState();
+  const html=st==='on'?`<span class="pl">Стоимость</span><s>${money(DISC.old)}</s><b>${money(DISC.now)}</b><small>Скидка за пройденный тест действует ещё ${cdHTML()}</small>`
     :st==='off'?`<span class="pl">Стоимость</span><b class="reg">${money(DISC.old)}</b><small>Время скидки вышло: она действовала ${hoursWord(DISC.hours)} после теста.</small>`
-    :`<span class="pl">Стоимость</span><b class="reg">${money(DISC.old)}</b>`}
+    :`<span class="pl">Стоимость</span><b class="reg">${money(DISC.old)}</b>`;
+  els.forEach(e=>{e.innerHTML=html})}
 function offerHTML(){
-  if(discState()==='on')return `<div class="offer"><p class="eyebrow">Ваша выгода за тест</p><div class="op"><s>${money(DISC.old)}</s><b>${money(DISC.now)}</b><i>−${money(DISC.old-DISC.now)}</i></div><p class="tm">Скидка на диагностику действует ещё ${cdHTML()}</p><a class="btn orange" href="#diagnostics">Записаться со скидкой</a></div>`;
-  return `<div class="offer off"><p class="tm">Скидка за тест закончилась. Диагностика — ${money(DISC.old)}.</p><a class="btn orange" href="#diagnostics">Записаться на диагностику</a></div>`}
+  if(discState()==='on')return `<div class="offer"><p class="eyebrow">Ваша выгода за тест</p><div class="op"><s>${money(DISC.old)}</s><b>${money(DISC.now)}</b><i>−${money(DISC.old-DISC.now)}</i></div><p class="tm">Скидка на диагностику действует ещё ${cdHTML()}</p><a class="btn orange" href="#book">Записаться со скидкой</a></div>`;
+  return `<div class="offer off"><p class="tm">Скидка за тест закончилась. Диагностика — ${money(DISC.old)}.</p><a class="btn orange" href="#book">Записаться на диагностику</a></div>`}
 setInterval(()=>{const left=discUntil()-Date.now(),t=fmtLeft(left);
   document.querySelectorAll('[data-cd]').forEach(e=>{e.textContent=t});
   if(discUntil()&&left<=0&&!tickDone){tickDone=true;renderPrice();document.querySelectorAll('.offer').forEach(e=>{e.outerHTML=offerHTML()})}
@@ -981,11 +1239,8 @@ function policyHTML(){const O=OPERATOR,f=v=>/^\[/.test(v)?`<span class="todo">${
   <h3>11. Изменения политики</h3>
   <p>Оператор вправе вносить изменения в настоящую политику. Действующая редакция всегда размещена на этой странице.</p>
   </div>`}
-(function(){const O=OPERATOR,f=v=>/^\[/.test(v)?`<span class="todo">${v}</span>`:v,
-  req=document.getElementById('f-req'),ph=document.getElementById('f-phone'),ml=document.getElementById('f-mail');
-  if(req)req.innerHTML=`${f(O.name)} · ИНН ${f(O.inn)} · ОГРНИП ${f(O.ogrnip)}`;
-  if(ph)ph.innerHTML=/^\[/.test(O.phone)?f(O.phone):`<a href="tel:${O.phone.replace(/[^\d+]/g,'')}">${O.phone}</a>`;
-  if(ml)ml.innerHTML=/^\[/.test(O.email)?f(O.email):`<a href="mailto:${O.email}">${O.email}</a>`})();
+(function(){const O=OPERATOR,f=v=>/^\[/.test(v)?`<span class="todo">${v}</span>`:v,ph=/^\[/.test(O.phone)?f(O.phone):`<a href="tel:${O.phone.replace(/[^\d+]/g,'')}">${O.phone}</a>`,ml=/^\[/.test(O.email)?f(O.email):`<a href="mailto:${O.email}">${O.email}</a>`;
+  document.querySelectorAll('[data-op]').forEach(e=>{const k=e.dataset.op;e.innerHTML=k==='phone'?ph:k==='email'?ml:`${f(O.name)} · ИНН ${f(O.inn)} · ОГРНИП ${f(O.ogrnip)}`})})();
 function openPolicy(){const B=openModal('Политика обработки персональных данных','Закрыть ✕');B.innerHTML=policyHTML();B.scrollTop=0}
 document.addEventListener('click',e=>{const a=e.target.closest('a[href="#privacy"]');if(a){e.preventDefault();openPolicy()}});
 if(location.hash==='#privacy')setTimeout(openPolicy,0);
@@ -994,15 +1249,7 @@ if(location.hash==='#admin')setTimeout(openAdmin,0);
 addEventListener('hashchange',()=>{if(location.hash==='#admin')openAdmin()});
 document.getElementById('tm-close').onclick=closeModal;
 DLG.addEventListener('click',e=>{if(e.target===DLG)closeModal();const a=e.target.closest('a[href^="#"]');if(a)closeModal()});
-const go=k=>{closeModal();k==='home'?home():MENUS[k]?menu(k):window.TRAINERS&&TRAINERS[k]?openTrainer(k):run(k)};
-function home(){
-  P.innerHTML=`<div class="who">
-    <button class="choice" data-t="parent"><span class="k">Я родитель</span><h3>Диагностика успеха</h3><span class="muted">5 вопросов: в какой зоне сейчас подготовка ребёнка</span></button>
-    <button class="choice" data-t="prof"><span class="k">Я ученик · профориентация</span><h3>Кем тебе стать?</h3><span class="muted">4 вопроса: врач, учёный или фармацевт</span></button>
-    <button class="choice" data-t="subject"><span class="k">Я ученик · предмет</span><h3>Проверь знания</h3><span class="muted">Пробник ОГЭ, пробник ЕГЭ и тренажёры</span></button>
-  </div>`;
-  P.querySelectorAll('.choice').forEach(b=>b.onclick=()=>go(b.dataset.t));
-}
+const go=k=>{closeModal();k==='close'?0:k==='home'?home():MENUS[k]?menu(k):window.TRAINERS&&TRAINERS[k]?openTrainer(k):run(k)};
 function menu(key){
   const M=MENUS[key];
   P.innerHTML=`<div style="display:grid;gap:1.2rem"><p class="eyebrow">${M.title}</p><div class="who">${M.items.map(([k,tag,h,d])=>`<button class="choice" data-t="${k}"><span class="k">${tag}</span><h3>${h}</h3><span class="muted">${d}</span></button>`).join('')}</div><button class="back" id="bk" style="justify-self:start">← Назад</button></div>`;
@@ -1106,12 +1353,85 @@ function run(key){
       <span class="zone" style="background:color-mix(in srgb,${c} 18%,transparent);color:${c};justify-self:start">${z}</span>
       <p>${t}</p>
       ${offerHTML()}
-      <div class="row"><button class="back" id="again">${T.back?'Выбрать другой тест':'Пройти другой тест'}</button></div></div>`;
+      <div class="row"><button class="back" id="again">${T.back==='close'?'Закрыть':T.back?'Выбрать другой тест':'Пройти другой тест'}</button></div></div>`;
     P.querySelector('#again').onclick=()=>go(backTo);
   };
   T.kind==='input'?drawExam():draw();
 }
+// ---------- карточки тестов (страница «Тесты» и первый экран) ----------
+const CARDS={
+  parent:{k:'Я родитель',h:'Диагностика успеха',m:'⏱ 2 минуты',d:'Узнаете, в какой зоне сейчас подготовка ребёнка и какие риски есть до экзамена'},
+  prof:{k:'Я ученик · профориентация',h:'Кем тебе стать?',m:'⏱ 2 минуты',d:'Узнаете, что вам ближе: врач, учёный или фармацевт'},
+  subject:{k:'Я ученик · предмет',h:'Проверь знания',m:'⏱ от 20 минут',d:'Узнаете балл за первую часть и темы с ошибками. Пробники ОГЭ и ЕГЭ, тренажёры'}
+};
+const cardHTML=k=>{const c=CARDS[k];return `<button class="choice" data-t="${k}"><span class="k">${c.k}</span><h3>${c.h}</h3><span class="tmeta">${c.m}</span><span class="muted">${c.d}</span></button>`};
+function home(){
+  P.innerHTML=`<div class="cols2"><div><h3 class="colh">Для родителей</h3><div class="col-cards">${cardHTML('parent')}</div></div><div><h3 class="colh">Для учеников</h3><div class="col-cards">${cardHTML('prof')}${cardHTML('subject')}</div></div></div>`;
+  P.querySelectorAll('.choice').forEach(b=>b.onclick=()=>go(b.dataset.t));
+}
 home();
+// ---------- общие блоки, которые повторяются на нескольких страницах ----------
+const T_ISLAM=`<article class="teacher"><div class="ph">И</div><div><h3>Ислам</h3><p class="muted" style="margin-top:.3rem">Врач и педагог. Выпускник РНИМУ им. Н. И. Пирогова. Объясняет биологию через реальную медицину и готовит тех, кто идёт в медицинский.</p><div class="tags"><span>Врач</span><span>Педагог</span><span>ЕГЭ</span></div></div></article>`;
+const T_ABU=`<article class="teacher"><div class="ph">А</div><div><h3>Абу-Бакр</h3><p class="muted" style="margin-top:.3rem">Репетитор по биологии, студент 4 курса лечебного факультета Казанского ГМУ. Готовит к экзамену через личный опыт: искреннее отношение, свежая подача и актуальные знания.</p><div class="tags"><span>Студент-медик</span><span>ОГЭ</span><span>ЕГЭ</span></div></div></article>`;
+const rv=(sc,t,who)=>`<article class="review"><span class="sc">${sc}</span><p>${t}</p><span class="muted" style="font-size:.85rem">${who}</span></article>`;
+const FRAG={
+  teachers:()=>T_ISLAM+T_ABU,
+  'teacher-islam':()=>T_ISLAM,
+  stats:()=>`<div class="stat"><b>300+</b><span>учеников</span></div><div class="stat"><b>0</b><span>несдач</span></div><div class="stat"><b>8 лет</b><span>онлайн-преподавания</span></div><div class="stat"><b>2</b><span>диплома: врач и педагог</span></div>`,
+  steps:()=>`<div class="step"><span class="n">Шаг 1</span><h3>Вебинар</h3><p class="muted">Живой урок онлайн: теория по теме на понятных примерах.</p></div><div class="step"><span class="n">Шаг 2</span><h3>Скрипт-конспект</h3><p class="muted">После урока — конспект с главным по теме.</p></div><div class="step"><span class="n">Шаг 3</span><h3>Домашнее задание</h3><p class="muted">Задания в формате экзамена с проверкой преподавателя.</p></div><div class="step"><span class="n">Шаг 4</span><h3>Отчёт родителю</h3><p class="muted">Что пройдено, где ошибки и как растёт балл.</p></div>`,
+  principles:()=>`<div><p><b>Не просто сдать.</b> Для врача и учёного биология — надёжный старт в профессии.</p></div><div><p><b>Понимание вместо зубрёжки.</b> Каждую тему объясняет врач-педагог на живых примерах.</p></div><div><p><b>Контроль.</b> Родитель видит прогресс и регулярно получает академический отчёт от преподавателя.</p></div><div><p><b>Свежая подача.</b> Без спекуляций на непристойных повестках.</p></div>`,
+  reviews:()=>`<div class="revgroup"><p class="sub">Ученики</p><div class="reviews">${rv('— баллов','Сюда — отзыв ученика о подготовке и результате экзамена.','Имя, ЕГЭ 2026, вуз')}${rv('— баллов','Видео-отзыв из рилс «Результаты учеников» — превью со ссылкой.','Имя, ОГЭ 2026')}${rv('— баллов','Поступление: «был на 40 баллах — поступил в медицинский».','Имя, медвуз')}</div></div><div class="revgroup"><p class="sub">Родители</p><div class="reviews">${rv('— баллов','Скриншот или цитата родителя о результате и о том, как шла подготовка.','Имя, родитель ученика')}${rv('— баллов','Что изменилось: родитель видит прогресс и получает отчёт.','Имя, родитель ученика')}</div></div>`,
+  'reviews-stories':()=>`<p class="sub">Истории роста балла <span class="demo-tag">шаблон</span></p><div class="reviews">${rv('с — до — баллов','История ученика со скриншотом результата: за сколько месяцев и что помогло.','Имя, ЕГЭ 2026')}${rv('с — до — баллов','Ещё одна история роста балла со скриншотом.','Имя, ОГЭ 2026')}</div>`
+};
+document.querySelectorAll('[data-inj]').forEach(e=>{e.innerHTML=FRAG[e.dataset.inj]()});
+renderPrice();
+// ---------- первый экран: «Я родитель» / «Я ученик» ----------
+const AUD={parent:['parent'],student:['prof','subject']};
+document.querySelectorAll('[data-aud]').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('[data-aud]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  const pn=document.getElementById('aud-panel');pn.innerHTML=AUD[b.dataset.aud].map(cardHTML).join('');pn.hidden=false;
+  pn.querySelectorAll('.choice').forEach(c=>c.onclick=()=>{if(c.dataset.t==='subject'){location.hash='#tests';menu('subject')}else go(c.dataset.t)});
+  pn.scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+// ---------- конспекты к урокам ----------
+const SCRIPTS={
+  cell:{t:'Органоиды клетки',l:['Ядро хранит ДНК и управляет синтезом белков; оболочка двумембранная, с порами.','Митохондрии двумембранные: на кристах идёт синтез АТФ, есть собственная кольцевая ДНК и рибосомы.','Рибосомы синтезируют белок. Шероховатая ЭПС несёт рибосомы, гладкая синтезирует липиды и углеводы.','Комплекс Гольджи сортирует, упаковывает и выводит вещества, образует лизосомы.','Лизосомы содержат ферменты и расщепляют органические вещества.','Чаще всего путают: двумембранные — ядро, митохондрии, пластиды; немембранные — рибосомы и клеточный центр.']},
+  gen:{t:'Сцепленное наследование',l:['Гены на одной хромосоме наследуются вместе — это группа сцепления. Число групп сцепления равно гаплоидному набору хромосом.','При полном сцеплении потомки похожи на родителей. При неполном из-за кроссинговера появляются кроссоверные гаметы.','Расстояние между генами измеряют в морганидах: 1 морганида — это 1% кроссоверных особей.','Оформление задачи: схема скрещивания, генотипы родителей, типы гамет, генотипы и фенотипы потомства, пояснение.','Больше всего баллов теряют за недописанные типы гамет и за отсутствие пояснения, какой закон проявился.']},
+  blood:{t:'Кровь и иммунитет',l:['Эритроциты переносят кислород с помощью гемоглобина, тромбоциты участвуют в свёртывании, лейкоциты защищают организм.','Фагоцитоз — поглощение чужеродных частиц лейкоцитами; его описал И. И. Мечников.','Лимфоциты вырабатывают антитела — белки, которые связывают антигены.','Иммунитет бывает врождённым и приобретённым; приобретённый — естественным и искусственным.','Вакцина содержит ослабленные или убитые микроорганизмы: организм сам вырабатывает антитела. Лечебная сыворотка — готовые антитела.','Группа крови и резус-фактор важны при переливании.']},
+  evo:{t:'Движущие силы и пути эволюции',l:['Движущие силы по Дарвину: наследственная изменчивость, борьба за существование, естественный отбор.','Современные факторы эволюции: мутации, комбинативная изменчивость, изоляция, дрейф генов, естественный отбор.','Ароморфоз — крупное усложнение организации, например появление четырёхкамерного сердца.','Идиоадаптация — приспособление к условиям без повышения уровня организации. Дегенерация — упрощение, например у паразитов.','Критерии вида: морфологический, физиологический, генетический, экологический, географический.']}
+};
+document.addEventListener('click',e=>{
+  const sc=e.target.closest('[data-script]');
+  if(sc){const S=SCRIPTS[sc.dataset.script],B=openModal('Скрипт к уроку','Закрыть ✕');B.innerHTML=`<div class="policy"><h3 style="margin-top:0">${S.t}</h3><ul>${S.l.map(x=>`<li>${x}</li>`).join('')}</ul><p style="margin-top:1rem"><a class="btn orange" href="#diagnostics">Разобрать тему на диагностике</a></p></div>`;B.scrollTop=0;return}
+  const mn=e.target.closest('[data-mini]');if(mn)go(mn.dataset.mini)
+});
+// ---------- переслать родителям ----------
+const shareBtn=document.getElementById('share-parents');
+if(shareBtn)shareBtn.onclick=async()=>{const text='Мам, я прошёл тест по биологии. Посмотри и запиши меня на диагностику: '+location.origin+location.pathname+'#diagnostics';
+  try{if(navigator.share){await navigator.share({title:'bio_capybara',text,url:location.origin+location.pathname+'#diagnostics'});return}}catch(e){if(e&&e.name==='AbortError')return}
+  try{await navigator.clipboard.writeText(text);shareBtn.textContent='Ссылка скопирована'}catch(e){window.prompt('Скопируйте и отправьте родителям:',text)}};
+// ---------- меню, счётчик до ЕГЭ и страницы ----------
+const EXAM_DATE='2027-06-15'; // предварительная дата ЕГЭ по биологии по проекту расписания; обновить после утверждения
+(function(){const el=document.getElementById('ege-cd');if(!el)return;const d=Math.ceil((new Date(EXAM_DATE+'T10:00:00+03:00')-Date.now())/864e5);
+  if(d>0){const m=d%10,t=d%100,w=m===1&&t!==11?'день':[2,3,4].includes(m)&&![12,13,14].includes(t)?'дня':'дней',o=m===1&&t!==11?'остался':'осталось';el.textContent=`До ЕГЭ ${o} ${d} ${w}`}})();
+const PAGES=['home','tests','lessons','about','courses','diagnostics'];
+const ALIAS={top:'home',benefit:'tests',plans:'courses',book:'diagnostics',lead:'diagnostics'};
+const pageOf=h=>PAGES.includes(h)?h:ALIAS[h]||(h===''?'home':null);
+const NAV=document.querySelector('.nav'),BURGER=document.querySelector('.burger');
+const showPage=n=>{document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.dataset.page===n));
+  document.querySelectorAll('.nav ul a').forEach(a=>{if(pageOf(a.getAttribute('href').slice(1))===n)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')})};
+function route(){const h=location.hash.replace(/^#\/?/,'');
+  NAV.classList.remove('open');BURGER.setAttribute('aria-expanded','false');
+  if(h==='privacy'||h==='admin'){if(!document.querySelector('.page.on'))showPage('home');return}
+  const n=pageOf(h);if(!n)return;closeModal();showPage(n);
+  const t=h==='book'?document.getElementById('book-screen'):null;
+  if(t)t.scrollIntoView({block:'start'});else window.scrollTo(0,0)}
+BURGER.onclick=()=>{const o=NAV.classList.toggle('open');BURGER.setAttribute('aria-expanded',String(o))};
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const h=a.getAttribute('href').slice(1);
+  if(!h||h==='privacy'||h==='admin'||!pageOf(h))return;e.preventDefault();
+  if(location.hash==='#'+h)route();else location.hash='#'+h});
+addEventListener('hashchange',route);
+route();
 window.__siteReady=true;
 
 // ---------- form ----------
