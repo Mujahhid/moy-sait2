@@ -290,6 +290,11 @@ const server = http.createServer(async (req, res) => {
       const secure = String(req.headers['x-forwarded-proto'] || '').includes('https') ? '; Secure' : '';
       return send(res, 200, { ok: true }, undefined, { 'Set-Cookie': `crm=${encodeURIComponent(crmToken())}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${30 * 86400}${secure}`, 'Cache-Control': 'no-store' });
     }
+    // выход из CRM (кнопка «Выйти» в панели администратора): стираем cookie
+    if (p === '/api/crm/logout' && req.method === 'POST') {
+      const secure = String(req.headers['x-forwarded-proto'] || '').includes('https') ? '; Secure' : '';
+      return send(res, 200, { ok: true }, undefined, { 'Set-Cookie': `crm=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0${secure}`, 'Cache-Control': 'no-store' });
+    }
     if (p.startsWith('/api/crm/')) {
       if (!crmAuthed(req)) return send(res, 401, { error: 'unauthorized' }, undefined, { 'Cache-Control': 'no-store' });
       if (p === '/api/crm/records' && req.method === 'GET') return send(res, 200, { records: records.map(crmView) }, undefined, { 'Cache-Control': 'no-store' });

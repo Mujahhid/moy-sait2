@@ -1230,7 +1230,7 @@ function closeModal(){if(!DLG.hidden){DLG.hidden=true;DLG.dispatchEvent(new Even
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!DLG.hidden)closeModal()});
 DLG.addEventListener('close',()=>{document.documentElement.classList.remove('modal-open');if(location.pathname.indexOf('/r/')===0){try{history.replaceState(null,'','/'+location.search+location.hash)}catch(e){}}DLG_BODY.innerHTML='';DLG_BODY.classList.remove('adm-body');if(location.hash==='#admin'||location.hash==='#privacy'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}});
 // ---------- панель заявок внутри сайта (видна только после ввода пароля) ----------
-function openAdmin(){const B=openModal('Панель заявок','Закрыть ✕',true);B.classList.add('adm-body');B.innerHTML='<iframe class="adm-frame" src="/admin?embed=1" title="Панель заявок"></iframe>';}
+function openAdmin(){const B=openModal('Панель администратора','Закрыть ✕',true);B.classList.add('adm-body');B.innerHTML='<iframe class="adm-frame" src="/admin?embed=1" title="Панель администратора"></iframe>';}
 document.getElementById('adm-link').addEventListener('click',e=>{e.preventDefault();openAdmin()});
 // ---------- политика обработки персональных данных ----------
 // Реквизиты оператора: заполните своими данными (сейчас стоят заглушки).
