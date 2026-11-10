@@ -1434,7 +1434,8 @@ const stripH=s=>String(s).replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').replace
 // ---------- оплата диагностики переводом по СБП ----------
 const phDigits=v=>{let d=String(v).replace(/\D/g,'');if(!d)return'';if(d[0]==='8')d='7'+d.slice(1);else if(d[0]!=='7')d='7'+d;return d.slice(0,11)};
 const phFmt=d=>{if(!d)return'';let r='+7';if(d.length>1)r+=' '+d.slice(1,4);if(d.length>4)r+=' '+d.slice(4,7);if(d.length>7)r+='-'+d.slice(7,9);if(d.length>9)r+='-'+d.slice(9,11);return r};
-const TEACH={'Ислам':()=>discState()==='on'?DISC.now:DISC.old,'Абу-Бакр':()=>1500};
+const DIAG_PRICE=()=>discState()==='on'?DISC.now:DISC.old;
+const TEACH={'Ислам':DIAG_PRICE,'Абу-Бакр':DIAG_PRICE}; // диагностика стоит одинаково у обоих преподавателей
 async function openPay(){
   track('clicked_signup');
   const B=openModal('Оплата диагностики','Закрыть ✕');B.innerHTML='<p class="muted">Загружаем…</p>';
@@ -1447,7 +1448,7 @@ async function openPay(){
       <p class="muted" style="margin:0">Карта пробелов по всем темам и план подготовки до экзамена. Стоимость диагностики засчитаем в курс, если продолжите заниматься.</p>
       <fieldset class="pteach"><legend>Преподаватель</legend>
         <label><input type="radio" name="pt" value="Ислам" checked><span>Ислам</span><b>${on?`<s>${money(DISC.old)}</s> ${money(DISC.now)}`:money(DISC.old)}</b></label>
-        <label><input type="radio" name="pt" value="Абу-Бакр"><span>Абу-Бакр</span><b>${money(1500)}</b></label></fieldset>
+        <label><input type="radio" name="pt" value="Абу-Бакр"><span>Абу-Бакр</span><b>${on?`<s>${money(DISC.old)}</s> ${money(DISC.now)}`:money(DISC.old)}</b></label></fieldset>
       ${ready?`<div class="payreq"><p class="eyebrow">Перевод по СБП</p><p style="margin:0">Переведите <b data-amt></b> на номер <b>${escH(info.phone)}</b>${info.bank?`, банк: <b>${escH(info.bank)}</b>`:''}${info.name?`, получатель: <b>${escH(info.name)}</b>`:''}</p></div>`
         :`<div class="payreq"><p style="margin:0">Реквизиты для перевода скоро появятся здесь. Попробуйте чуть позже.</p></div>`}
       <p class="muted fine">Оплатить может родитель — отправьте ему эту страницу.</p>

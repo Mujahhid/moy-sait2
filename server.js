@@ -104,7 +104,7 @@ const TRACK_EVENTS = ['test_done', 'shared', 'parent_opened', 'clicked_signup', 
 const ID_RE = /^[\w-]{4,16}$/;
 const KINDS = ['probnik', 'risk', 'specialty', 'format', 'trainer'];
 const ZONES = ['green', 'yellow', 'red'];
-const PRICES = { 'Ислам': [2000, 2500], 'Абу-Бакр': [1500] };
+const PRICES = { 'Ислам': [2000, 2500], 'Абу-Бакр': [2000, 2500] }; // диагностика: 2 500, со скидкой за тест 2 000
 const nowIso = () => new Date().toISOString();
 const numOrNull = (v, max = 100000) => (Number.isFinite(v) && v >= 0 && v <= max ? Math.round(v * 100) / 100 : null);
 function cleanTest(t) {
