@@ -219,6 +219,106 @@ function crmAuthed(req) {
 }
 const PAY = () => ({ phone: clip(process.env.SBP_PHONE, 30), bank: clip(process.env.SBP_BANK, 60), name: clip(process.env.SBP_NAME, 80) });
 
+// ---------- оплата через ЮKassa (шаг 7 инструкции CRM) ----------
+// Ключи — только в переменных окружения. Сумму всегда считает сервер, ссылке и браузеру не верим.
+// Оплата засчитывается только по уведомлению ЮKassa (вебхуку), которое сервер перепроверяет запросом в API ЮKassa.
+const YK = {
+  shop: String(process.env.YOOKASSA_SHOP_ID || '').trim(),
+  key: String(process.env.YOOKASSA_SECRET_KEY || '').trim(),
+  receipt: process.env.YOOKASSA_RECEIPT === '1', // чеки по 54-ФЗ через ЮKassa: включить, если они включены в магазине
+  vat: Number(process.env.YOOKASSA_VAT_CODE || 1), // 1 — без НДС
+  api: String(process.env.YOOKASSA_API || 'https://api.yookassa.ru/v3').replace(/\/+$/, ''), // переопределяется только для проверок
+};
+const SITE_URL = String(process.env.SITE_URL || 'https://biocapybara.ru').replace(/\/+$/, '');
+const DIAG_PRICES = { 'Ислам': { old: 2500, now: 2000 }, 'Абу-Бакр': { old: 1500, now: 1500 } };
+const DISCOUNT_HOURS = 3; // как таймер на сайте: 3 часа после первого пройденного теста
+const COURSE_TARIFFS = { // как в crm.html: цена в месяц и за весь курс; null — целиком не продаётся
+  'CapyBasic': { m: 5000, full: 29500 },
+  'Comfort-bara': { m: 6000, full: 35500 },
+  'Capybarin-Pro': { m: 9800, full: null },
+  'Capybarin-Pro MAX': { m: 13000, full: null },
+};
+const CREDIT_HOURS = 72; // зачёт диагностики в первую оплату курса
+async function yk(method, apiPath, body, idemKey) {
+  if (!YK.shop || !YK.key) { const e = new Error('yookassa_not_configured'); e.status = 503; throw e; }
+  const r = await fetch(YK.api + apiPath, {
+    method,
+    headers: { Authorization: 'Basic ' + Buffer.from(YK.shop + ':' + YK.key).toString('base64'), 'Content-Type': 'application/json', ...(idemKey ? { 'Idempotence-Key': idemKey } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+    signal: AbortSignal.timeout(15000),
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) { const e = new Error('yookassa_' + r.status); e.status = r.status; e.body = j; throw e; }
+  return j;
+}
+const okPays = (rec, purpose) => (rec.payments || []).filter((p) => p.status === 'succeeded' && (!purpose || p.purpose === purpose));
+function discountUntil(rec) {
+  const t = ((rec && rec.events) || []).filter((e) => e.type === 'test_done').map((e) => Date.parse(e.at)).filter(Number.isFinite);
+  return t.length ? Math.min(...t) + DISCOUNT_HOURS * 3600000 : 0;
+}
+function diagPrice(rec, teacher) {
+  const p = DIAG_PRICES[teacher];
+  if (!p) return null;
+  return discountUntil(rec) > Date.now() ? p.now : p.old;
+}
+function courseQuote(rec, tariff, plan) {
+  const t = COURSE_TARIFFS[tariff];
+  if (!t || (plan !== 'month' && plan !== 'full')) return null;
+  const price = plan === 'full' ? t.full : t.m;
+  if (!price) return null;
+  const prev = okPays(rec, 'course');
+  if (plan === 'full' && prev.length) return null; // весь курс — только первой покупкой
+  const month_no = plan === 'month' ? prev.filter((p) => p.plan === 'month').length + 1 : null;
+  let credit = 0;
+  const diag = okPays(rec, 'diagnostic')[0];
+  const doneEv = (rec.events || []).find((e) => e.type === 'diag_done');
+  const doneAt = Date.parse((rec.diagnostic && rec.diagnostic.done_at) || (doneEv && doneEv.at) || '');
+  if (!prev.length && diag && Number.isFinite(doneAt) && Date.now() - doneAt <= CREDIT_HOURS * 3600000) credit = Math.min(diag.amount, price - 1);
+  return { tariff, plan, month_no, price, credit, amount: price - credit };
+}
+function advanceStage(rec, stage) {
+  if (rec.stage === 'lost' || SITE_ORDER.indexOf(stage) > SITE_ORDER.indexOf(rec.stage)) rec.stage = stage;
+}
+// успешная оплата из ЮKassa → запись CRM (повторное уведомление по тому же платежу ничего не меняет)
+async function applyPayment(pay) {
+  const m = pay.metadata || {};
+  const id = ID_RE.test(String(m.record_id || '')) ? m.record_id : null;
+  let rec = id && records.find((r) => r.id === id);
+  if (!rec) { rec = newRecord(id || ('p' + String(pay.id).replace(/[^\w]/g, '').slice(0, 12))); records.unshift(rec); }
+  rec.payments = rec.payments || [];
+  if (rec.payments.some((x) => x.id === pay.id)) return false;
+  const purpose = m.purpose === 'course' ? 'course' : 'diagnostic';
+  const first = !okPays(rec, purpose).length;
+  const item = { id: pay.id, provider: 'yookassa', purpose, amount: Number(pay.amount && pay.amount.value) || 0, status: 'succeeded', paid_at: pay.captured_at || pay.created_at || nowIso() };
+  if (pay.test) item.test = true;
+  if (purpose === 'diagnostic') item.teacher = DIAG_PRICES[m.teacher] ? m.teacher : '';
+  else {
+    item.tariff = COURSE_TARIFFS[m.tariff] ? m.tariff : clip(m.tariff, 40);
+    item.plan = m.plan === 'full' ? 'full' : 'month';
+    if (Number(m.month_no) > 0) item.month_no = Number(m.month_no);
+    if (Number(m.credit) > 0) item.credit = Number(m.credit);
+  }
+  rec.payments.push(item);
+  rec.diagnostic = rec.diagnostic || {};
+  if (purpose === 'diagnostic' && first) { pushEvent(rec, 'paid'); if (item.teacher) rec.diagnostic.teacher = item.teacher; rec.diagnostic.price = item.amount; advanceStage(rec, 'paid'); }
+  if (purpose === 'course' && first) { pushEvent(rec, 'bought'); advanceStage(rec, 'bought'); }
+  rec.updated_at = nowIso(); await saveRecords();
+  return true;
+}
+async function applyRefund(rf) {
+  for (const rec of records) {
+    const p = (rec.payments || []).find((x) => x.id === rf.payment_id);
+    if (!p) continue;
+    p.refunds = p.refunds || [];
+    if (p.refunds.some((x) => x.id === rf.id)) return false;
+    p.refunds.push({ id: rf.id, amount: Number(rf.amount && rf.amount.value) || 0, at: rf.created_at || nowIso() });
+    p.status = 'refunded'; p.refunded_at = rf.created_at || nowIso();
+    rec.updated_at = nowIso(); await saveRecords();
+    return true;
+  }
+  return false;
+}
+
 // ---------- статические файлы ----------
 const FILES = {
   '/': ['index.html', 'text/html; charset=utf-8'],
@@ -228,6 +328,8 @@ const FILES = {
   '/crm': ['crm.html', 'text/html; charset=utf-8'],
   '/crm/': ['crm.html', 'text/html; charset=utf-8'],
   '/offer': ['offer.html', 'text/html; charset=utf-8'], // публичная оферта
+  '/pay': ['pay.html', 'text/html; charset=utf-8'], // оплата курса по ссылке из CRM
+  '/pay/thanks': ['pay.html', 'text/html; charset=utf-8'], // сюда ЮKassa возвращает после оплаты
 };
 const ICONS = {
   '/favicon.svg': ['favicon.svg', 'image/svg+xml'],
@@ -280,6 +382,87 @@ const server = http.createServer(async (req, res) => {
     }
     // реквизиты для перевода по СБП берутся из переменных окружения, в коде их нет
     if (p === '/api/pay-info' && req.method === 'GET') return send(res, 200, PAY(), undefined, { 'Cache-Control': 'no-store' });
+
+    // ---------- оплата через ЮKassa ----------
+    // цены для показа на сайте и на странице /pay (без персональных данных)
+    if (p === '/api/pay/quote' && req.method === 'GET') {
+      const id = clip(url.searchParams.get('r'), 16);
+      const rec = ID_RE.test(id) ? records.find((r) => r.id === id) : null;
+      const nc = { 'Cache-Control': 'no-store' };
+      if (url.searchParams.get('p') === 'course') {
+        if (!rec) return send(res, 404, { error: 'not_found' }, undefined, nc);
+        const q = courseQuote(rec, clip(url.searchParams.get('tariff'), 40), url.searchParams.get('plan'));
+        if (!q) return send(res, 400, { error: 'invalid_tariff' }, undefined, nc);
+        return send(res, 200, { ...q, ready: !!(YK.shop && YK.key) }, undefined, nc);
+      }
+      const prices = {}; for (const t of Object.keys(DIAG_PRICES)) prices[t] = diagPrice(rec, t);
+      const du = discountUntil(rec);
+      return send(res, 200, { prices, old: DIAG_PRICES['Ислам'].old, discount_until: du > Date.now() ? new Date(du).toISOString() : null, ready: !!(YK.shop && YK.key) }, undefined, nc);
+    }
+    // создать платёж: диагностика (с контактами и согласием) или курс (по записи из CRM)
+    if (p === '/api/pay/create' && req.method === 'POST') {
+      if (rateLimited('pay:' + clientIp(req), 20)) return send(res, 429, { error: 'too_many' });
+      let data; try { data = JSON.parse(await readBody(req, 5000)); } catch { return send(res, 400, { error: 'bad_json' }); }
+      const id = clip(data && data.id, 16);
+      if (!ID_RE.test(id)) return send(res, 400, { error: 'invalid' });
+      if (!YK.shop || !YK.key) return send(res, 503, { error: 'pay_not_configured' });
+      let rec = records.find((r) => r.id === id);
+      let amount, description, metadata, phone;
+      if (data.purpose === 'diagnostic') {
+        const c = data.contact || {};
+        if (c.consent !== true) return send(res, 400, { error: 'consent_required' });
+        phone = clip(c.phone, 20).replace(/[^\d+]/g, '');
+        if (!/^\+7\d{10}$/.test(phone)) return send(res, 400, { error: 'invalid_phone' });
+        if (!clip(c.parent_name, 80) || !clip(c.student_name, 80)) return send(res, 400, { error: 'invalid_name' });
+        const teacher = DIAG_PRICES[data.teacher] ? data.teacher : null;
+        if (!teacher) return send(res, 400, { error: 'invalid_teacher' });
+        if (!rec) { rec = newRecord(id); records.unshift(rec); }
+        rec.contact = { parent_name: clip(c.parent_name, 80), student_name: clip(c.student_name, 80), phone, messenger: ['WhatsApp', 'Telegram', 'Звонок'].includes(c.messenger) ? c.messenger : 'Звонок', consent: true };
+        rec.updated_at = nowIso(); await saveRecords();
+        amount = diagPrice(rec, teacher);
+        description = `Диагностика по биологии · ${teacher}`;
+        metadata = { record_id: id, purpose: 'diagnostic', teacher };
+      } else if (data.purpose === 'course') {
+        if (!rec) return send(res, 404, { error: 'not_found' });
+        const q = courseQuote(rec, clip(data.tariff, 40), data.plan);
+        if (!q) return send(res, 400, { error: 'invalid_tariff' });
+        amount = q.amount; phone = rec.contact && rec.contact.phone;
+        description = `Курс ${q.tariff} · ${q.plan === 'full' ? 'весь курс' : 'месяц ' + q.month_no}`;
+        metadata = { record_id: id, purpose: 'course', tariff: q.tariff, plan: q.plan, month_no: String(q.month_no || ''), credit: String(q.credit || 0) };
+      } else return send(res, 400, { error: 'invalid_purpose' });
+      const body = { amount: { value: amount.toFixed(2), currency: 'RUB' }, capture: true, confirmation: { type: 'redirect', return_url: `${SITE_URL}/pay/thanks?r=${encodeURIComponent(id)}` }, description: description.slice(0, 128), metadata };
+      if (YK.receipt) {
+        if (!/^\+7\d{10}$/.test(phone || '')) return send(res, 400, { error: 'phone_required' });
+        body.receipt = { customer: { phone: phone.slice(1) }, items: [{ description: description.slice(0, 128), quantity: '1.00', amount: body.amount, vat_code: YK.vat, payment_mode: 'full_payment', payment_subject: 'service' }] };
+      }
+      try {
+        const pay = await yk('POST', '/payments', body, crypto.randomUUID());
+        return send(res, 200, { url: pay.confirmation && pay.confirmation.confirmation_url, amount });
+      } catch (e) {
+        console.error('ЮKassa: не создался платёж', e.status, JSON.stringify(e.body || {}));
+        return send(res, 502, { error: 'pay_failed' });
+      }
+    }
+    // уведомления ЮKassa. Телу не верим: статус платежа/возврата перепроверяем запросом в API ЮKassa
+    if (p === '/api/pay/webhook' && req.method === 'POST') {
+      let data; try { data = JSON.parse(await readBody(req, 20000)); } catch { return send(res, 400, { error: 'bad_json' }); }
+      const ev = String((data && data.event) || ''), objId = clip(data && data.object && data.object.id, 64);
+      if (!/^[\w-]{10,64}$/.test(objId)) return send(res, 200, { ok: true });
+      try {
+        if (ev === 'payment.succeeded') {
+          const pay = await yk('GET', '/payments/' + encodeURIComponent(objId));
+          if (pay.status === 'succeeded' && pay.paid) await applyPayment(pay);
+        } else if (ev === 'refund.succeeded') {
+          const rf = await yk('GET', '/refunds/' + encodeURIComponent(objId));
+          if (rf.status === 'succeeded') await applyRefund(rf);
+        }
+      } catch (e) {
+        if (e.status === 404) return send(res, 200, { ok: true }); // такого платежа в магазине нет — подделка
+        console.error('ЮKassa: вебхук не обработан', ev, objId, e.status || e.message);
+        return send(res, 500, { error: 'retry' }); // ЮKassa повторит уведомление
+      }
+      return send(res, 200, { ok: true });
+    }
 
     // CRM (только после входа)
     if (p === '/api/crm/login' && req.method === 'POST') {

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Оплата · bio_capybara</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Страница оплаты: одна карточка по центру в стиле сайта (тетрадь в клетку, оранжевый акцент) */
+:root{
+  --bg:#fbfaf7;--grid:rgba(60,45,30,.06);--surface:#fff;--ink:#2b2119;--muted:#6f6257;--line:#e7e0d6;
+  --orange:#f07f1e;--orange-ink:#b4560a;--orange-soft:#fde9d6;--leaf:#2f8a57;--leaf-soft:#dff1e6;--danger:#c4472f;
+  --display:"Unbounded",system-ui,sans-serif;--body:"Manrope",system-ui,-apple-system,sans-serif;color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#181411;--grid:rgba(255,230,200,.045);--surface:#221c17;--ink:#f3ebe2;--muted:#b3a597;--line:#3a3029;
+  --orange:#ff9a3d;--orange-ink:#ffb36b;--orange-soft:#3b2716;--leaf:#5cc489;--leaf-soft:#1c3326;--danger:#ff8a72;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#181411;--grid:rgba(255,230,200,.045);--surface:#221c17;--ink:#f3ebe2;--muted:#b3a597;--line:#3a3029;
+  --orange:#ff9a3d;--orange-ink:#ffb36b;--orange-soft:#3b2716;--leaf:#5cc489;--leaf-soft:#1c3326;--danger:#ff8a72;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{min-height:100vh;min-height:100dvh;display:grid;place-items:center;background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;
+  padding:max(24px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.card{width:100%;max-width:460px;background:var(--surface);border:1.5px solid var(--line);border-radius:22px;padding:28px 26px;display:grid;gap:14px;box-shadow:0 24px 60px -36px rgba(43,33,25,.45)}
+.brand{display:flex;align-items:center;gap:10px;font:700 .95rem var(--display);text-decoration:none;color:inherit}
+.brand img{width:34px;height:34px;border-radius:10px}
+.eyebrow{margin:6px 0 0;font:700 .72rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--orange-ink)}
+h1{margin:0;font:700 1.45rem/1.2 var(--display)}
+p{margin:0}
+.muted{color:var(--muted)}
+.sum{display:grid;gap:6px;background:var(--orange-soft);border-radius:16px;padding:16px 18px}
+.sum .row{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.sum .total{font:700 1.6rem/1.1 var(--display)}
+.sum s{color:var(--muted)}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;font:700 1rem var(--body);border:0;border-radius:999px;padding:.9em 1.4em;background:var(--orange);color:#fff;cursor:pointer;text-decoration:none;box-shadow:0 12px 28px -14px rgba(240,127,30,.9)}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
+.btn:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+.err{color:var(--danger);font-weight:600}
+.ok{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--leaf-soft);color:var(--leaf);font-size:28px;font-weight:700}
+.fine{font-size:.85rem}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main class="card" id="card" aria-live="polite">
+  <a class="brand" href="/"><img src="/icon-180.png" alt="" width="34" height="34">bio_capybara</a>
+  <p class="muted">Загружаем…</p>
+</main>
+<script>
+(function(){
+  var card=document.getElementById('card');
+  var brand=card.querySelector('.brand').outerHTML;
+  var money=function(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+$)/g,' ')+' ₽'};
+  var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+  var q=new URLSearchParams(location.search);
+  function put(html){card.innerHTML=brand+html}
+
+  // после оплаты ЮKassa возвращает сюда. Сам возврат оплатой не считается — оплату подтверждает уведомление ЮKassa.
+  if(location.pathname.replace(/\/+$/,'')==='/pay/thanks'){
+    put('<div class="ok" aria-hidden="true">✓</div><h1>Спасибо!</h1><p>Мы свяжемся с вами в течение 2 часов.</p>'+
+      '<p class="muted fine">Если оплату отменили или она не прошла, вернитесь на сайт и попробуйте ещё раз.</p><a class="btn ghost" href="/">На сайт</a>');
+    return;
+  }
+
+  // оплата курса по ссылке из CRM: /pay?r=<id>&p=course&tariff=<тариф>&plan=month|full. Сумму берём с сервера.
+  var r=q.get('r')||'',tariff=q.get('tariff')||'',plan=q.get('plan')==='full'?'full':'month';
+  function fail(t){put('<h1>Ссылка не работает</h1><p>'+esc(t)+'</p><p class="muted fine">Напишите нам — пришлём новую ссылку.</p><a class="btn ghost" href="/">На сайт</a>')}
+  if(q.get('p')!=='course'||!r||!tariff){fail('В ссылке не хватает данных для оплаты.');return}
+  fetch('/api/pay/quote?p=course&r='+encodeURIComponent(r)+'&tariff='+encodeURIComponent(tariff)+'&plan='+plan,{cache:'no-store'})
+    .then(function(res){return res.json().then(function(j){return {ok:res.ok,j:j}})})
+    .then(function(x){
+      if(!x.ok){fail(x.j&&x.j.error==='not_found'?'Запись не найдена.':'Такого тарифа или способа оплаты нет.');return}
+      var d=x.j,what=d.plan==='full'?'Весь курс':'Месяц '+d.month_no;
+      put('<p class="eyebrow">Оплата курса</p><h1>'+esc(d.tariff)+'</h1>'+
+        '<div class="sum"><div class="row"><span>'+what+'</span><span>'+(d.credit?'<s>'+money(d.price)+'</s>':money(d.price))+'</span></div>'+
+        (d.credit?'<div class="row muted"><span>Зачёт диагностики</span><span>−'+money(d.credit)+'</span></div>':'')+
+        '<div class="row"><span>К оплате</span><span class="total">'+money(d.amount)+'</span></div></div>'+
+        '<p class="err" id="err" hidden></p>'+
+        '<button class="btn" type="button" id="go"'+(d.ready?'':' disabled')+'>Оплатить '+money(d.amount)+'</button>'+
+        '<p class="muted fine">'+(d.ready?'Оплата картой или через СБП на защищённой странице ЮKassa.':'Оплата скоро появится здесь. Попробуйте чуть позже.')+'</p>');
+      var go=document.getElementById('go'),err=document.getElementById('err');
+      go.onclick=function(){go.disabled=true;err.hidden=true;
+        fetch('/api/pay/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:r,purpose:'course',tariff:d.tariff,plan:d.plan})})
+          .then(function(res){return res.json().then(function(j){if(!res.ok||!j.url)throw new Error(j.error||'http');location.href=j.url})})
+          .catch(function(e){go.disabled=false;err.textContent=e.message==='too_many'?'Слишком много попыток подряд. Попробуйте через несколько минут.':'Не получилось перейти к оплате. Попробуйте ещё раз.';err.hidden=false})};
+    })
+    .catch(function(){fail('Нет связи с сервером. Проверьте интернет и обновите страницу.')});
+})();
+</script>
+</body>
+</html>
