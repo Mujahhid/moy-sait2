@@ -146,6 +146,10 @@ main{padding:28px 32px 60px;min-width:0}
 .btn.p{background:linear-gradient(90deg,var(--orange-soft),var(--orange));color:#fff;box-shadow:0 10px 26px -12px rgba(255,106,19,.8)}
 .btn.g{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
 .btn.l{background:var(--white);color:var(--ink);border:1px solid var(--line)}
+.btn.del{background:var(--red-soft);color:var(--red);border:1px solid rgba(215,68,58,.35)}
+.btn.del.solid{background:var(--red);color:#fff;border-color:var(--red)}
+.delq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px;font-weight:600}
+.delq span{flex-basis:100%}
 .db{padding:20px 26px 40px;display:flex;flex-direction:column;gap:16px}
 .kv{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;font-size:14px}
 .kv dt{color:var(--ink-faint)}
@@ -649,8 +653,13 @@ function openRec(id){
         <div style="display:flex;flex-direction:column;gap:8px"><select id="nAuthor" class="stagesel" style="font-weight:600">${CONFIG.TEAM.map(t=>`<option>${t}</option>`).join('')}</select><button class="btn p" id="nAdd" style="justify-content:center">Добавить</button></div>
       </div>
     </div>
+
+    <div class="card pad">
+      <div class="sec-t">Удалить запись</div><div class="sec-s">Для пробных и ошибочных записей. Удаляется всё: тесты, контакты, заметки${r.payments.length?', оплаты':''}.</div>
+      <div id="delBox"><button class="btn del" id="dDel">Удалить запись</button></div>
+    </div>
   </div>`;
-  d.classList.add('on'); $('#ov').classList.add('on'); d.scrollTop=0;
+  d.dataset.rid=r.id; d.classList.add('on'); $('#ov').classList.add('on'); d.scrollTop=0;
   // ссылка на оплату курса
   const lT=$('#lTariff');
   if (lT){
@@ -690,6 +699,23 @@ function testBlock(t,open){
   </div></details>`;
 }
 function closeRec(){ $('#drawer').classList.remove('on'); $('#ov').classList.remove('on'); }
+// удаление записи: кнопка в карточке → подтверждение → DELETE /records/:id
+document.addEventListener('click', async e=>{
+  const box=$('#delBox'); if(!box || !box.contains(e.target)) return;
+  const r=RECORDS.find(x=>x.id===$('#drawer').dataset.rid); if(!r) return;
+  if (e.target.id==='dDel'){
+    const paid=paidTotal(r);
+    box.innerHTML=`<div class="delq"><span>Удалить «${esc(who(r))}» навсегда?${paid?` У записи оплаты на ${rub(paid)} — они пропадут из отчётов.`:''}</span>
+      <button class="btn del solid" id="dDelYes">Да, удалить</button><button class="btn l" id="dDelNo">Отмена</button></div>`;
+  } else if (e.target.id==='dDelNo'){
+    box.innerHTML='<button class="btn del" id="dDel">Удалить запись</button>';
+  } else if (e.target.id==='dDelYes'){
+    e.target.disabled=true;
+    if (LIVE){ try{ await api('/records/'+encodeURIComponent(r.id),{method:'DELETE'}); }catch(err){ e.target.disabled=false; toast('Не удалилось: '+err.message); return; } }
+    RECORDS=RECORDS.filter(x=>x.id!==r.id); if(!LIVE) persistDemo();
+    closeRec(); renderAll(); toast('Запись удалена');
+  }
+});
 
 /* ---------- навигация ---------- */
 let VIEW='dash';

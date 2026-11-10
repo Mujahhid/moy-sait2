@@ -14,6 +14,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
 const DATA_DIR = process.env.DATA_DIR || process.env.RAILWAY_VOLUME_MOUNT_PATH || path.join(__dirname, 'data');
 const LEADS_FILE = path.join(DATA_DIR, 'leads.json');
 const RECORDS_FILE = path.join(DATA_DIR, 'crm.json'); // записи CRM: одна запись = одна семья
+const TRASH_FILE = path.join(DATA_DIR, 'crm-deleted.json'); // корзина: удалённые из CRM записи
 const ROOT = __dirname;
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -297,6 +298,15 @@ const server = http.createServer(async (req, res) => {
       if (cm) {
         const rec = records.find((r) => r.id === cm[1]);
         if (!rec) return send(res, 404, { error: 'not_found' });
+        // удаление записи из CRM; копия уходит в корзину crm-deleted.json (последние 500) — на случай ошибки
+        if (!cm[2] && req.method === 'DELETE') {
+          let trash = [];
+          try { trash = JSON.parse(fs.readFileSync(TRASH_FILE, 'utf8')); if (!Array.isArray(trash)) trash = []; } catch { trash = []; }
+          trash.unshift({ deleted_at: nowIso(), record: rec }); if (trash.length > 500) trash.length = 500;
+          const tmp = TRASH_FILE + '.tmp'; fs.writeFileSync(tmp, JSON.stringify(trash, null, 1)); fs.renameSync(tmp, TRASH_FILE);
+          records.splice(records.indexOf(rec), 1); await saveRecords();
+          return send(res, 200, { ok: true });
+        }
         let data; try { data = JSON.parse(await readBody(req, 60000)); } catch { return send(res, 400, { error: 'bad_json' }); }
         if (cm[2] && req.method === 'POST') {
           const text = clip(data.text, 1000);
