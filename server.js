@@ -230,7 +230,7 @@ const YK = {
   api: String(process.env.YOOKASSA_API || 'https://api.yookassa.ru/v3').replace(/\/+$/, ''), // переопределяется только для проверок
 };
 const SITE_URL = String(process.env.SITE_URL || 'https://biocapybara.ru').replace(/\/+$/, '');
-const DIAG_PRICES = { 'Ислам': { old: 2500, now: 2000 }, 'Абу-Бакр': { old: 1500, now: 1500 } };
+const DIAG_PRICES = { 'Ислам': { old: 2500, now: 2000 }, 'Абу-Бакр': { old: 2500, now: 2000 } }; // одинаково у обоих
 const DISCOUNT_HOURS = 3; // как таймер на сайте: 3 часа после первого пройденного теста
 const COURSE_TARIFFS = { // как в crm.html и на сайте. m — месяц, full — учебный год (до 31 августа), lesson — одно занятие
   'Курс теории': { m: 6000, full: 34000 },

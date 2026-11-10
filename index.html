@@ -1439,10 +1439,10 @@ async function openPay(){
   track('clicked_signup');
   const B=openModal('Оплата диагностики','Закрыть ✕');B.innerHTML='<p class="muted">Загружаем…</p>';
   let q=null;try{const r=await fetch('/api/pay/quote?r='+encodeURIComponent(CUR_RID),{cache:'no-store'});if(r.ok)q=await r.json()}catch(e){}
-  const prices=(q&&q.prices)||{'Ислам':discState()==='on'?DISC.now:DISC.old,'Абу-Бакр':1500};
+  const fb=discState()==='on'?DISC.now:DISC.old,prices=(q&&q.prices)||{'Ислам':fb,'Абу-Бакр':fb};
   const ready=!!(q&&q.ready);
   const link=location.origin+'/r/'+CUR_RID;
-  const priceHTML=t=>t==='Ислам'&&prices[t]<DISC.old?`<s>${money(DISC.old)}</s> ${money(prices[t])}`:money(prices[t]);
+  const priceHTML=t=>prices[t]<DISC.old?`<s>${money(DISC.old)}</s> ${money(prices[t])}`:money(prices[t]);
   B.innerHTML=`<form class="pay payform" novalidate><p class="eyebrow">Диагностика</p><h3 class="zh">Разбор с преподавателем: 45 минут в Zoom</h3>
     <p class="muted" style="margin:0">Карта пробелов по всем темам и план подготовки до экзамена. Стоимость диагностики засчитаем в курс, если продолжите заниматься.</p>
     <fieldset class="pteach"><legend>Преподаватель</legend>
