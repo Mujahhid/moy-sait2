@@ -1226,14 +1226,14 @@ DLG.addEventListener('close',()=>{document.documentElement.classList.remove('mod
 // ---------- панель заявок внутри сайта (видна только после ввода пароля) ----------
 // ---------- политика обработки персональных данных ----------
 // Реквизиты оператора: заполните своими данными (сейчас стоят заглушки).
-const OPERATOR={name:'[ФИО или наименование оператора — заполнить]',inn:'[ИНН]',ogrnip:'[ОГРНИП]',address:'[адрес]',email:'[e-mail]',phone:'[телефон]'};
+const OPERATOR={name:'Баисов Ислам Ибрагимович',status:'плательщик налога на профессиональный доход (самозанятый)',inn:'890512108461',email:'baisov.isl@gmail.com',phone:'+7 996 948-87-63'};
 const POLICY_DATE='6 ноября 2026 года';
 function policyHTML(){const O=OPERATOR,f=v=>/^\[/.test(v)?`<span class="todo">${v}</span>`:v;
   return `<div class="policy">
   <p class="ed">Редакция от ${POLICY_DATE}</p>
   <p>Документ описывает, какие данные собирает сайт bio_capybara, зачем, как долго хранит и какие права есть у посетителя.</p>
   <h3>1. Оператор</h3>
-  <p>Оператором персональных данных является ${f(O.name)} (ИНН ${f(O.inn)}, ОГРНИП ${f(O.ogrnip)}), адрес: ${f(O.address)}.</p>
+  <p>Оператором персональных данных является ${f(O.name)}, ${O.status}, ИНН ${f(O.inn)}.</p>
   <p>Лицо, ответственное за организацию обработки персональных данных, — ${f(O.name)}, ${f(O.email)}, ${f(O.phone)}.</p>
   <p>Настоящая политика разработана в соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных».</p>
   <h3>2. Какие данные собираются</h3>
@@ -1267,7 +1267,7 @@ function policyHTML(){const O=OPERATOR,f=v=>/^\[/.test(v)?`<span class="todo">${
   <p>Оператор вправе вносить изменения в настоящую политику. Действующая редакция всегда размещена на этой странице.</p>
   </div>`}
 (function(){const O=OPERATOR,f=v=>/^\[/.test(v)?`<span class="todo">${v}</span>`:v,ph=/^\[/.test(O.phone)?f(O.phone):`<a href="tel:${O.phone.replace(/[^\d+]/g,'')}">${O.phone}</a>`,ml=/^\[/.test(O.email)?f(O.email):`<a href="mailto:${O.email}">${O.email}</a>`;
-  document.querySelectorAll('[data-op]').forEach(e=>{const k=e.dataset.op;e.innerHTML=k==='phone'?ph:k==='email'?ml:`${f(O.name)} · ИНН ${f(O.inn)} · ОГРНИП ${f(O.ogrnip)}`})})();
+  document.querySelectorAll('[data-op]').forEach(e=>{const k=e.dataset.op;e.innerHTML=k==='phone'?ph:k==='email'?ml:`${f(O.name)} · самозанятый · ИНН ${f(O.inn)}`})})();
 function openPolicy(){const B=openModal('Политика обработки персональных данных','Закрыть ✕');B.innerHTML=policyHTML();B.scrollTop=0}
 document.addEventListener('click',e=>{const a=e.target.closest('a[href="#privacy"]');if(a){e.preventDefault();openPolicy()}});
 if(location.hash==='#privacy')setTimeout(openPolicy,0);
