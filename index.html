@@ -1573,7 +1573,7 @@ async function runDoc(id){
       steps.forEach((s,k)=>{const o=optAt(k);Object.entries(o.s||{}).forEach(([c,v])=>{cnt[c]+=v});if(o.flag)flags[o.flag]=true});
       const hit=r=>!r.any||Object.entries(r.any).some(([c,v])=>cnt[c]>=v);
       const R=T.rules.find(r=>hit(r)&&(!r.flag||flags[r.flag]))||T.rules[T.rules.length-1],tf=T.tariffs[R.tariff];
-      html=`<p class="eyebrow">Результат · Подбор формата</p><p class="muted" style="margin:0">${T.resultLabel}</p><h3 class="tariff">${tf.name}</h3><p>${tf.text}</p><p class="strap">${T.strap}</p><div class="row"><a class="btn orange" href="#book" data-cta>${T.primary}</a><a class="btn ghost" href="#courses" data-plan="${R.tariff}">${T.secondary}</a></div>`;
+      html=`<p class="eyebrow">Результат · Подбор формата</p><p class="muted" style="margin:0">${T.resultLabel}</p><h3 class="tariff">${tf.name}</h3><p>${tf.text}</p><p class="strap">${T.strap}</p><div class="row"><a class="btn orange" href="#book" data-cta>${T.primary}</a><a class="btn ghost" href="#courses" data-plan="${tf.card||R.tariff}">${T.secondary}</a></div>`;
       crm={at:new Date().toISOString(),test:'Подбор формата',kind:'format',score:null,max:null,zone:null,label:tf.name,answers:answers(),extra:'Рекомендован тариф: '+tf.name};
       meta={role:'parent'};
       local={test:'Подбор формата',score:null,max:null,label:tf.name};
