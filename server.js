@@ -232,13 +232,12 @@ const YK = {
 const SITE_URL = String(process.env.SITE_URL || 'https://biocapybara.ru').replace(/\/+$/, '');
 const DIAG_PRICES = { 'Ислам': { old: 2500, now: 2000 }, 'Абу-Бакр': { old: 1500, now: 1500 } };
 const DISCOUNT_HOURS = 3; // как таймер на сайте: 3 часа после первого пройденного теста
-const COURSE_TARIFFS = { // как в crm.html: цена в месяц и за весь курс; null — целиком не продаётся
-  'CapyBasic': { m: 5000, full: 29500 },
-  'Comfort-bara': { m: 6000, full: 35500 },
-  'Capybarin-Pro': { m: 9800, full: null },
-  'Capybarin-Pro MAX': { m: 13000, full: null },
+const COURSE_TARIFFS = { // как в crm.html и на сайте. m — месяц, full — учебный год (до 31 августа), lesson — одно занятие
+  'Курс теории': { m: 6000, full: 34000 },
+  'Занятие с Исламом': { lesson: 2500 },
+  'Занятие с Абу-Бакром': { lesson: 1500 },
 };
-const CREDIT_HOURS = 72; // зачёт диагностики в первую оплату курса
+const CREDIT_HOURS = 72; // зачёт диагностики в первую оплату курса теории (в индивидуальные занятия не засчитывается)
 async function yk(method, apiPath, body, idemKey) {
   if (!YK.shop || !YK.key) { const e = new Error('yookassa_not_configured'); e.status = 503; throw e; }
   const r = await fetch(YK.api + apiPath, {
@@ -263,17 +262,24 @@ function diagPrice(rec, teacher) {
 }
 function courseQuote(rec, tariff, plan) {
   const t = COURSE_TARIFFS[tariff];
-  if (!t || (plan !== 'month' && plan !== 'full')) return null;
+  if (!t) return null;
+  const prev = okPays(rec, 'course').filter((p) => p.tariff === tariff);
+  // индивидуальное занятие — оплата за одно занятие, номер занятия по счёту, без зачёта диагностики
+  if (t.lesson) {
+    if (plan !== 'lesson') return null;
+    return { tariff, plan, month_no: prev.length + 1, price: t.lesson, credit: 0, amount: t.lesson };
+  }
+  if (plan !== 'month' && plan !== 'full') return null;
   const price = plan === 'full' ? t.full : t.m;
   if (!price) return null;
-  const prev = okPays(rec, 'course');
-  if (plan === 'full' && prev.length) return null; // весь курс — только первой покупкой
+  if (plan === 'full' && prev.length) return null; // учебный год — только первой покупкой курса
   const month_no = plan === 'month' ? prev.filter((p) => p.plan === 'month').length + 1 : null;
   let credit = 0;
   const diag = okPays(rec, 'diagnostic')[0];
   const doneEv = (rec.events || []).find((e) => e.type === 'diag_done');
   const doneAt = Date.parse((rec.diagnostic && rec.diagnostic.done_at) || (doneEv && doneEv.at) || '');
-  if (!prev.length && diag && Number.isFinite(doneAt) && Date.now() - doneAt <= CREDIT_HOURS * 3600000) credit = Math.min(diag.amount, price - 1);
+  const creditUsed = (rec.payments || []).some((p) => p.credit > 0);
+  if (!prev.length && !creditUsed && diag && Number.isFinite(doneAt) && Date.now() - doneAt <= CREDIT_HOURS * 3600000) credit = Math.min(diag.amount, price - 1);
   return { tariff, plan, month_no, price, credit, amount: price - credit };
 }
 function advanceStage(rec, stage) {
@@ -294,7 +300,7 @@ async function applyPayment(pay) {
   if (purpose === 'diagnostic') item.teacher = DIAG_PRICES[m.teacher] ? m.teacher : '';
   else {
     item.tariff = COURSE_TARIFFS[m.tariff] ? m.tariff : clip(m.tariff, 40);
-    item.plan = m.plan === 'full' ? 'full' : 'month';
+    item.plan = ['full', 'lesson'].includes(m.plan) ? m.plan : 'month';
     if (Number(m.month_no) > 0) item.month_no = Number(m.month_no);
     if (Number(m.credit) > 0) item.credit = Number(m.credit);
   }
@@ -427,7 +433,7 @@ const server = http.createServer(async (req, res) => {
         const q = courseQuote(rec, clip(data.tariff, 40), data.plan);
         if (!q) return send(res, 400, { error: 'invalid_tariff' });
         amount = q.amount; phone = rec.contact && rec.contact.phone;
-        description = `Курс ${q.tariff} · ${q.plan === 'full' ? 'весь курс' : 'месяц ' + q.month_no}`;
+        description = q.plan === 'lesson' ? `${q.tariff} · занятие ${q.month_no}` : `${q.tariff} · ${q.plan === 'full' ? 'учебный год' : 'месяц ' + q.month_no}`;
         metadata = { record_id: id, purpose: 'course', tariff: q.tariff, plan: q.plan, month_no: String(q.month_no || ''), credit: String(q.credit || 0) };
       } else return send(res, 400, { error: 'invalid_purpose' });
       const body = { amount: { value: amount.toFixed(2), currency: 'RUB' }, capture: true, confirmation: { type: 'redirect', return_url: `${SITE_URL}/pay/thanks?r=${encodeURIComponent(id)}` }, description: description.slice(0, 128), metadata };

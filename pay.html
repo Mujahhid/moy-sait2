@@ -68,16 +68,16 @@ p{margin:0}
     return;
   }
 
-  // оплата курса по ссылке из CRM: /pay?r=<id>&p=course&tariff=<тариф>&plan=month|full. Сумму берём с сервера.
-  var r=q.get('r')||'',tariff=q.get('tariff')||'',plan=q.get('plan')==='full'?'full':'month';
+  // оплата по ссылке из CRM: /pay?r=<id>&p=course&tariff=<тариф>&plan=month|full|lesson. Сумму берём с сервера.
+  var r=q.get('r')||'',tariff=q.get('tariff')||'',plan=['full','lesson'].indexOf(q.get('plan'))>=0?q.get('plan'):'month';
   function fail(t){put('<h1>Ссылка не работает</h1><p>'+esc(t)+'</p><p class="muted fine">Напишите нам — пришлём новую ссылку.</p><a class="btn ghost" href="/">На сайт</a>')}
   if(q.get('p')!=='course'||!r||!tariff){fail('В ссылке не хватает данных для оплаты.');return}
   fetch('/api/pay/quote?p=course&r='+encodeURIComponent(r)+'&tariff='+encodeURIComponent(tariff)+'&plan='+plan,{cache:'no-store'})
     .then(function(res){return res.json().then(function(j){return {ok:res.ok,j:j}})})
     .then(function(x){
       if(!x.ok){fail(x.j&&x.j.error==='not_found'?'Запись не найдена.':'Такого тарифа или способа оплаты нет.');return}
-      var d=x.j,what=d.plan==='full'?'Весь курс':'Месяц '+d.month_no;
-      put('<p class="eyebrow">Оплата курса</p><h1>'+esc(d.tariff)+'</h1>'+
+      var d=x.j,what=d.plan==='full'?'Учебный год (до 31 августа)':d.plan==='lesson'?'Занятие № '+d.month_no:'Месяц № '+d.month_no;
+      put('<p class="eyebrow">'+(d.plan==='lesson'?'Оплата занятия':'Оплата курса')+'</p><h1>'+esc(d.tariff)+'</h1>'+
         '<div class="sum"><div class="row"><span>'+what+'</span><span>'+(d.credit?'<s>'+money(d.price)+'</s>':money(d.price))+'</span></div>'+
         (d.credit?'<div class="row muted"><span>Зачёт диагностики</span><span>−'+money(d.credit)+'</span></div>':'')+
         '<div class="row"><span>К оплате</span><span class="total">'+money(d.amount)+'</span></div></div>'+

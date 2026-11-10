@@ -323,7 +323,7 @@ textarea{resize:vertical;min-height:70px}
 const CONFIG = {
   API_BASE: '/api/crm',          // POST /login, GET /records, PATCH /records/:id, POST /records/:id/notes
   PAY_PATH: '/pay',              // страница сайта, которая создаёт платёж: /pay?r=<id>&p=course&tariff=…&plan=…
-  DEMO_SITE: 'https://site-production-45dd.up.railway.app',
+  DEMO_SITE: 'https://biocapybara.ru',
   REQUIRE_LOGIN: true,
   CALL_DEADLINE_HOURS: 2,        // «свяжемся в течение 2 часов после оплаты»
   CREDIT_HOURS: 72,              // зачёт стоимости диагностики в курс
@@ -351,11 +351,10 @@ const BOARD = [ // колонки канбана — рабочие этапы �
 ];
 const STAGE_NAMES = Object.fromEntries(STAGES.map(s=>[s.k,s.n])); STAGE_NAMES.lost='Отказ';
 const ZN = {red:'Красная',yellow:'Жёлтая',green:'Зелёная'};
-const TARIFFS = { // цена в месяц и за весь курс (9 месяцев); null — оплата целиком не предусмотрена
-  'CapyBasic':        {m:5000,  full:29500},
-  'Comfort-bara':     {m:6000,  full:35500},
-  'Capybarin-Pro':    {m:9800,  full:null},
-  'Capybarin-Pro MAX':{m:13000, full:null}
+const TARIFFS = { // как на сайте: m — месяц, full — учебный год (до 31 августа), lesson — одно индивидуальное занятие
+  'Курс теории':          {m:6000, full:34000},
+  'Занятие с Исламом':    {lesson:2500},
+  'Занятие с Абу-Бакром': {lesson:1500}
 };
 
 /* ---------- данные ---------- */
@@ -436,13 +435,13 @@ const lastTest = r => r.tests.slice().sort((a,b)=>new Date(b.at)-new Date(a.at))
 const who = r => r.contact.parent_name || r.contact.student_name || (r.role==='student'?'Ученик':'Родитель')+' · '+r.id;
 const inPeriod = (d,days) => !days || (Date.now()-new Date(d))/864e5 <= days;
 const boardCol = r => (BOARD.find(c=>c.from.includes(r.stage))||{}).k;
-const courseInfo = r => { const c=coursePays(r); if(!c.length) return null; const last=c[c.length-1]; return {tariff:last.tariff, plan:last.plan, months:c.filter(p=>p.plan==='month').length, last}; };
+const courseInfo = r => { const c=coursePays(r); if(!c.length) return null; const last=c[c.length-1]; return {tariff:last.tariff, plan:last.plan, months:c.filter(p=>p.plan==='month').length, lessons:c.filter(p=>p.plan==='lesson').length, last}; };
 function nextDue(r){ // для помесячной оплаты: когда следующий платёж
   const ci=courseInfo(r); if(!ci||ci.plan!=='month'||r.stage==='lost') return null;
   const d=new Date(ci.last.paid_at); d.setMonth(d.getMonth()+1); return d;
 }
 const purposeTxt = p => p.purpose==='course'
-  ? `Курс ${p.tariff||''} · ${p.plan==='full'?'весь курс':'месяц'+(p.month_no?' '+p.month_no:'')}`
+  ? (p.plan==='lesson' ? `${p.tariff||'Занятие'} · занятие${p.month_no?' '+p.month_no:''}` : `${p.tariff||'Курс'} · ${p.plan==='full'?'учебный год':'месяц'+(p.month_no?' '+p.month_no:'')}`)
   : `Диагностика${p.teacher?' · '+p.teacher:''}`;
 
 /* ---------- утилиты ---------- */
@@ -526,7 +525,7 @@ function card(r){
   if (r.stage==='scheduled') flag = `<div class="soon">🗓 ${fmtDT(r.diagnostic.scheduled_at)} · ${esc(r.diagnostic.teacher||'')}</div>`;
   if (r.stage==='diag_done'){ const left=CONFIG.CREDIT_HOURS-hoursSince(r.diagnostic.done_at||evAt(r,'diag_done')); flag = left>0?`<div class="${left<36?'late':'soon'}">⏳ зачёт ещё ${Math.ceil(left)} ч</div>`:`<div class="muted" style="font-size:12px;margin-top:8px">зачёт истёк</div>`; }
   if (r.stage==='bought'){ const ci=courseInfo(r); const d=nextDue(r);
-    flag = ci?`<div class="soon" style="color:var(--green)">✓ ${esc(ci.tariff)} · ${ci.plan==='full'?'весь курс':'оплачено мес.: '+ci.months}</div>${d?`<div class="muted" style="font-size:12px;margin-top:3px">след. платёж ${fmtD(d)}</div>`:''}`:`<div class="muted" style="font-size:12px;margin-top:8px">оплаты курса нет</div>`; }
+    flag = ci?`<div class="soon" style="color:var(--green)">✓ ${esc(ci.tariff)} · ${ci.plan==='full'?'учебный год':ci.plan==='lesson'?'занятий: '+ci.lessons:'оплачено мес.: '+ci.months}</div>${d?`<div class="muted" style="font-size:12px;margin-top:3px">след. платёж ${fmtD(d)}</div>`:''}`:`<div class="muted" style="font-size:12px;margin-top:8px">оплаты курса нет</div>`; }
   if (r.stage==='lost' && r.lost_reason) flag = `<div class="muted" style="font-size:12px;margin-top:8px">${esc(r.lost_reason)}</div>`;
   return `<div class="kc" data-id="${r.id}"><div class="n">${esc(who(r))}</div><div class="m">${esc(r.contact.student_name&&r.contact.parent_name?'ребёнок: '+r.contact.student_name+' · ':'')}${esc(r.exam||'')} ${r.grade?esc(r.grade)+' кл.':''}</div><div class="row">${zoneChip(t.zone,t.zone?ZN[t.zone]:t.label)}${t.test?`<span class="tag">${esc(short(t.test))}</span>`:''}</div>${flag}</div>`;
 }
@@ -581,6 +580,13 @@ async function setStage(r,k){
   if (k==='diag_done' && !r.diagnostic.done_at){ r.diagnostic.done_at=new Date().toISOString(); patch.diagnostic=r.diagnostic; }
   await save(r,patch);
 }
+// варианты оплаты по тарифу: курс — месяц (и учебный год, если курс ещё не покупали), занятие — по одному
+function planOpts(r,tariff){ const t=TARIFFS[tariff]; if(!t) return [];
+  if (t.lesson) return [['lesson',`Одно занятие · ${rub(t.lesson)}`]];
+  const bought=coursePays(r).filter(p=>p.tariff===tariff);
+  if (bought.some(p=>p.plan==='full')) return [];
+  return [['month',`Месяц · ${rub(t.m)}`]].concat(t.full&&!bought.length?[['full',`Учебный год (до 31 августа) · ${rub(t.full)}`]]:[]);
+}
 function payLink(r,tariff,plan){ return `${siteOrigin()}${CONFIG.PAY_PATH}?r=${encodeURIComponent(r.id)}&p=course&tariff=${encodeURIComponent(tariff)}&plan=${plan}`; }
 function creditLeft(r){ const d=r.diagnostic.done_at||evAt(r,'diag_done'); if(!d||!diagPay(r)) return 0; return CONFIG.CREDIT_HOURS-hoursSince(d); }
 function openRec(id){
@@ -588,7 +594,7 @@ function openRec(id){
   const d=$('#drawer');
   const c=r.contact, dg=r.diagnostic, dp=diagPay(r), ci=courseInfo(r), due=nextDue(r);
   const wa=phoneLink(c.phone,c.messenger);
-  const recT = dg.recommended_tariff && TARIFFS[dg.recommended_tariff] ? dg.recommended_tariff : 'Comfort-bara';
+  const recT = dg.recommended_tariff && TARIFFS[dg.recommended_tariff] ? dg.recommended_tariff : 'Курс теории';
   const cl = creditLeft(r);
   d.innerHTML = `
   <div class="dh"><button class="x" data-close>✕</button>
@@ -603,11 +609,11 @@ function openRec(id){
       ${r.payments.length?`<div class="plist">${r.payments.slice().sort((a,b)=>new Date(a.paid_at)-new Date(b.paid_at)).map(p=>`<div class="pi"><span>${esc(purposeTxt(p))}<br><small>${fmtDT(p.paid_at)}${p.credit?' · зачтена диагностика −'+rub(p.credit):''}</small></span><span style="text-align:right"><b>${rub(p.amount)}</b><br><span class="pay-st ${p.status==='refunded'?'pay-ref':'pay-ok'}">${p.status==='refunded'?'Возврат':'Оплачено'}</span></span></div>`).join('')}</div>
         <div style="margin-top:10px;font-weight:700">Всего оплачено: ${rub(paidTotal(r))}${due?` <span class="muted" style="font-weight:500">· следующий платёж ${fmtD(due)}</span>`:''}</div>`
         :'<div class="muted" style="font-size:14px">Оплат пока нет.</div>'}
-      ${dp && (r.stage!=='lost') && (!ci || ci.plan==='month')?`
+      ${dp && (r.stage!=='lost')?`
       <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line)">
-        <div style="font-weight:700;margin-bottom:4px">${ci?'Ссылка на оплату следующего месяца':'Ссылка на оплату курса'}</div>
-        <div class="muted" style="font-size:13px;margin-bottom:10px">Отправьте родителю — оплата сама появится здесь, этап сменится на «Купил курс».${cl>0&&!ci?` Сейчас в ссылке будет учтён зачёт диагностики −${rub(dp.amount)} (ещё ${Math.ceil(cl)} ч).`:''}</div>
-        <div class="fgrid"><label class="field">Тариф<select id="lTariff">${Object.keys(TARIFFS).map(t=>`<option ${t===(ci?ci.tariff:recT)?'selected':''}>${t}</option>`).join('')}</select></label>
+        <div style="font-weight:700;margin-bottom:4px">Ссылка на оплату курса или занятия</div>
+        <div class="muted" style="font-size:13px;margin-bottom:10px">Отправьте родителю — оплата сама появится здесь, этап сменится на «Купил курс».${cl>0&&!ci?` В ссылке на курс теории будет учтён зачёт диагностики −${rub(dp.amount)} (ещё ${Math.ceil(cl)} ч).`:''}</div>
+        <div class="fgrid"><label class="field">Тариф<select id="lTariff">${Object.keys(TARIFFS).filter(t=>planOpts(r,t).length).map(t=>`<option ${t===(ci?ci.tariff:recT)?'selected':''}>${t}</option>`).join('')}</select></label>
         <label class="field">Оплата<select id="lPlan"></select></label></div>
         <div class="linkbox"><input id="lUrl" readonly><button class="btn p" id="lCopy">Скопировать</button></div>
       </div>`:''}
@@ -664,8 +670,8 @@ function openRec(id){
   const lT=$('#lTariff');
   if (lT){
     const lP=$('#lPlan'), lU=$('#lUrl');
-    const upd=()=>{ const t=TARIFFS[lT.value]; const prev=lP.value;
-      lP.innerHTML=`<option value="month">Помесячно · ${rub(t.m)}</option>`+(t.full&&!ci?`<option value="full">Весь курс · ${rub(t.full)}</option>`:'');
+    const upd=()=>{ const prev=lP.value;
+      lP.innerHTML=planOpts(r,lT.value).map(([v,n])=>`<option value="${v}">${n}</option>`).join('');
       if ([...lP.options].some(o=>o.value===prev)) lP.value=prev;
       lU.value=payLink(r,lT.value,lP.value); };
     lT.onchange=upd; lP.onchange=()=>{ lU.value=payLink(r,lT.value,lP.value); }; upd();
@@ -775,7 +781,7 @@ function demo(){
     const dPrice = teacher==='Абу-Бакр'?(i%2?1250:1500):(i%2?2000:2500);
     if (paid) payments.push(pay({purpose:'diagnostic',amount:dPrice,teacher,paid_at:(events.find(e=>e.type==='paid')||{}).at}));
     if (stage==='lost' && i%2) payments[0].status='refunded';
-    const tariff=['Comfort-bara','Capybarin-Pro','CapyBasic'][i%3];
+    const tariff='Курс теории';
     if (stage==='bought'){ const bAt=new Date((events.find(e=>e.type==='bought')||{}).at); const full = i===1 && TARIFFS[tariff].full;
       if (full) payments.push(pay({purpose:'course',tariff,plan:'full',amount:TARIFFS[tariff].full-dPrice,credit:dPrice,paid_at:bAt.toISOString()}));
       else { let m=1, d=new Date(bAt); while(d<=now && m<=9){ payments.push(pay({purpose:'course',tariff,plan:'month',month_no:m,amount:TARIFFS[tariff].m-(m===1?dPrice:0),credit:m===1?dPrice:undefined,paid_at:d.toISOString()})); d=new Date(d); d.setMonth(d.getMonth()+1); m++; if(i===31&&m>1) break; } } }
