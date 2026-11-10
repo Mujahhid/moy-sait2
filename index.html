@@ -707,12 +707,6 @@ document.documentElement.className+=' js';
     </div>
   </section>
 
-  <section>
-    <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">Отзывы</p><h2>Что говорят ученики и родители <span class="demo-tag">шаблон</span></h2></div>
-      <div data-inj="reviews"></div>
-    </div>
-  </section>
 
   <section>
     <div class="wrap">
@@ -812,7 +806,6 @@ document.documentElement.className+=' js';
     <div class="wrap">
       <div class="sec-head"><p class="eyebrow">Кто проводит</p><h2>Ислам</h2></div>
       <div class="teachers one" data-inj="teacher-islam"></div>
-      <div data-inj="reviews-stories"></div>
       <p class="muted"><b>Принципы школы:</b> наука, уважительное общение, на занятиях только предмет.</p>
     </div>
   </section>
@@ -941,9 +934,8 @@ document.documentElement.className+=' js';
   <!-- 5. Почему безопасно -->
   <section>
     <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">Почему безопасно</p><h2>Отзывы, цифры и условия</h2></div>
+      <div class="sec-head"><p class="eyebrow">Почему безопасно</p><h2>Цифры и условия</h2></div>
       <div class="stats" data-inj="stats"></div>
-      <div data-inj="reviews-stories"></div>
       <p class="muted"><b>Условия:</b> сначала диагностика — вы видите уровень и план до выбора курса. Если курс вам не подойдёт, мы скажем об этом честно.</p>
     </div>
   </section>
@@ -964,13 +956,14 @@ document.documentElement.className+=' js';
   <!-- 7. Тарифы -->
   <section>
     <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">Тарифы</p><h2>Курсы и занятия</h2><p class="muted">Стоимость тарифов уточняется <span class="demo-tag">заменить</span></p></div>
+      <div class="sec-head"><p class="eyebrow">Цены</p><h2>Курсы и занятия</h2><p class="muted">Цены фиксированные. Все занятия онлайн.</p></div>
       <div class="plans">
-        <article class="plan" data-tariff="basic"><p class="eyebrow">Самостоятельный формат</p><h3>CapyBasic</h3><p class="p" data-tbd></p><ul><li>Вебинары дважды в неделю</li><li>Конспекты</li><li>Домашние задания в формате экзамена</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
-        <article class="plan" data-tariff="comfort"><p class="eyebrow">С контролем</p><h3>Comfort-bara</h3><p class="p" data-tbd></p><ul><li>Письменные домашние и пробники проверяют индивидуально</li><li>Каждую неделю — отчёт об успеваемости</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
-        <article class="plan" data-tariff="pro"><p class="eyebrow">Индивидуальные занятия</p><h3>Capybarin-Pro</h3><p class="p" data-tbd></p><ul><li>Раз в неделю индивидуальное занятие</li><li>Преподаватель находит и закрывает пробелы</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
-        <article class="plan" data-tariff="max"><p class="eyebrow">Лично с Исламом</p><h3>Capybarin-Pro MAX</h3><p class="p" data-tbd></p><ul><li>Индивидуальные занятия ведёт лично Ислам</li><li>Раз в неделю индивидуальное занятие</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
+        <article class="plan" data-tariff="course"><p class="eyebrow">Группа · онлайн</p><h3>Курс теории</h3><p class="p" data-m="6 000" data-unit="в месяц"></p><p class="muted" style="margin:-.6rem 0 0">или 34 000 ₽ за учебный год (до 31 августа)</p><ul><li>Вебинары дважды в неделю</li><li>Конспект после каждого занятия</li><li>Домашние задания в формате экзамена</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
+        <article class="plan" data-tariff="islam"><p class="eyebrow">Индивидуально</p><h3>Занятие с Исламом</h3><p class="p" data-m="2 500" data-unit="за занятие"></p><ul><li>Онлайн, один на один</li><li>Ведёт Ислам — врач и педагог</li><li>Разбираем темы и пробелы ученика</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
+        <article class="plan" data-tariff="abu"><p class="eyebrow">Индивидуально</p><h3>Занятие с Абу-Бакром</h3><p class="p" data-m="1 500" data-unit="за занятие"></p><ul><li>Онлайн, один на один</li><li>Ведёт Абу-Бакр — студент-медик</li><li>Разбираем темы и пробелы ученика</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
+        <article class="plan" data-tariff="diag"><p class="eyebrow">С чего начать</p><h3>Диагностика</h3><p class="p" data-m="2 500" data-unit="разово"></p><p class="muted" style="margin:-.6rem 0 0">2 000 ₽ — со скидкой за пройденный тест</p><ul><li>45 минут с преподавателем в Zoom</li><li>Карта пробелов по всем темам</li><li>План подготовки до экзамена</li></ul><a class="btn orange" href="#diagnostics" data-cta>Записаться</a></article>
       </div>
+      <p class="muted" style="margin-top:1.2rem">Оплата на сайте картой или через СБП. После оплаты свяжемся с вами в течение 2 часов, согласуем время и пришлём ссылку на онлайн-занятие. Условия оплаты и возврата — в <a href="/offer">публичной оферте</a>.</p>
 
     </div>
   </section>
@@ -1009,12 +1002,6 @@ document.documentElement.className+=' js';
     <div class="wrap">
       <div class="sec-head"><p class="eyebrow">Структура курса</p><h2>Как проходит подготовка</h2></div>
       <div class="method" data-inj="steps"></div>
-    </div>
-  </section>
-  <section class="alt">
-    <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">Отзывы</p><h2>Ученики и родители <span class="demo-tag">шаблон</span></h2></div>
-      <div data-inj="reviews"></div>
     </div>
   </section>
   <section>
@@ -1080,6 +1067,7 @@ document.documentElement.className+=' js';
       <a href="#about">О школе</a>
       <a href="#courses">Курсы и цены</a>
       <a href="#privacy" class="pol" id="pol-link">Обработка персональных данных</a>
+      <a href="/offer">Публичная оферта</a>
     </div>
     <div class="fcol">
       <h4>Связь</h4>

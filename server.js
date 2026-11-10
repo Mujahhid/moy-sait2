@@ -227,6 +227,7 @@ const FILES = {
   '/admin/': ['admin.html', 'text/html; charset=utf-8'],
   '/crm': ['crm.html', 'text/html; charset=utf-8'],
   '/crm/': ['crm.html', 'text/html; charset=utf-8'],
+  '/offer': ['offer.html', 'text/html; charset=utf-8'], // публичная оферта
 };
 const ICONS = {
   '/favicon.svg': ['favicon.svg', 'image/svg+xml'],
