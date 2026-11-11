@@ -498,6 +498,15 @@ section.alt{background:color-mix(in srgb,var(--ink) 4%,var(--bg))}
 .lesson .lrow{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.3rem}
 .lesson .lrow .btn{padding:.55em 1em;font-size:.9rem}
 .lesson .more{font-size:.88rem;font-weight:600;color:var(--ink)}
+.lesson .vthumb{position:relative;overflow:hidden;border:0;padding:0;cursor:pointer;width:100%}
+.lesson .vthumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 70%}
+.lesson .vthumb .vplay{position:relative;width:54px;height:54px;border-radius:50%;background:rgba(240,127,30,.92);box-shadow:0 8px 24px -8px rgba(0,0,0,.6)}
+.lesson .vthumb .vplay::after{content:"";position:absolute;left:21px;top:16px;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent #fff}
+.lesson .vthumb .vlabel{position:absolute;left:10px;bottom:8px;font:700 .8rem var(--body);color:#fff;background:rgba(0,0,0,.45);border-radius:999px;padding:.15em .7em}
+.lesson .vthumb:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+.vbox{display:grid;gap:1rem;justify-items:center}
+.vbox video{display:block;width:auto;max-width:100%;height:min(70vh,640px);aspect-ratio:9/16;border-radius:16px;background:#000}
+.vbox .row{justify-content:center}
 .faq{display:grid;gap:.6rem;max-width:760px}
 .faq details{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:.9rem 1.1rem}
 .faq summary{font-weight:700;cursor:pointer}
@@ -741,17 +750,15 @@ document.documentElement.className+=' js';
       <div class="sec-head">
         <p class="eyebrow">Бесплатно</p>
         <h2>Уроки</h2>
-        <p class="muted">Короткие уроки по 10–15 минут и скрипт-конспект к каждому. После урока — мини-тест по теме.</p>
+        <p class="muted">Короткие видеоуроки от Ислама и конспект к каждому. После урока — мини-тест по теме.</p>
       </div>
       <div class="lessons">
-        <article class="lesson"><div class="thumb">Клетка</div><span class="meta">ЕГЭ · линии 2–6 · 15 мин</span><h3>Органоиды клетки за один урок</h3><p class="muted">Строение и функции, которые чаще всего путают на экзамене.</p>
-          <div class="lrow"><button class="btn ghost" type="button" data-script="cell">Скрипт-конспект</button><button class="btn orange" type="button" data-mini="topic-cell">Мини-тест</button></div><a class="more" href="#diagnostics">Разобрать тему на диагностике →</a></article>
-        <article class="lesson"><div class="thumb">Генетика</div><span class="meta">ЕГЭ · линия 28 · 15 мин</span><h3>Задачи на сцепленное наследование</h3><p class="muted">Алгоритм оформления, за который эксперт ставит полный балл.</p>
-          <div class="lrow"><button class="btn ghost" type="button" data-script="gen">Скрипт-конспект</button><button class="btn orange" type="button" data-mini="topic-gen">Мини-тест</button></div><a class="more" href="#diagnostics">Разобрать тему на диагностике →</a></article>
-        <article class="lesson"><div class="thumb">Человек</div><span class="meta">ОГЭ · 12 мин</span><h3>Кровь и иммунитет</h3><p class="muted">Короткий разбор с примерами из врачебной практики.</p>
-          <div class="lrow"><button class="btn ghost" type="button" data-script="blood">Скрипт-конспект</button><button class="btn orange" type="button" data-mini="topic-human">Мини-тест</button></div><a class="more" href="#diagnostics">Разобрать тему на диагностике →</a></article>
-        <article class="lesson"><div class="thumb">Эволюция</div><span class="meta">ОГЭ и ЕГЭ · 10 мин</span><h3>Движущие силы и пути эволюции</h3><p class="muted">Отбор, ароморфоз, идиоадаптация: как не перепутать на экзамене.</p>
-          <div class="lrow"><button class="btn ghost" type="button" data-script="evo">Скрипт-конспект</button><button class="btn orange" type="button" data-mini="topic-evo">Мини-тест</button></div><a class="more" href="#diagnostics">Разобрать тему на диагностике →</a></article>
+        <article class="lesson"><button class="thumb vthumb" type="button" data-video="cells" aria-label="Смотреть урок «Как отличить клетки»"><img src="/media/cells.jpg" alt="" loading="lazy" width="640" height="1136"><span class="vplay" aria-hidden="true"></span><span class="vlabel">Клетки</span></button><span class="meta">ЕГЭ · линии 2–6 · 10 мин</span><h3>Как отличить клетки</h3><p class="muted">Бактерии, растения, грибы и животные: по каким признакам различать клетки на картинках в экзамене.</p>
+          <div class="lrow"><button class="btn orange" type="button" data-video="cells">Смотреть урок</button><a class="btn ghost" href="/media/cells.pdf" target="_blank" rel="noopener">Конспект PDF</a><button class="btn ghost" type="button" data-mini="lesson-cells">Мини-тест</button></div><a class="more" href="#diagnostics">Разобрать тему на диагностике →</a></article>
+        <article class="lesson"><button class="thumb vthumb" type="button" data-video="birds" aria-label="Смотреть урок «Птицы: ароморфозы и полёт»"><img src="/media/birds.jpg" alt="" loading="lazy" width="640" height="1136"><span class="vplay" aria-hidden="true"></span><span class="vlabel">Птицы</span></button><span class="meta">ЕГЭ · зоология · 5 мин</span><h3>Птицы: ароморфозы и полёт</h3><p class="muted">Киль, цевка, воздушные мешки и четырёхкамерное сердце — как всё в теле птицы работает на полёт.</p>
+          <div class="lrow"><button class="btn orange" type="button" data-video="birds">Смотреть урок</button><a class="btn ghost" href="/media/birds.pdf" target="_blank" rel="noopener">Конспект PDF</a><button class="btn ghost" type="button" data-mini="lesson-birds">Мини-тест</button></div><a class="more" href="#diagnostics">Разобрать тему на диагностике →</a></article>
+        <article class="lesson"><button class="thumb vthumb" type="button" data-video="hypoxia" aria-label="Смотреть урок «Горная болезнь и гипоксия»"><img src="/media/hypoxia.jpg" alt="" loading="lazy" width="640" height="1136"><span class="vplay" aria-hidden="true"></span><span class="vlabel">Дыхание</span></button><span class="meta">ЕГЭ · человек · 6 мин</span><h3>Горная болезнь и гипоксия</h3><p class="muted">Этапы дыхания, почему в горах не хватает кислорода и что происходит с организмом на высоте.</p>
+          <div class="lrow"><button class="btn orange" type="button" data-video="hypoxia">Смотреть урок</button><button class="btn ghost" type="button" data-mini="lesson-hypoxia">Мини-тест</button></div><a class="more" href="#diagnostics">Разобрать тему на диагностике →</a></article>
       </div>
     </div>
   </section>
@@ -1122,6 +1129,33 @@ const TESTS={
     {n:16,q:'Сколько аутосом в соматической клетке человека?',o:[],f:'Число',a:'44',e:'Из 46 хромосом две — половые, остальные 44 — аутосомы.'},
     {n:17,q:'Установите соответствие между веществом и структурой клетки, где оно образуется.',cols:[['А) АТФ в ходе кислородного дыхания','Б) белок','В) глюкоза при фотосинтезе','Г) рибосомная РНК'],['1) ядрышко','2) хлоропласт','3) рибосома','4) митохондрия']],f:'Запишите цифры в порядке букв АБВГ',a:'4321',e:'АТФ при дыхании — в митохондриях, белок — на рибосомах, глюкоза — в хлоропластах, рРНК — в ядрышке.'},
     {n:18,q:'Какие факторы могут ограничить численность продуцентов в озере? Выберите три верных ответа из шести.',o:['1) недостаток света','2) увеличение численности щук','3) недостаток минеральных солей','4) низкая температура воды','5) увеличение численности хищных рыб','6) рост числа видов в водоёме'],f:'Три цифры',a:'134',set:1,e:'Водорослям и водным растениям нужны свет, минеральные соли и тепло. Хищные рыбы на продуцентов прямо не влияют.'}
+  ]},
+  'lesson-cells':{title:'Урок: как отличить клетки',kind:'quiz',back:'close',qs:[
+    {q:'Из какого вещества состоит клеточная стенка грибов?',o:['Целлюлоза','Хитин','Муреин','Пектин'],a:1,e:'У грибов прочная стенка из хитина — того же вещества, что в покровах членистоногих.'},
+    {q:'Основу клеточной стенки бактерий образует:',o:['Муреин','Хитин','Целлюлоза','Гликоген'],a:0,e:'Стенка бактерий построена из муреина (пептидогликана).'},
+    {q:'Какое запасное вещество характерно для растительной клетки?',o:['Гликоген','Хитин','Крахмал','Муреин'],a:2,e:'Растения запасают крахмал. Гликоген — запасное вещество животных и грибов.'},
+    {q:'Где хранится наследственная информация бактерий?',o:['В ядре','В кольцевой ДНК в цитоплазме (нуклеоид)','В митохондриях','В вакуоли'],a:1,e:'Ядра у бактерий нет: кольцевая ДНК лежит прямо в цитоплазме — это нуклеоид. Есть и плазмиды.'},
+    {q:'Какие органоиды есть в клетке растения, но нет в клетке животного?',o:['Митохондрии','Рибосомы','Пластиды (хлоропласты)','Аппарат Гольджи'],a:2,e:'Пластиды — признак растительной клетки. Митохондрии, рибосомы и аппарат Гольджи есть у обоих.'},
+    {q:'На рисунке клетка без клеточной стенки, с гликокаликсом и центриолями. Чья это клетка?',o:['Бактерии','Растения','Гриба','Животного'],a:3,e:'Только у животной клетки нет клеточной стенки: снаружи мембрана с гликокаликсом, есть клеточный центр с центриолями.'},
+    {q:'Кто из перечисленных питается гетеротрофно?',o:['Растения','Грибы и животные','Только бактерии','Все растения и грибы'],a:1,e:'Грибы и животные — гетеротрофы. Растения — автотрофы (фотосинтез), бактерии бывают и теми, и другими.'}
+  ]},
+  'lesson-birds':{title:'Урок: птицы',kind:'quiz',back:'close',qs:[
+    {q:'К какой части скелета птицы прикрепляются мощные грудные мышцы, двигающие крыльями?',o:['К цевке','К килю грудины','К тазу','К черепу'],a:1,e:'Киль — вырост грудины, он увеличивает площадь прикрепления грудных мышц.'},
+    {q:'Цевка у птиц находится:',o:['В крыле','В ноге','В позвоночнике','В черепе'],a:1,e:'Цевка — кость ноги из сросшихся костей предплюсны и плюсны: амортизирует и служит дополнительным рычагом при взлёте.'},
+    {q:'У каких птиц нет киля?',o:['У голубей','У орлов','У страусов','У пингвинов'],a:2,e:'Киля нет у бегающих птиц, например у страусов. У пингвинов киль есть — их крылья работают как ласты.'},
+    {q:'Почему отсутствие зубов полезно птицам?',o:['Облегчает массу тела','Ускоряет пищеварение','Помогает петь','Защищает от хищников'],a:0,e:'Лёгкий клюв без зубов облегчает голову и всё тело — это приспособление к полёту.'},
+    {q:'Какую функцию НЕ выполняет перьевой покров?',o:['Теплоизоляция','Обтекаемость тела','Несущие плоскости крыльев и хвоста','Газообмен'],a:3,e:'Перья дают обтекаемость, тепло и несущие поверхности. Газообмен идёт в лёгких.'},
+    {q:'Что помогает птицам получать кислород и на вдохе, и на выдохе?',o:['Диафрагма','Воздушные мешки (двойное дыхание)','Жабры','Кожное дыхание'],a:1,e:'Воздушные мешки прогоняют воздух через лёгкие при вдохе и при выдохе — это двойное дыхание.'},
+    {q:'Какой признак — ароморфоз птиц?',o:['Киль','Окраска оперения','Четырёхкамерное сердце и теплокровность','Длинный клюв'],a:2,e:'Четырёхкамерное сердце полностью разделяет артериальную и венозную кровь — это и дало теплокровность. Киль — частное приспособление (идиоадаптация).'}
+  ]},
+  'lesson-hypoxia':{title:'Урок: горная болезнь и гипоксия',kind:'quiz',back:'close',qs:[
+    {q:'В каком порядке идут этапы дыхания?',o:['Тканевое дыхание → перенос газов кровью → внешнее дыхание','Внешнее дыхание → перенос газов кровью → тканевое дыхание','Перенос газов кровью → внешнее дыхание → тканевое дыхание','Внешнее дыхание → тканевое дыхание → перенос газов кровью'],a:1,e:'Сначала воздух попадает в лёгкие (внешнее дыхание), затем кровь несёт газы, и в клетках кислород окисляет органические вещества.'},
+    {q:'Что такое гипоксия?',o:['Избыток кислорода в крови','Недостаток кислорода в тканях','Избыток углекислого газа в лёгких','Снижение температуры тела'],a:1,e:'Гипоксия — кислородное голодание тканей.'},
+    {q:'Почему высоко в горах трудно дышать?',o:['Доля кислорода в воздухе падает до 5%','Воздух разрежен: давление ниже, и в каждом вдохе меньше молекул кислорода','В горах больше углекислого газа','Лёгкие на высоте уменьшаются'],a:1,e:'Доля кислорода остаётся около 21%, но воздух разрежен — при каждом вдохе в лёгкие попадает меньше молекул O₂.'},
+    {q:'Чем в основном переносится кислород в крови?',o:['Плазмой','Гемоглобином эритроцитов','Лейкоцитами','Тромбоцитами'],a:1,e:'Кислород связывается с гемоглобином в эритроцитах.'},
+    {q:'В каких органоидах клеток кислород используется для получения энергии?',o:['В рибосомах','В митохондриях','В ядре','В лизосомах'],a:1,e:'На кислородном этапе в митохондриях органические вещества окисляются до CO₂ и H₂O с выделением энергии.'},
+    {q:'Как организм приспосабливается к долгой жизни в горах?',o:['Уменьшается число эритроцитов','Растёт число эритроцитов и гемоглобина в крови','Замедляется дыхание','Прекращается тканевое дыхание'],a:1,e:'При акклиматизации в крови становится больше эритроцитов и гемоглобина — кровь переносит больше кислорода.'},
+    {q:'С какой высоты у альпинистов начинается «зона смерти»?',o:['Около 2 000 м','Около 4 000 м','Около 6 000 м','Около 8 000 м'],a:3,e:'Выше примерно 8 000 м кислорода так мало, что организм не может приспособиться, — это «зона смерти».'}
   ]},
   'topic-cell':{title:'Тема: клетка',kind:'quiz',back:'close',qs:[
     {q:'Какой органоид клетки синтезирует основную часть АТФ?',o:['Рибосома','Митохондрия','Комплекс Гольджи','Лизосома'],a:1,e:'Митохондрии — «энергетические станции»: там идёт кислородный этап дыхания.'},
@@ -1666,7 +1700,15 @@ document.addEventListener('click',e=>{
   const sc=e.target.closest('[data-script]');
   if(sc){const S=SCRIPTS[sc.dataset.script],B=openModal('Скрипт к уроку','Закрыть ✕');B.innerHTML=`<div class="policy"><h3 style="margin-top:0">${S.t}</h3><ul>${S.l.map(x=>`<li>${x}</li>`).join('')}</ul><p style="margin-top:1rem"><a class="btn orange" href="#diagnostics">Разобрать тему на диагностике</a></p></div>`;B.scrollTop=0;return}
   const mn=e.target.closest('[data-mini]');if(mn)go(mn.dataset.mini)
+  const vd=e.target.closest('[data-video]');if(vd)openLesson(vd.dataset.video)
 });
+// ---------- видеоурок: вертикальное видео с нашего сервера, под ним конспект и мини-тест ----------
+const LESSON_VIDEO={cells:{t:'Как отличить клетки',pdf:true},birds:{t:'Птицы: ароморфозы и полёт',pdf:true},hypoxia:{t:'Горная болезнь и гипоксия',pdf:false}};
+function openLesson(k){const L=LESSON_VIDEO[k];if(!L)return;
+  const B=openModal(L.t,'Закрыть ✕');
+  B.innerHTML=`<div class="vbox"><video controls playsinline preload="metadata" poster="/media/${k}.jpg" src="/media/${k}.mp4"></video>
+    <div class="row">${L.pdf?`<a class="btn ghost" href="/media/${k}.pdf" target="_blank" rel="noopener">Конспект PDF</a>`:''}<button class="btn orange" type="button" data-mini="lesson-${k}">Мини-тест по уроку</button></div></div>`;
+  const v=B.querySelector('video');try{v.play().catch(()=>{})}catch(x){}}
 // ---------- переслать родителям ----------
 const shareBtn=document.getElementById('share-parents');
 if(shareBtn)shareBtn.onclick=async()=>{const text='Мам, я прошёл тест по биологии. Посмотри и запиши меня на диагностику: '+location.origin+location.pathname+'#diagnostics';
