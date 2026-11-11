@@ -164,7 +164,11 @@ input,select{font:500 1rem var(--body);padding:.75rem .9rem;border-radius:12px;b
 .teacher .tags span{font-size:.8rem;font-weight:600;background:var(--leaf-soft);color:var(--leaf);border-radius:999px;padding:.2em .7em}
 @media (max-width:720px){.teachers{grid-template-columns:1fr}.teacher{grid-template-columns:72px 1fr}.teacher .ph{width:72px;height:72px}}
 .reviews{display:flex;gap:1rem;overflow-x:auto;padding-bottom:.6rem;margin-bottom:3rem;scroll-snap-type:x mandatory}
-.review{flex:0 0 min(300px,82%);scroll-snap-align:start;background:var(--surface);border:1.5px dashed var(--line);border-radius:20px;padding:1.3rem;display:grid;gap:.7rem;align-content:start}
+.review{flex:0 0 min(320px,85%);scroll-snap-align:start;background:var(--surface);border:1.5px solid var(--line);border-radius:20px;padding:1.3rem;display:grid;gap:.7rem;align-content:start}
+.review .rhead{display:flex;flex-wrap:wrap;gap:.4rem .7rem;align-items:baseline;justify-content:space-between}
+.review .ex{font:500 .75rem var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.1em .6em}
+.review p{margin:0;line-height:1.55}
+.review .who{font-size:.85rem;font-weight:600;color:var(--muted)}
 .review .sc{font:700 1.4rem var(--display);color:var(--orange)}
 .method{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
 .step{background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:1.2rem;display:grid;gap:.4rem;align-content:start}
@@ -716,6 +720,12 @@ document.documentElement.className+=' js';
       <div class="value" data-inj="principles"></div>
     </div>
   </section>
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Отзывы</p><h2>Что говорят ученики и родители</h2></div>
+      <div data-inj="reviews"></div>
+    </div>
+  </section>
 
 
   <section>
@@ -1010,6 +1020,12 @@ document.documentElement.className+=' js';
     <div class="wrap">
       <div class="sec-head"><p class="eyebrow">Структура курса</p><h2>Как проходит подготовка</h2></div>
       <div class="method" data-inj="steps"></div>
+    </div>
+  </section>
+  <section class="alt">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Отзывы</p><h2>Ученики и родители</h2></div>
+      <div data-inj="reviews"></div>
     </div>
   </section>
   <section>
@@ -1669,14 +1685,19 @@ home();
 // ---------- общие блоки, которые повторяются на нескольких страницах ----------
 const T_ISLAM=`<article class="teacher"><div class="ph">И</div><div><h3>Ислам</h3><p class="muted" style="margin-top:.3rem">Врач и педагог. Выпускник РНИМУ им. Н. И. Пирогова. Объясняет биологию через реальную медицину и готовит тех, кто идёт в медицинский.</p><div class="tags"><span>Врач</span><span>Педагог</span><span>ЕГЭ</span></div></div></article>`;
 const T_ABU=`<article class="teacher"><div class="ph">А</div><div><h3>Абу-Бакр</h3><p class="muted" style="margin-top:.3rem">Репетитор по биологии, студент 4 курса лечебного факультета Казанского ГМУ. Готовит к экзамену через личный опыт: искреннее отношение, свежая подача и актуальные знания.</p><div class="tags"><span>Студент-медик</span><span>ОГЭ</span><span>ЕГЭ</span></div></div></article>`;
-const rv=(sc,t,who)=>`<article class="review"><span class="sc">${sc}</span><p>${t}</p><span class="muted" style="font-size:.85rem">${who}</span></article>`;
+const rv=(sc,t,who,ex)=>`<article class="review"><div class="rhead"><span class="sc">${sc}</span>${ex?`<span class="ex">${ex}</span>`:''}</div><p>${t}</p><span class="who">${who}</span></article>`;
 const FRAG={
   teachers:()=>T_ISLAM+T_ABU,
   'teacher-islam':()=>T_ISLAM,
   stats:()=>`<div class="stat"><b>300+</b><span>учеников</span></div><div class="stat"><b>0</b><span>несдач</span></div><div class="stat"><b>8 лет</b><span>онлайн-преподавания</span></div><div class="stat"><b>2</b><span>диплома: врач и педагог</span></div>`,
   steps:()=>`<div class="step"><span class="n">Шаг 1</span><h3>Вебинар</h3><p class="muted">Живой урок онлайн: теория по теме на понятных примерах.</p></div><div class="step"><span class="n">Шаг 2</span><h3>Скрипт-конспект</h3><p class="muted">После урока — конспект с главным по теме.</p></div><div class="step"><span class="n">Шаг 3</span><h3>Домашнее задание</h3><p class="muted">Задания в формате экзамена с проверкой преподавателя.</p></div><div class="step"><span class="n">Шаг 4</span><h3>Отчёт родителю</h3><p class="muted">Что пройдено, где ошибки и как растёт балл.</p></div>`,
   principles:()=>`<div><p><b>Не просто сдать.</b> Для врача и учёного биология — надёжный старт в профессии.</p></div><div><p><b>Понимание вместо зубрёжки.</b> Каждую тему объясняет врач-педагог на живых примерах.</p></div><div><p><b>Контроль.</b> Родитель видит прогресс и регулярно получает академический отчёт от преподавателя.</p></div><div><p><b>Свежая подача.</b> Без спекуляций на непристойных повестках.</p></div>`,
-  reviews:()=>`<div class="revgroup"><p class="sub">Ученики</p><div class="reviews">${rv('— баллов','Сюда — отзыв ученика о подготовке и результате экзамена.','Имя, ЕГЭ 2026, вуз')}${rv('— баллов','Видео-отзыв из рилс «Результаты учеников» — превью со ссылкой.','Имя, ОГЭ 2026')}${rv('— баллов','Поступление: «был на 40 баллах — поступил в медицинский».','Имя, медвуз')}</div></div><div class="revgroup"><p class="sub">Родители</p><div class="reviews">${rv('— баллов','Скриншот или цитата родителя о результате и о том, как шла подготовка.','Имя, родитель ученика')}${rv('— баллов','Что изменилось: родитель видит прогресс и получает отчёт.','Имя, родитель ученика')}</div></div>`,
+  reviews:()=>`<div class="revgroup"><p class="sub">Ученики</p><div class="reviews">${
+    rv('85 баллов','Привет!! Биология — 85, чуть огорчила: это совсем не тот результат, который я хотела бы видеть. Но сейчас я уже смирилась, так как сумма хорошая.','Марьям','ЕГЭ')}${
+    rv('81 балл','Первичный балл 46: 29 — за первую часть и 17 — за вторую.','Результат из личного кабинета ЕГЭ','ЕГЭ 2025')}${
+    rv('40 баллов · «5»','Ислам, салам алейкум! Хотел рассказать о своих результатах: кроме вас, за весь год ни с одним репетитором не занимался. Получил 40 баллов — «5».','Ученик','ОГЭ')}${
+    rv('«5»','Делюсь своей нескончаемой радостью и говорю вам огромное спасибо!!!','Диана, 41 правильный ответ','ОГЭ 2023')}</div></div><div class="revgroup"><p class="sub">Родители</p><div class="reviews">${
+    rv('Спасибо','Ислам, хочу поблагодарить вас за проделанную работу с моей дочерью по подготовке к ЕГЭ по биологии. Дочь была в восторге от вашего метода обучения: она, которая не очень любила биологию, полюбила её и начала понимать. Ещё раз спасибо за всё 🌸','Хадижат, мама ученицы','ЕГЭ')}</div></div>`,
   'reviews-stories':()=>`<p class="sub">Истории роста балла <span class="demo-tag">шаблон</span></p><div class="reviews">${rv('с — до — баллов','История ученика со скриншотом результата: за сколько месяцев и что помогло.','Имя, ЕГЭ 2026')}${rv('с — до — баллов','Ещё одна история роста балла со скриншотом.','Имя, ОГЭ 2026')}</div>`
 };
 document.querySelectorAll('[data-inj]').forEach(e=>{e.innerHTML=FRAG[e.dataset.inj]()});
