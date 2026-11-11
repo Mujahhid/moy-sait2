@@ -169,8 +169,7 @@ input,select{font:500 1rem var(--body);padding:.75rem .9rem;border-radius:12px;b
 .review .ex{font:500 .75rem var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.1em .6em}
 .review p{margin:0;line-height:1.55}
 .review .who{font-size:.85rem;font-weight:600;color:var(--muted)}
-.review .rimg{display:block;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
-.review .rimg img{display:block;width:100%;height:auto}
+.review .rshot{font-size:.85rem;font-weight:600;color:var(--orange);text-decoration:underline;text-underline-offset:3px}
 .review .sc{font:700 1.4rem var(--display);color:var(--orange)}
 .method{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
 .step{background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:1.2rem;display:grid;gap:.4rem;align-content:start}
@@ -1687,7 +1686,7 @@ home();
 // ---------- общие блоки, которые повторяются на нескольких страницах ----------
 const T_ISLAM=`<article class="teacher"><div class="ph">И</div><div><h3>Ислам</h3><p class="muted" style="margin-top:.3rem">Врач и педагог. Выпускник РНИМУ им. Н. И. Пирогова. Объясняет биологию через реальную медицину и готовит тех, кто идёт в медицинский.</p><div class="tags"><span>Врач</span><span>Педагог</span><span>ЕГЭ</span></div></div></article>`;
 const T_ABU=`<article class="teacher"><div class="ph">А</div><div><h3>Абу-Бакр</h3><p class="muted" style="margin-top:.3rem">Репетитор по биологии, студент 4 курса лечебного факультета Казанского ГМУ. Готовит к экзамену через личный опыт: искреннее отношение, свежая подача и актуальные знания.</p><div class="tags"><span>Студент-медик</span><span>ОГЭ</span><span>ЕГЭ</span></div></div></article>`;
-const rv=(sc,t,who,ex,img,alt)=>`<article class="review"><div class="rhead"><span class="sc">${sc}</span>${ex?`<span class="ex">${ex}</span>`:''}</div>${t?`<p>${t}</p>`:''}${img?`<a class="rimg" href="${img}" target="_blank" rel="noopener"><img src="${img}" alt="${alt||''}" loading="lazy" width="600" height="498"></a>`:''}<span class="who">${who}</span></article>`;
+const rv=(sc,t,who,ex,img,alt)=>`<article class="review"><div class="rhead"><span class="sc">${sc}</span>${ex?`<span class="ex">${ex}</span>`:''}</div>${t?`<p>${t}</p>`:''}<span class="who">${who}</span>${img?`<a class="rshot" href="${img}" target="_blank" rel="noopener">Посмотреть скриншот →</a>`:''}</article>`;
 const FRAG={
   teachers:()=>T_ISLAM+T_ABU,
   'teacher-islam':()=>T_ISLAM,
@@ -1699,7 +1698,7 @@ const FRAG={
     rv('81 балл','Ислам, здравствуйте! 81!!!! Я ОЧЕНЬ рада🔥🔥🔥 Даже не верится, что всё закончилось. Помню, как в январе 9 класса пришла к вам с нулевыми знаниями и последними надеждами. Очень вам благодарна за те знания, что вы мне дали, — это были мои лучшие 2 с половиной года, ахахахахахах. Спасибо вам огромное!!','Ира','ЕГЭ 2025')}${
     rv('40 баллов · «5»','Ислам, салам алейкум! Хотел рассказать о своих результатах: кроме вас, за весь год ни с одним репетитором не занимался. Получил 40 баллов — «5».','Ученик','ОГЭ')}${
     rv('«5»','Делюсь своей нескончаемой радостью и говорю вам огромное спасибо!!!','Диана, 41 правильный ответ','ОГЭ 2023')}</div></div><div class="revgroup"><p class="sub">Родители</p><div class="reviews">${
-    rv('Спасибо','','Хадижат, мама ученицы','ЕГЭ','/media/reviews/mom-khadijat.jpg','Ислам, хочу поблагодарить вас за проделанную работу с моей дочерью по подготовке к ЕГЭ по биологии. Дочь была в восторге от вашего метода обучения: она, которая не очень любила биологию, полюбила её и начала понимать. Ещё раз спасибо за всё 🌸')}</div></div>`,
+    rv('Спасибо','Ислам, хочу поблагодарить вас за проделанную работу с моей дочерью по подготовке к ЕГЭ по биологии. Дочь была в восторге от вашего метода обучения: она, которая не очень любила биологию, полюбила её и начала понимать. Ещё раз спасибо за всё 🌸','Хадижат, мама ученицы','ЕГЭ','/media/reviews/mom-khadijat.jpg')}</div></div>`,
   'reviews-stories':()=>`<p class="sub">Истории роста балла <span class="demo-tag">шаблон</span></p><div class="reviews">${rv('с — до — баллов','История ученика со скриншотом результата: за сколько месяцев и что помогло.','Имя, ЕГЭ 2026')}${rv('с — до — баллов','Ещё одна история роста балла со скриншотом.','Имя, ОГЭ 2026')}</div>`
 };
 document.querySelectorAll('[data-inj]').forEach(e=>{e.innerHTML=FRAG[e.dataset.inj]()});
