@@ -772,7 +772,7 @@ function demo(){
       tt+= (s.k==='scheduled'?3*H: s.k==='diag_done'?24*H: s.k==='bought'?20*H: 0.3*H); if(tt>now) tt=now-60e3; events.push({at:iso(tt),type:s.k}); });
     const paid = lastIdx>=STAGES.findIndex(s=>s.k==='paid');
     const payments=[]; const teacher=i%3===2?'Абу-Бакр':'Ислам';
-    const dPrice = i%2?2000:2500;
+    const dPrice = teacher==='Абу-Бакр'?(i%2?1250:1500):(i%2?2000:2500);
     if (paid) payments.push(pay({purpose:'diagnostic',amount:dPrice,teacher,paid_at:(events.find(e=>e.type==='paid')||{}).at}));
     if (stage==='lost' && i%2) payments[0].status='refunded';
     const tariff=['Comfort-bara','Capybarin-Pro','CapyBasic'][i%3];
