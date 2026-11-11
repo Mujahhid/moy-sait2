@@ -78,7 +78,8 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:col
 .badge-card{background:var(--surface);border:2px solid var(--ink);border-radius:28px;padding:1.6rem;position:relative;box-shadow:8px 8px 0 var(--orange)}
 .badge-card .ava{width:120px;height:120px;border-radius:50%;background:var(--orange);display:grid;place-items:center;margin-bottom:1rem}
 .badge-card .ava svg{width:92px}
-.badge-card .ava img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.badge-card .ava:has(img){position:relative;overflow:hidden}
+.badge-card .ava img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
 .badge-card ul{list-style:none;padding:0;margin:.8rem 0 0;display:grid;gap:.45rem;font-weight:500}
 .badge-card li{display:flex;gap:.6rem}
 .badge-card li b{font-family:var(--mono);font-weight:500;color:var(--orange-ink);min-width:4.2ch}
@@ -161,7 +162,8 @@ input,select{font:500 1rem var(--body);padding:.75rem .9rem;border-radius:12px;b
 .teachers{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:3rem}
 .teacher{background:var(--surface);border:1.5px solid var(--line);border-radius:24px;padding:1.5rem;display:grid;grid-template-columns:96px 1fr;gap:1.2rem;align-items:start}
 .teacher .ph{width:96px;height:96px;border-radius:20px;background:var(--orange-soft);display:grid;place-items:center;font:700 2rem var(--display);color:var(--orange-ink);overflow:hidden}
-.teacher .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.teacher .ph:has(img){position:relative}
+.teacher .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .teacher .tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
 .teacher .tags span{font-size:.8rem;font-weight:600;background:var(--leaf-soft);color:var(--leaf);border-radius:999px;padding:.2em .7em}
 @media (max-width:720px){.teachers{grid-template-columns:1fr}.teacher{grid-template-columns:72px 1fr}.teacher .ph{width:72px;height:72px}}
