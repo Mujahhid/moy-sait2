@@ -78,6 +78,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:col
 .badge-card{background:var(--surface);border:2px solid var(--ink);border-radius:28px;padding:1.6rem;position:relative;box-shadow:8px 8px 0 var(--orange)}
 .badge-card .ava{width:120px;height:120px;border-radius:50%;background:var(--orange);display:grid;place-items:center;margin-bottom:1rem}
 .badge-card .ava svg{width:92px}
+.badge-card .ava img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
 .badge-card ul{list-style:none;padding:0;margin:.8rem 0 0;display:grid;gap:.45rem;font-weight:500}
 .badge-card li{display:flex;gap:.6rem}
 .badge-card li b{font-family:var(--mono);font-weight:500;color:var(--orange-ink);min-width:4.2ch}
@@ -159,7 +160,8 @@ input,select{font:500 1rem var(--body);padding:.75rem .9rem;border-radius:12px;b
 @media (max-width:720px){.stats{grid-template-columns:1fr 1fr}}
 .teachers{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:3rem}
 .teacher{background:var(--surface);border:1.5px solid var(--line);border-radius:24px;padding:1.5rem;display:grid;grid-template-columns:96px 1fr;gap:1.2rem;align-items:start}
-.teacher .ph{width:96px;height:96px;border-radius:20px;background:var(--orange-soft);display:grid;place-items:center;font:700 2rem var(--display);color:var(--orange-ink)}
+.teacher .ph{width:96px;height:96px;border-radius:20px;background:var(--orange-soft);display:grid;place-items:center;font:700 2rem var(--display);color:var(--orange-ink);overflow:hidden}
+.teacher .ph img{width:100%;height:100%;object-fit:cover;display:block}
 .teacher .tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
 .teacher .tags span{font-size:.8rem;font-weight:600;background:var(--leaf-soft);color:var(--leaf);border-radius:999px;padding:.2em .7em}
 @media (max-width:720px){.teachers{grid-template-columns:1fr}.teacher{grid-template-columns:72px 1fr}.teacher .ph{width:72px;height:72px}}
@@ -791,7 +793,7 @@ document.documentElement.className+=' js';
         <div class="price" data-pb></div>
       </div>
       <div class="badge-card">
-        <div class="ava"><svg><use href="#capy"/></svg></div>
+        <div class="ava"><img src="/media/team/islam.jpg" alt="Ислам" width="320" height="320"></div>
         <h3>Ислам</h3>
         <p class="muted">Врач и педагог. Разбирает пробник вместе с учеником.</p>
       </div>
@@ -1687,7 +1689,7 @@ function home(){
 }
 home();
 // ---------- общие блоки, которые повторяются на нескольких страницах ----------
-const T_ISLAM=`<article class="teacher"><div class="ph">И</div><div><h3>Ислам</h3><p class="muted" style="margin-top:.3rem">Врач и педагог. Выпускник РНИМУ им. Н. И. Пирогова. Объясняет биологию через реальную медицину и готовит тех, кто идёт в медицинский.</p><div class="tags"><span>Врач</span><span>Педагог</span><span>ЕГЭ</span></div></div></article>`;
+const T_ISLAM=`<article class="teacher"><div class="ph"><img src="/media/team/islam.jpg" alt="Ислам" width="320" height="320" loading="lazy"></div><div><h3>Ислам</h3><p class="muted" style="margin-top:.3rem">Врач и педагог. Выпускник РНИМУ им. Н. И. Пирогова. Объясняет биологию через реальную медицину и готовит тех, кто идёт в медицинский.</p><div class="tags"><span>Врач</span><span>Педагог</span><span>ЕГЭ</span></div></div></article>`;
 const T_ABU=`<article class="teacher"><div class="ph">А</div><div><h3>Абу-Бакр</h3><p class="muted" style="margin-top:.3rem">Репетитор по биологии, студент 4 курса лечебного факультета Казанского ГМУ. Готовит к экзамену через личный опыт: искреннее отношение, свежая подача и актуальные знания.</p><div class="tags"><span>Студент-медик</span><span>ОГЭ</span><span>ЕГЭ</span></div></div></article>`;
 const rv=(sc,t,who,ex,img,alt)=>`<article class="review"><div class="rhead"><span class="sc">${sc}</span>${ex?`<span class="ex">${ex}</span>`:''}</div>${t?`<p>${t}</p>`:''}<span class="who">${who}</span>${img?`<a class="rshot" href="${img}" target="_blank" rel="noopener">Посмотреть скриншот →</a>`:''}</article>`;
 const FRAG={
