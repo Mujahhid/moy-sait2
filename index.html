@@ -198,7 +198,10 @@ footer{background:var(--ink);color:var(--bg);padding-block:2.6rem 2rem;margin-to
 .fcol a{color:inherit;text-decoration:none;opacity:.85;font-size:.92rem}
 .fcol a:hover,.fcol a:focus-visible{opacity:1;text-decoration:underline;text-underline-offset:3px}
 .fcol .freq{font-size:.78rem;opacity:.6}
-.fcol .fcredit{font-size:.82rem;opacity:.6}
+.fcol .fcredit{font-size:.82rem;opacity:.6;display:flex;flex-wrap:wrap;gap:.2rem .6rem;align-items:baseline}
+.fcredit-btn{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left;text-decoration:underline dotted;text-underline-offset:3px}
+.fcredit-btn:focus-visible{outline:2px solid var(--orange);outline-offset:3px;border-radius:4px}
+.fcol .fcredit .fcredit-tel{font-size:inherit;opacity:1;font-weight:600}
 .fbrand .logo{color:var(--bg);margin-bottom:.2rem}
 @media (max-width:760px){.fcols{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
@@ -1098,7 +1101,7 @@ document.documentElement.className+=' js';
       <h4>Связь</h4>
       <p data-op="phone"></p>
       <p data-op="email"></p>
-      <p class="fcredit">Сайт — Абу Бакр Вагитов</p>
+      <p class="fcredit"><button type="button" class="fcredit-btn" aria-expanded="false" aria-controls="fcredit-tel">Сайт — Абу Бакр Вагитов</button><a class="fcredit-tel" id="fcredit-tel" href="tel:+79285669186" hidden>+7 928 566-91-86</a></p>
       <a href="#diagnostics">Записаться на диагностику</a>
     </div>
   </div>
@@ -1702,6 +1705,8 @@ const FRAG={
   'reviews-stories':()=>`<p class="sub">Истории роста балла <span class="demo-tag">шаблон</span></p><div class="reviews">${rv('с — до — баллов','История ученика со скриншотом результата: за сколько месяцев и что помогло.','Имя, ЕГЭ 2026')}${rv('с — до — баллов','Ещё одна история роста балла со скриншотом.','Имя, ОГЭ 2026')}</div>`
 };
 document.querySelectorAll('[data-inj]').forEach(e=>{e.innerHTML=FRAG[e.dataset.inj]()});
+// подпись в подвале: по нажатию показываем номер разработчика сайта
+{const b=document.querySelector('.fcredit-btn'),t=document.getElementById('fcredit-tel');if(b&&t)b.addEventListener('click',()=>{t.hidden=!t.hidden;b.setAttribute('aria-expanded',String(!t.hidden))})}
 renderPrice();
 // ---------- первый экран: «Я родитель» / «Я ученик» ----------
 const AUD={parent:['t1','t2'],student:['t3','subject']};
