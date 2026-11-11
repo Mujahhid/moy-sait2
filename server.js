@@ -230,7 +230,7 @@ const YK = {
   api: String(process.env.YOOKASSA_API || 'https://api.yookassa.ru/v3').replace(/\/+$/, ''), // переопределяется только для проверок
 };
 const SITE_URL = String(process.env.SITE_URL || 'https://biocapybara.ru').replace(/\/+$/, '');
-const DIAG_PRICES = { 'Ислам': { old: 2500, now: 2000 }, 'Абу-Бакр': { old: 2500, now: 2000 } }; // одинаково у обоих
+const DIAG_PRICES = { 'Ислам': { old: 2500, now: 2000 }, 'Абу-Бакр': { old: 1500, now: 1250 } }; // now — со скидкой за тест
 const DISCOUNT_HOURS = 3; // как таймер на сайте: 3 часа после первого пройденного теста
 const COURSE_TARIFFS = { // как в crm.html и на сайте. m — месяц, full — учебный год (до 31 августа), lesson — одно занятие
   'Курс теории': { m: 6000, full: 34000 },
@@ -401,9 +401,9 @@ const server = http.createServer(async (req, res) => {
         if (!q) return send(res, 400, { error: 'invalid_tariff' }, undefined, nc);
         return send(res, 200, { ...q, ready: !!(YK.shop && YK.key) }, undefined, nc);
       }
-      const prices = {}; for (const t of Object.keys(DIAG_PRICES)) prices[t] = diagPrice(rec, t);
+      const prices = {}, regular = {}; for (const t of Object.keys(DIAG_PRICES)) { prices[t] = diagPrice(rec, t); regular[t] = DIAG_PRICES[t].old; }
       const du = discountUntil(rec);
-      return send(res, 200, { prices, old: DIAG_PRICES['Ислам'].old, discount_until: du > Date.now() ? new Date(du).toISOString() : null, ready: !!(YK.shop && YK.key) }, undefined, nc);
+      return send(res, 200, { prices, regular, discount_until: du > Date.now() ? new Date(du).toISOString() : null, ready: !!(YK.shop && YK.key) }, undefined, nc);
     }
     // создать платёж: диагностика (с контактами и согласием) или курс (по записи из CRM)
     if (p === '/api/pay/create' && req.method === 'POST') {
