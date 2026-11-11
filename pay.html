@@ -44,6 +44,7 @@ p{margin:0}
 .err{color:var(--danger);font-weight:600}
 .ok{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--leaf-soft);color:var(--leaf);font-size:28px;font-weight:700}
 .fine{font-size:.85rem}
+.thx{font-size:1.25rem;line-height:1.35}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -63,7 +64,7 @@ p{margin:0}
 
   // после оплаты ЮKassa возвращает сюда. Сам возврат оплатой не считается — оплату подтверждает уведомление ЮKassa.
   if(location.pathname.replace(/\/+$/,'')==='/pay/thanks'){
-    put('<div class="ok" aria-hidden="true">✓</div><h1>Спасибо!</h1><p>Мы свяжемся с вами в течение 2 часов.</p>'+
+    put('<div class="ok" aria-hidden="true">✓</div><h1 class="thx">Спасибо, в ближайшее время мы свяжемся с Вами для выбора даты занятия.</h1>'+
       '<p class="muted fine">Если оплату отменили или она не прошла, вернитесь на сайт и попробуйте ещё раз.</p><a class="btn ghost" href="/">На сайт</a>');
     return;
   }
