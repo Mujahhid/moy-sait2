@@ -963,7 +963,7 @@ document.documentElement.className+=' js';
         <article class="plan" data-tariff="abu"><p class="eyebrow">Индивидуально</p><h3>Занятие с Абу-Бакром</h3><p class="p" data-m="1 500" data-unit="за занятие"></p><ul><li>Онлайн, один на один</li><li>Ведёт Абу-Бакр — студент-медик</li><li>Разбираем темы и пробелы ученика</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
         <article class="plan" data-tariff="diag"><p class="eyebrow">С чего начать</p><h3>Диагностика</h3><p class="p" data-m="2 500" data-unit="с Исламом"></p><p class="muted" style="margin:-.6rem 0 0">2 000 ₽ — со скидкой за пройденный тест.<br>С Абу-Бакром — 1 500 ₽, со скидкой 1 250 ₽</p><ul><li>45 минут с преподавателем в Zoom</li><li>Карта пробелов по всем темам</li><li>План подготовки до экзамена</li></ul><a class="btn orange" href="#diagnostics" data-cta>Записаться</a></article>
       </div>
-      <p class="muted" style="margin-top:1.2rem">Оплата на сайте картой или через СБП. После оплаты свяжемся с вами в течение 2 часов, согласуем время и пришлём ссылку на онлайн-занятие. Условия оплаты и возврата — в <a href="/offer">публичной оферте</a>.</p>
+      <p class="muted" style="margin-top:1.2rem">Оплата на сайте картой или через СБП. После оплаты в ближайшее время свяжемся с вами для выбора даты занятия и пришлём ссылку на онлайн-занятие. Условия оплаты и возврата — в <a href="/offer">публичной оферте</a>.</p>
 
     </div>
   </section>
@@ -1457,7 +1457,7 @@ async function openPay(){
     <details class="muted fine"><summary>Политика обработки персональных данных</summary>${policyHTML()}</details>
     <p class="form-err" id="pf-err" hidden></p>
     <div class="row"><button class="btn orange" type="submit"${ready?'':' disabled'}>Перейти к оплате <span data-amt></span></button><button class="btn ghost" type="button" id="cplink">Скопировать ссылку для родителя</button></div>
-    <p class="muted fine">${ready?'Оплата картой или через СБП на защищённой странице ЮKassa. После оплаты свяжемся с вами в течение 2 часов.':'Оплата скоро появится здесь. Попробуйте чуть позже.'} Оплатить может родитель — отправьте ему эту страницу.</p></form>`;
+    <p class="muted fine">${ready?'Оплата картой или через СБП на защищённой странице ЮKassa. После оплаты в ближайшее время свяжемся с вами для выбора даты занятия.':'Оплата скоро появится здесь. Попробуйте чуть позже.'} Оплатить может родитель — отправьте ему эту страницу.</p></form>`;
   const f=B.querySelector('form'),ph=B.querySelector('#pf-phone'),err=B.querySelector('#pf-err');
   const teacher=()=>B.querySelector('input[name=pt]:checked').value;
   const upd=()=>{B.querySelector('[data-amt]').textContent=money(prices[teacher()])};
