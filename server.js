@@ -104,7 +104,7 @@ const TRACK_EVENTS = ['test_done', 'shared', 'parent_opened', 'clicked_signup', 
 const ID_RE = /^[\w-]{4,16}$/;
 const KINDS = ['probnik', 'risk', 'specialty', 'format', 'trainer'];
 const ZONES = ['green', 'yellow', 'red'];
-const PRICES = { 'Ислам': [2000, 2500], 'Абу-Бакр': [1250, 1500] }; // диагностика: Ислам 2 500 / 2 000, Абу-Бакр 1 500 / 1 250 (со скидкой за тест)
+const PRICES = { 'Ислам': [2000, 2500], 'Абу-Бакр': [1000, 1500] }; // диагностика: Ислам 2 500 / 2 000, Абу-Бакр 1 500 / 1 000 (со скидкой за тест)
 const nowIso = () => new Date().toISOString();
 const numOrNull = (v, max = 100000) => (Number.isFinite(v) && v >= 0 && v <= max ? Math.round(v * 100) / 100 : null);
 function cleanTest(t) {
@@ -230,10 +230,10 @@ const YK = {
   api: String(process.env.YOOKASSA_API || 'https://api.yookassa.ru/v3').replace(/\/+$/, ''), // переопределяется только для проверок
 };
 const SITE_URL = String(process.env.SITE_URL || 'https://biocapybara.ru').replace(/\/+$/, '');
-const DIAG_PRICES = { 'Ислам': { old: 2500, now: 2000 }, 'Абу-Бакр': { old: 1500, now: 1250 } }; // now — со скидкой за тест
+const DIAG_PRICES = { 'Ислам': { old: 2500, now: 2000 }, 'Абу-Бакр': { old: 1500, now: 1000 } }; // now — со скидкой за тест
 const DISCOUNT_HOURS = 3; // как таймер на сайте: 3 часа после первого пройденного теста
-const COURSE_TARIFFS = { // как в crm.html и на сайте. m — месяц, full — учебный год (до 31 августа), lesson — одно занятие
-  'Курс теории': { m: 6000, full: 34000 },
+const COURSE_TARIFFS = { // как в crm.html и на сайте. m — месяц, full — учебный год (до конца летних каникул), lesson — одно занятие (1 час)
+  'Курс теории': { m: 6000, full: 34500 },
   'Занятие с Исламом': { lesson: 2500 },
   'Занятие с Абу-Бакром': { lesson: 1500 },
 };
@@ -433,7 +433,7 @@ const server = http.createServer(async (req, res) => {
         const q = courseQuote(rec, clip(data.tariff, 40), data.plan);
         if (!q) return send(res, 400, { error: 'invalid_tariff' });
         amount = q.amount; phone = rec.contact && rec.contact.phone;
-        description = q.plan === 'lesson' ? `${q.tariff} · занятие ${q.month_no}` : `${q.tariff} · ${q.plan === 'full' ? 'учебный год' : 'месяц ' + q.month_no}`;
+        description = q.plan === 'lesson' ? `${q.tariff} · занятие ${q.month_no} (1 час)` : `${q.tariff} · ${q.plan === 'full' ? 'учебный год' : 'месяц ' + q.month_no}`;
         metadata = { record_id: id, purpose: 'course', tariff: q.tariff, plan: q.plan, month_no: String(q.month_no || ''), credit: String(q.credit || 0) };
       } else return send(res, 400, { error: 'invalid_purpose' });
       const body = { amount: { value: amount.toFixed(2), currency: 'RUB' }, capture: true, confirmation: { type: 'redirect', return_url: `${SITE_URL}/pay/thanks?r=${encodeURIComponent(id)}` }, description: description.slice(0, 128), metadata };

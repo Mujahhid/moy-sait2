@@ -77,7 +77,7 @@ p{margin:0}
     .then(function(res){return res.json().then(function(j){return {ok:res.ok,j:j}})})
     .then(function(x){
       if(!x.ok){fail(x.j&&x.j.error==='not_found'?'Запись не найдена.':'Такого тарифа или способа оплаты нет.');return}
-      var d=x.j,what=d.plan==='full'?'Учебный год (до 31 августа)':d.plan==='lesson'?'Занятие № '+d.month_no:'Месяц № '+d.month_no;
+      var d=x.j,what=d.plan==='full'?'Учебный год (до конца летних каникул)':d.plan==='lesson'?'Занятие № '+d.month_no+' (1 час)':'Месяц № '+d.month_no;
       put('<p class="eyebrow">'+(d.plan==='lesson'?'Оплата занятия':'Оплата курса')+'</p><h1>'+esc(d.tariff)+'</h1>'+
         '<div class="sum"><div class="row"><span>'+what+'</span><span>'+(d.credit?'<s>'+money(d.price)+'</s>':money(d.price))+'</span></div>'+
         (d.credit?'<div class="row muted"><span>Зачёт диагностики</span><span>−'+money(d.credit)+'</span></div>':'')+

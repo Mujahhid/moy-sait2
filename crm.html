@@ -351,8 +351,8 @@ const BOARD = [ // колонки канбана — рабочие этапы �
 ];
 const STAGE_NAMES = Object.fromEntries(STAGES.map(s=>[s.k,s.n])); STAGE_NAMES.lost='Отказ';
 const ZN = {red:'Красная',yellow:'Жёлтая',green:'Зелёная'};
-const TARIFFS = { // как на сайте: m — месяц, full — учебный год (до 31 августа), lesson — одно индивидуальное занятие
-  'Курс теории':          {m:6000, full:34000},
+const TARIFFS = { // как на сайте: m — месяц, full — учебный год (до конца летних каникул), lesson — одно индивидуальное занятие (1 час)
+  'Курс теории':          {m:6000, full:34500},
   'Занятие с Исламом':    {lesson:2500},
   'Занятие с Абу-Бакром': {lesson:1500}
 };
@@ -582,10 +582,10 @@ async function setStage(r,k){
 }
 // варианты оплаты по тарифу: курс — месяц (и учебный год, если курс ещё не покупали), занятие — по одному
 function planOpts(r,tariff){ const t=TARIFFS[tariff]; if(!t) return [];
-  if (t.lesson) return [['lesson',`Одно занятие · ${rub(t.lesson)}`]];
+  if (t.lesson) return [['lesson',`Одно занятие, 1 час · ${rub(t.lesson)}`]];
   const bought=coursePays(r).filter(p=>p.tariff===tariff);
   if (bought.some(p=>p.plan==='full')) return [];
-  return [['month',`Месяц · ${rub(t.m)}`]].concat(t.full&&!bought.length?[['full',`Учебный год (до 31 августа) · ${rub(t.full)}`]]:[]);
+  return [['month',`Месяц · ${rub(t.m)}`]].concat(t.full&&!bought.length?[['full',`Учебный год (до конца летних каникул) · ${rub(t.full)}`]]:[]);
 }
 function payLink(r,tariff,plan){ return `${siteOrigin()}${CONFIG.PAY_PATH}?r=${encodeURIComponent(r.id)}&p=course&tariff=${encodeURIComponent(tariff)}&plan=${plan}`; }
 function creditLeft(r){ const d=r.diagnostic.done_at||evAt(r,'diag_done'); if(!d||!diagPay(r)) return 0; return CONFIG.CREDIT_HOURS-hoursSince(d); }
@@ -778,7 +778,7 @@ function demo(){
       tt+= (s.k==='scheduled'?3*H: s.k==='diag_done'?24*H: s.k==='bought'?20*H: 0.3*H); if(tt>now) tt=now-60e3; events.push({at:iso(tt),type:s.k}); });
     const paid = lastIdx>=STAGES.findIndex(s=>s.k==='paid');
     const payments=[]; const teacher=i%3===2?'Абу-Бакр':'Ислам';
-    const dPrice = teacher==='Абу-Бакр'?(i%2?1250:1500):(i%2?2000:2500);
+    const dPrice = teacher==='Абу-Бакр'?(i%2?1000:1500):(i%2?2000:2500);
     if (paid) payments.push(pay({purpose:'diagnostic',amount:dPrice,teacher,paid_at:(events.find(e=>e.type==='paid')||{}).at}));
     if (stage==='lost' && i%2) payments[0].status='refunded';
     const tariff='Курс теории';
