@@ -353,8 +353,7 @@ const STAGE_NAMES = Object.fromEntries(STAGES.map(s=>[s.k,s.n])); STAGE_NAMES.lo
 const ZN = {red:'Красная',yellow:'Жёлтая',green:'Зелёная'};
 const TARIFFS = { // как на сайте: m — месяц, full — учебный год (до конца летних каникул), lesson — одно индивидуальное занятие (1 час)
   'Курс теории':          {m:6000, full:34500},
-  'Занятие с Исламом':    {lesson:2500},
-  'Занятие с Абу-Бакром': {lesson:1500}
+  'Занятие с Исламом':    {lesson:2500}
 };
 
 /* ---------- данные ---------- */
@@ -644,7 +643,7 @@ function openRec(id){
     <div class="card pad">
       <div class="sec-t">Диагностика</div><div class="sec-s">${dp?`Оплачена ${fmtDT(dp.paid_at)} · ${rub(dp.amount)}.`:'Ещё не оплачена.'} Кто проводит, когда, что выяснили и какой тариф предложили.</div>
       <div class="fgrid">
-        <label class="field">Преподаватель<select data-g="teacher">${['Ислам','Абу-Бакр'].map(p=>`<option ${(dg.teacher||(dp&&dp.teacher))===p?'selected':''}>${p}</option>`).join('')}</select></label>
+        <label class="field">Преподаватель<select data-g="teacher">${['Ислам'].map(p=>`<option ${(dg.teacher||(dp&&dp.teacher))===p?'selected':''}>${p}</option>`).join('')}</select></label>
         <label class="field">Дата и время<input type="datetime-local" data-g="scheduled_at" value="${dg.scheduled_at?toLocalInput(dg.scheduled_at):''}"></label>
         <label class="field">Рекомендованный тариф<select data-g="recommended_tariff"><option value="">—</option>${Object.keys(TARIFFS).map(p=>`<option ${dg.recommended_tariff===p?'selected':''}>${p}</option>`).join('')}</select></label>
       </div>
@@ -777,8 +776,8 @@ function demo(){
     STAGES.forEach((s,j)=>{ if(j>lastIdx) return; if(role==='parent' && ['shared','parent_opened'].includes(s.k)) return;
       tt+= (s.k==='scheduled'?3*H: s.k==='diag_done'?24*H: s.k==='bought'?20*H: 0.3*H); if(tt>now) tt=now-60e3; events.push({at:iso(tt),type:s.k}); });
     const paid = lastIdx>=STAGES.findIndex(s=>s.k==='paid');
-    const payments=[]; const teacher=i%3===2?'Абу-Бакр':'Ислам';
-    const dPrice = teacher==='Абу-Бакр'?(i%2?1000:1500):(i%2?2000:2500);
+    const payments=[]; const teacher='Ислам';
+    const dPrice = i%2?2000:2500;
     if (paid) payments.push(pay({purpose:'diagnostic',amount:dPrice,teacher,paid_at:(events.find(e=>e.type==='paid')||{}).at}));
     if (stage==='lost' && i%2) payments[0].status='refunded';
     const tariff='Курс теории';

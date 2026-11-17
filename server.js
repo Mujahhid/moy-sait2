@@ -104,7 +104,7 @@ const TRACK_EVENTS = ['test_done', 'shared', 'parent_opened', 'clicked_signup', 
 const ID_RE = /^[\w-]{4,16}$/;
 const KINDS = ['probnik', 'risk', 'specialty', 'format', 'trainer'];
 const ZONES = ['green', 'yellow', 'red'];
-const PRICES = { 'Ислам': [2000, 2500], 'Абу-Бакр': [1000, 1500] }; // диагностика: Ислам 2 500 / 2 000, Абу-Бакр 1 500 / 1 000 (со скидкой за тест)
+const PRICES = { 'Ислам': [2000, 2500] }; // диагностика: 2 500 / 2 000 (со скидкой за тест); проводит только Ислам
 const nowIso = () => new Date().toISOString();
 const numOrNull = (v, max = 100000) => (Number.isFinite(v) && v >= 0 && v <= max ? Math.round(v * 100) / 100 : null);
 function cleanTest(t) {
@@ -230,12 +230,11 @@ const YK = {
   api: String(process.env.YOOKASSA_API || 'https://api.yookassa.ru/v3').replace(/\/+$/, ''), // переопределяется только для проверок
 };
 const SITE_URL = String(process.env.SITE_URL || 'https://biocapybara.ru').replace(/\/+$/, '');
-const DIAG_PRICES = { 'Ислам': { old: 2500, now: 2000 }, 'Абу-Бакр': { old: 1500, now: 1000 } }; // now — со скидкой за тест
+const DIAG_PRICES = { 'Ислам': { old: 2500, now: 2000 } }; // now — со скидкой за тест; преподаватель только Ислам
 const DISCOUNT_HOURS = 3; // как таймер на сайте: 3 часа после первого пройденного теста
 const COURSE_TARIFFS = { // как в crm.html и на сайте. m — месяц, full — учебный год (до конца летних каникул), lesson — одно занятие (1 час)
   'Курс теории': { m: 6000, full: 34500 },
   'Занятие с Исламом': { lesson: 2500 },
-  'Занятие с Абу-Бакром': { lesson: 1500 },
 };
 const CREDIT_HOURS = 72; // зачёт диагностики в первую оплату курса теории (в индивидуальные занятия не засчитывается)
 async function yk(method, apiPath, body, idemKey) {

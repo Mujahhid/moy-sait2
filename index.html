@@ -703,8 +703,8 @@ document.documentElement.className+=' js';
 
   <section>
     <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">Кто преподаёт</p><h2>Ислам и Абу-Бакр</h2></div>
-      <div class="teachers" data-inj="teachers"></div>
+      <div class="sec-head"><p class="eyebrow">Кто преподаёт</p><h2>Ислам — врач и педагог</h2></div>
+      <div class="teachers one" data-inj="teachers"></div>
     </div>
   </section>
 
@@ -986,8 +986,7 @@ document.documentElement.className+=' js';
       <div class="plans">
         <article class="plan" data-tariff="course"><p class="eyebrow">Онлайн · в записи</p><h3>Курс теории</h3><p class="p" data-m="6 000" data-unit="в месяц"></p><p class="muted" style="margin:-.6rem 0 0">или 34 500 ₽ за учебный год: доступ сразу и до конца летних каникул текущего учебного года</p><ul><li>Занятия в записи — смотреть в удобное время</li><li>Конспект после каждого занятия</li><li>Домашние задания в формате экзамена</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
         <article class="plan" data-tariff="islam"><p class="eyebrow">Индивидуально</p><h3>Занятие с Исламом</h3><p class="p" data-m="2 500" data-unit="за час"></p><ul><li>Онлайн, один на один</li><li>Ведёт Ислам — врач и педагог</li><li>Разбираем темы и пробелы ученика</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
-        <article class="plan" data-tariff="abu"><p class="eyebrow">Индивидуально</p><h3>Занятие с Абу-Бакром</h3><p class="p" data-m="1 500" data-unit="за час"></p><ul><li>Онлайн, один на один</li><li>Ведёт Абу-Бакр — студент-медик</li><li>Разбираем темы и пробелы ученика</li></ul><a class="btn ghost" href="#diagnostics">Начать с диагностики</a></article>
-        <article class="plan" data-tariff="diag"><p class="eyebrow">С чего начать</p><h3>Диагностика</h3><p class="p" data-m="2 500" data-unit="с Исламом"></p><p class="muted" style="margin:-.6rem 0 0">2 000 ₽ — со скидкой за пройденный тест.<br>С Абу-Бакром — 1 500 ₽, со скидкой 1 000 ₽</p><ul><li>45 минут с преподавателем в Zoom</li><li>Карта пробелов по всем темам</li><li>План подготовки до экзамена</li></ul><a class="btn orange" href="#diagnostics" data-cta>Записаться</a></article>
+        <article class="plan" data-tariff="diag"><p class="eyebrow">С чего начать</p><h3>Диагностика</h3><p class="p" data-m="2 500" data-unit="с Исламом"></p><p class="muted" style="margin:-.6rem 0 0">2 000 ₽ — со скидкой за пройденный тест.</p><ul><li>45 минут с преподавателем в Zoom</li><li>Карта пробелов по всем темам</li><li>План подготовки до экзамена</li></ul><a class="btn orange" href="#diagnostics" data-cta>Записаться</a></article>
       </div>
       <p class="muted" style="margin-top:1.2rem">Оплата на сайте картой или через СБП. После оплаты в ближайшее время свяжемся с вами для выбора даты занятия и пришлём ссылку на онлайн-занятие. Условия оплаты и возврата — в <a href="/offer">публичной оферте</a>.</p>
 
@@ -1014,8 +1013,8 @@ document.documentElement.className+=' js';
 <div class="page" data-page="about" id="pg-about">
   <section>
     <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">О школе</p><h2>Преподаватели</h2></div>
-      <div class="teachers" data-inj="teachers"></div>
+      <div class="sec-head"><p class="eyebrow">О школе</p><h2>Преподаватель</h2></div>
+      <div class="teachers one" data-inj="teachers"></div>
     </div>
   </section>
   <section class="alt">
@@ -1305,7 +1304,7 @@ function policyHTML(){const O=OPERATOR,f=v=>/^\[/.test(v)?`<span class="todo">${
   <p>Заявки хранятся столько, сколько нужно для связи с посетителем, диагностики и записи на занятия. По достижении этих целей или при отзыве согласия данные удаляются в срок, установленный законодательством.</p>
   <h3>7. Как данные защищаются</h3>
   <p>Оператор принимает правовые, организационные и технические меры для защиты персональных данных от неправомерного доступа, уничтожения, изменения и распространения.</p>
-  <p>Данные передаются по защищённому протоколу HTTPS. Доступ к заявкам есть только у оператора и преподавателей через закрытую панель, которая открывается по паролю.</p>
+  <p>Данные передаются по защищённому протоколу HTTPS. Доступ к заявкам есть только у оператора и преподавателя через закрытую панель, которая открывается по паролю.</p>
   <h3>8. Несовершеннолетние</h3>
   <p>Если на диагностику записывается несовершеннолетний, заявку следует оставлять вместе с родителем или законным представителем и с его согласия.</p>
   <h3>9. Права посетителя</h3>
@@ -1500,15 +1499,14 @@ async function openPay(){
   track('clicked_signup');
   const B=openModal('Оплата диагностики','Закрыть ✕');B.innerHTML='<p class="muted">Загружаем…</p>';
   let q=null;try{const r=await fetch('/api/pay/quote?r='+encodeURIComponent(CUR_RID),{cache:'no-store'});if(r.ok)q=await r.json()}catch(e){}
-  const on=discState()==='on',regular=(q&&q.regular)||{'Ислам':2500,'Абу-Бакр':1500},prices=(q&&q.prices)||{'Ислам':on?2000:2500,'Абу-Бакр':on?1000:1500};
+  const on=discState()==='on',regular=(q&&q.regular)||{'Ислам':2500},prices=(q&&q.prices)||{'Ислам':on?2000:2500};
   const ready=!!(q&&q.ready);
   const link=location.origin+'/r/'+CUR_RID;
   const priceHTML=t=>prices[t]<regular[t]?`<s>${money(regular[t])}</s> ${money(prices[t])}`:money(prices[t]);
   B.innerHTML=`<form class="pay payform" novalidate><p class="eyebrow">Диагностика</p><h3 class="zh">Разбор с преподавателем: 45 минут в Zoom</h3>
     <p class="muted" style="margin:0">Карта пробелов по всем темам и план подготовки до экзамена. Стоимость диагностики засчитаем в курс, если продолжите заниматься.</p>
     <fieldset class="pteach"><legend>Преподаватель</legend>
-      <label><input type="radio" name="pt" value="Ислам" checked><span>Ислам</span><b>${priceHTML('Ислам')}</b></label>
-      <label><input type="radio" name="pt" value="Абу-Бакр"><span>Абу-Бакр</span><b>${priceHTML('Абу-Бакр')}</b></label></fieldset>
+      <label><input type="radio" name="pt" value="Ислам" checked><span>Ислам</span><b>${priceHTML('Ислам')}</b></label></fieldset>
     <label>Имя родителя<input id="pf-parent" autocomplete="name" required maxlength="80"></label>
     <label>Имя ребёнка<input id="pf-child" maxlength="80" required></label>
     <label>Телефон<input id="pf-phone" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="+7 900 000-00-00" maxlength="16"></label>
@@ -1692,10 +1690,9 @@ function home(){
 home();
 // ---------- общие блоки, которые повторяются на нескольких страницах ----------
 const T_ISLAM=`<article class="teacher"><div class="ph"><img src="/media/team/islam.jpg" alt="Ислам" width="320" height="320" loading="lazy"></div><div><h3>Ислам</h3><p class="muted" style="margin-top:.3rem">Врач и педагог. Выпускник РНИМУ им. Н. И. Пирогова. Объясняет биологию через реальную медицину и готовит тех, кто идёт в медицинский.</p><div class="tags"><span>Врач</span><span>Педагог</span><span>ЕГЭ</span></div></div></article>`;
-const T_ABU=`<article class="teacher"><div class="ph">А</div><div><h3>Абу-Бакр</h3><p class="muted" style="margin-top:.3rem">Репетитор по биологии, студент 4 курса лечебного факультета Казанского ГМУ. Готовит к экзамену через личный опыт: искреннее отношение, свежая подача и актуальные знания.</p><div class="tags"><span>Студент-медик</span><span>ОГЭ</span><span>ЕГЭ</span></div></div></article>`;
 const rv=(sc,t,who,ex,img,alt)=>`<article class="review"><div class="rhead"><span class="sc">${sc}</span>${ex?`<span class="ex">${ex}</span>`:''}</div>${t?`<p>${t}</p>`:''}<span class="who">${who}</span>${img?`<a class="rshot" href="${img}" target="_blank" rel="noopener">Посмотреть скриншот →</a>`:''}</article>`;
 const FRAG={
-  teachers:()=>T_ISLAM+T_ABU,
+  teachers:()=>T_ISLAM,
   'teacher-islam':()=>T_ISLAM,
   stats:()=>`<div class="stat"><b>300+</b><span>учеников</span></div><div class="stat"><b>0</b><span>несдач</span></div><div class="stat"><b>8 лет</b><span>онлайн-преподавания</span></div><div class="stat"><b>2</b><span>диплома: врач и педагог</span></div>`,
   steps:()=>`<div class="step"><span class="n">Шаг 1</span><h3>Урок в записи</h3><p class="muted">Теория по теме на понятных примерах. Смотреть можно в удобное время.</p></div><div class="step"><span class="n">Шаг 2</span><h3>Скрипт-конспект</h3><p class="muted">После урока — конспект с главным по теме.</p></div><div class="step"><span class="n">Шаг 3</span><h3>Домашнее задание</h3><p class="muted">Задания в формате экзамена с проверкой преподавателя.</p></div><div class="step"><span class="n">Шаг 4</span><h3>Отчёт родителю</h3><p class="muted">Что пройдено, где ошибки и как растёт балл.</p></div>`,
